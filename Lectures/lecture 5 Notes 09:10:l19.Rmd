@@ -1,0 +1,108 @@
+---
+title: "Lecture Notes - 9/10/19"
+date: 09/10/2019
+output: html_notebook
+---
+
+```{r}
+fact = 1
+print(paste0("1! is ", fact))
+```
+
+Rewrite this as a `for loop`
+```{r}
+fact = 1
+for (i in 1:10) {
+  fact = i * fact
+  print(paste0(i, "! is ", fact))
+}
+```
+
+|Header1|Header2|
+|---|---|
+|trying out a table|with data|
+
+## Conditionals 
+```{r}
+a = c(2,5,6,88,3,20)
+
+if(a[3] < 10){
+  print("yes")
+}else{
+  print("no")
+}
+```
+
+```{r}
+for (i in 1:length(a)){
+  if(a[i] < 10){
+    print("yes")
+  }else{
+    print("no")
+  }
+}
+```
+
+# Descriptive Stats
+
+```{r}
+setwd("~/Google Drive/Grad School/Fall 2019/BTRY_6010")
+data = read.table("titanic(4).txt",header=TRUE)
+```
+
+## Histograms
+- like a bar graph but the x-axis has numerical meaning
+- When first looking at a dataset, histograms are a good place to start
+- Clustering
+  - No Bumps - uniform
+  - 1 bump - unimodal
+  - 2 bumb - bimodal
+- *Center* where is the middle
+- *Spread* how much variablitity
+- *Skewness* lack of symmetry
+- *Outliers* extreme values that stand out
+
+
+```{r}
+dat = read.table("/Users/mdarfler/Google Drive/Grad School/Fall 2019/BTRY_6010/titanic(4).txt",header=TRUE)
+head(dat)
+
+hist(dat$Age)
+```
+
+## Measures of central tendancy
+- mean
+  - $$\bar{x} = \dfrac{1}{n} \sum_{n=1}^{n} x$$
+- meadian
+- mode
+
+```{r}
+x = c(2,1,2,8,2)
+mean(x)
+
+sort(x)
+```
+
+
+```{r}
+age = dat$Age[!is.na(dat$Age)]
+length(age)
+
+age_sort = sort(age)
+age_sort[length(age_sort)/2] #median
+```
+
+##Sample Median, Quartiles and Percentiles
+
+- given _n_ values x1 ... xn
+
+Median - Equal area
+Mean = balancing point
+
+### Weighted Average
+
+If a discrete random variable tekes the values $x_{1}, ..., x_{n}$ whith frequences $f_{1}...f_{k}$ it's average can be calculated as
+-
+$$\dfrac{x_{1}f_{1} + x_{2}f_{2} + ... + x_{n}f_{n}}{f_{1} + f_{2} + ... +f_{n}}$$
+
+# Measure of Spread or Dispersion
