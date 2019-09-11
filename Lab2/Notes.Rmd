@@ -1,0 +1,28 @@
+---
+title: "Lab 3"
+date: "09/11/2019"
+author: "Michael Darfler"
+output: html_notebook
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+require("knitr")
+opts_knit$set(root.dir = "~/Google Drive/Grad School/Fall 2019/BTRY_6010")
+```
+
+## Box Plot
+
+`boxplot(data)`
+
+- The box is defined by $Q_{1}$ and $Q_{3}$ with the bar in the middle representing the median. The whiskers are the "extremes" of the data with outliers shown as circles.
+
+- Upper whisker is at most $Q_{3} + 1.5 \times IQR$ (inter quartile range, i.e. the distance between the 1st and third quartile)
+
+- Invented by Tukey
+
+```{r}
+dat = read.table("titanic(4).txt", header=1)
+
+boxplot(dat$Age)
+```
+

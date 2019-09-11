@@ -1,0 +1,121 @@
+---
+title: "Simple Random Sampling to estimate one population proportion"
+author: "Sumanta Basu"
+date: "September 5, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, root.dir = "~/Google Drive/Grad School/Fall 2019/BTRY_6010")
+baseurl = "https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/Lab2"
+```
+
+## Background
+
+The status of $155$ enrolled students in a BTRY 6010 class from a previous semester are listed in enrollment.csv. Using simple random samples of different sizes, we will estimate the proportion of PhD students (population parameter $p$) in class (code 'GR' in the file). The other student status codes are 0C0 (professional development), 1P1 - 3P1 (masters) and 41 (undergraduate senior).
+
+The goal is to demonstrate how simple random sampling helps control the margin of error in our estimation. In particular, we will see that with a sample of size $n$, the proportion of PhD students in our sample ($\hat{p}$) is roughly within $\pm 1/\sqrt{n}$ of the population proportion of PhD students ($p$) (i.e. the proportion of PhD students among these $155$ students). In the process, we will also see some examples of using `if` and `for` statements in R. 
+
+Note that in this case the population ($155$ students in class) is observed, so we can easily calculate the true proportion. However, the point of the exercise is to illustrate how we can get reasonably close to $p$ without using data on all the students, but only a small number ($n$) of them.
+
+We will use the following informal result (we will see a more formal treatment of this result in textbook section 6.1):
+
+``Suppose we select a simple random sample of $n$ students in the class, and find that $X$ of them are PhD students. Then the sample proportion $\hat{p} = X/n$ is a good estimator of $p$, in the sense that there is at least a $95$\% chance the random interval $(\hat{p} - \frac{1}{\sqrt{n}}, \hat{p} + \frac{1}{\sqrt{n}})$ contains $p$.''
+
+
+
+## Reading Enrollment Data
+
+```{r}
+dat = read.csv(paste0(baseurl,'enrollment(3).csv'), header=TRUE, as.is=TRUE)
+pop = dat$Level
+table(pop)
+```
+
+## Population proportion
+
+The true proportion of PhD students in class (which we will estimate using data on smaller samples) is
+```{r}
+p = mean(pop == 'GR')
+p
+sum(pop=="GR")/length(pop)
+```
+
+## Set random number seed for reproducibility
+```{r}
+set.seed(51)
+```
+
+
+## Estimate p using a SRS of size 15
+```{r}
+sample1 = sample(pop, 15, replace=FALSE)
+sample1
+p.hat = mean(sample1 == 'GR')
+p.hat
+```
+Construct an approx. 95% confidence interval
+```{r}
+ci.lower = p.hat - (1/sqrt(15))
+ci.upper = p.hat + (1/sqrt(15))
+print(c(ci.lower, ci.upper))
+```
+Does this interval contain the true proportion of PhD students in class?
+
+Let's try again. Repeat using another SRS of size 15
+```{r}
+sample2 = sample(pop, 15, replace=FALSE)
+sample2
+p.hat = mean(sample2 == 'GR')
+p.hat
+```
+Construct an approx. 95% confidence interval
+```{r}
+ci.lower = p.hat - (1/sqrt(15))
+ci.upper = p.hat + (1/sqrt(15))
+print(c(ci.lower, ci.upper))
+```
+How about now? Did we capture the true proportion?
+
+Let's try this a hundred times, and see how often our interval captures the true proportion
+```{r}
+n=15 # sample size
+success = rep(0, 1000)
+for (iter in 1:1000){
+  paste0('iter=', iter)
+  smpl = sample(pop, n, replace=FALSE)
+  p.hat = mean(smpl == 'GR')
+  if (((p.hat - (1/sqrt(n))) < p) & (p.hat + (1/(sqrt(n))) > p))
+    success[iter] = 1
+}
+mean(success)
+```
+## Reducing margin of error with larger sample size
+With a sample size of 15, our margin of error is
+```{r}
+n=15
+1/sqrt(n)
+```
+A 25% margin of error may be considered high. What if we increase our sample size to 50? Our margin of error will now be
+```{r}
+n = 50
+1/sqrt(n)
+```
+This is narrower margin of error. But does it preserve our level of confidence about the estimate? To check this, let's repeat our procedure a hundred times with n=50, and see how often our interval captures the true proportion
+```{r, echo=TRUE}
+n=50 # sample size
+numTrials = 1000
+success = rep(0, numTrials)
+for (iter in 1:numTrials){
+  paste0('iter=', iter)
+  smpl = sample(pop, n, replace=FALSE)
+  p.hat = mean(smpl == 'GR')
+  if (((p.hat - (1/sqrt(n))) < p) & (p.hat + (1/(sqrt(n))) > p))
+    success[iter] = 1
+}
+mean(success)
+```
+
+
+
+
