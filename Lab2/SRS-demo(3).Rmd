@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, root.dir = "~/Google Drive/Grad School/Fall 2019/BTRY_6010")
-baseurl = "https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/Lab2"
+baseurl = "https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/"
 ```
 
 ## Background
@@ -27,7 +27,7 @@ We will use the following informal result (we will see a more formal treatment o
 ## Reading Enrollment Data
 
 ```{r}
-dat = read.csv(paste0(baseurl,'enrollment(3).csv'), header=TRUE, as.is=TRUE)
+dat = read.csv(paste0(baseurl,'Lab2/enrollment(3).csv'), header=TRUE, as.is=TRUE)
 pop = dat$Level
 table(pop)
 ```

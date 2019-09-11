@@ -380,7 +380,7 @@ summary {
 </div>
 <div id="reading-enrollment-data" class="section level2">
 <h2>Reading Enrollment Data</h2>
-<pre class="r"><code>dat = read.csv(&#39;enrollment(3).csv&#39;, header=TRUE, as.is=TRUE)
+<pre class="r"><code>dat = read.csv(paste0(baseurl,&#39;Lab2/enrollment(3).csv&#39;), header=TRUE, as.is=TRUE)
 pop = dat$Level
 table(pop)</code></pre>
 <pre><code>## pop
@@ -392,6 +392,8 @@ table(pop)</code></pre>
 <p>The true proportion of PhD students in class (which we will estimate using data on smaller samples) is</p>
 <pre class="r"><code>p = mean(pop == &#39;GR&#39;)
 p</code></pre>
+<pre><code>## [1] 0.7741935</code></pre>
+<pre class="r"><code>sum(pop==&quot;GR&quot;)/length(pop)</code></pre>
 <pre><code>## [1] 0.7741935</code></pre>
 </div>
 <div id="set-random-number-seed-for-reproducibility" class="section level2">
@@ -429,8 +431,8 @@ print(c(ci.lower, ci.upper))</code></pre>
 <p>How about now? Did we capture the true proportion?</p>
 <p>Let’s try this a hundred times, and see how often our interval captures the true proportion</p>
 <pre class="r"><code>n=15 # sample size
-success = rep(0, 100)
-for (iter in 1:100){
+success = rep(0, 1000)
+for (iter in 1:1000){
   paste0(&#39;iter=&#39;, iter)
   smpl = sample(pop, n, replace=FALSE)
   p.hat = mean(smpl == &#39;GR&#39;)
@@ -438,7 +440,7 @@ for (iter in 1:100){
     success[iter] = 1
 }
 mean(success)</code></pre>
-<pre><code>## [1] 1</code></pre>
+<pre><code>## [1] 0.991</code></pre>
 </div>
 <div id="reducing-margin-of-error-with-larger-sample-size" class="section level2">
 <h2>Reducing margin of error with larger sample size</h2>
@@ -452,8 +454,9 @@ mean(success)</code></pre>
 <pre><code>## [1] 0.1414214</code></pre>
 <p>This is narrower margin of error. But does it preserve our level of confidence about the estimate? To check this, let’s repeat our procedure a hundred times with n=50, and see how often our interval captures the true proportion</p>
 <pre class="r"><code>n=50 # sample size
-success = rep(0, 100)
-for (iter in 1:100){
+numTrials = 1000
+success = rep(0, numTrials)
+for (iter in 1:numTrials){
   paste0(&#39;iter=&#39;, iter)
   smpl = sample(pop, n, replace=FALSE)
   p.hat = mean(smpl == &#39;GR&#39;)
@@ -461,7 +464,7 @@ for (iter in 1:100){
     success[iter] = 1
 }
 mean(success)</code></pre>
-<pre><code>## [1] 1</code></pre>
+<pre><code>## [1] 0.997</code></pre>
 </div>
 
 
