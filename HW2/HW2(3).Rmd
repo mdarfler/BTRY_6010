@@ -276,4 +276,4 @@ hist(SS$Piercings)
   
   
   e) Suppose we want to reduce the number of levels for `Piercings` from 11 to 8.  What might be the best way to re-group these data so that the pie chart is a better representation of the distribution of `Piercings`?  
-  Looking at a histogram of the data it becomes clear that very few people have 7 or more piercings. Therefore it would make the pie chart easier to ready if we collapse the last 3 factors resulting in the factors 0,1,2,3,4,5,6,7+
+  Looking at a histogram of the data it becomes clear that very few people have 7 or more piercings. Therefore it would make the pie chart easier to ready if we collapse the last 3 factors resulting in the factors 0,1,2,3,4,5,6,7+.
