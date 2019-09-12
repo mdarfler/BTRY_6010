@@ -31,6 +31,12 @@ R has a lot of different data types. Here we will focus on vectors and data fram
 
 One way to create vectors in R is by using the function `c()` which combines its arguments into a vector.  Vectors in R do not need to be numeric.  Run the following code chunk by setting `eval=TRUE' and knitting your document to put these vectors into your workspace for this lab document.
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, root.dir = "~/Google Drive/Grad School/Fall 2019/BTRY_6010")
+baseurl = "https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/"
+
+```
+
 ```{r, eval=FALSE}
 a <- c(1, 2, 0, -5)  # numeric vector
 b <- c("one", "two", "three")  # character vector
@@ -109,8 +115,16 @@ tail(cdc)
 ```
 
     a) How many observations are there in this data set?  
+```{r}
+dim(cdc)[1]
+```
+    
     
     b) How many variables?  
+```{r}
+dim(cdc)[2]
+```
+    
     
 There are multiple ways that you can determine the number of observations and the number of variables.
 
@@ -123,15 +137,15 @@ dim(cdc)
     
     c) For each of the following variables, identify its data type (categorical or quantitative).
 
-genhlth:
+genhlth: categorical
 
-exerany (1 if you exercise, 0 otherwise):
+exerany (1 if you exercise, 0 otherwise): Logical
 
-height:
+height: Numerical
 
-age:
+age: Numerical
 
-gender:
+gender: Categorical
 
 
 
@@ -144,6 +158,10 @@ summary(cdc$weight)
 ```
 
 Add a new code chunk here to calculate the summary statistics for height.
+```{r}
+summary(cdc$height)
+```
+
 
 ### Problem 4
 For categorical data a frequency or relative frequency distribution provides a good summary of the sample data.  The function `table` does this for you by counting the number of times each kind of response was given. For example, to see the number of people who have smoked 100 cigarettes in their lifetime, type
