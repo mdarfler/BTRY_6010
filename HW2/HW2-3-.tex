@@ -1,0 +1,830 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={DarflerM-HW2},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{DarflerM-HW2}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+
+\begin{document}
+\maketitle
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\hypertarget{name-michael-darfler}{%
+\section{NAME: Michael Darfler}\label{name-michael-darfler}}
+
+\hypertarget{netid-mbd25}{%
+\section{NETID: mbd25}\label{netid-mbd25}}
+
+\textbf{DUE DATE: September 14, 2019 by 11:59pm }
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\hypertarget{homework-2-instructions}{%
+\subsection{\texorpdfstring{\textbf{Homework 2 Instructions
+}}{Homework 2 Instructions }}\label{homework-2-instructions}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  In this homework we will explore the \texttt{StudentSurvey} data
+  described below. For each problem:
+
+  \begin{enumerate}
+  \def\labelenumii{\alph{enumii})}
+  \item
+    Answer all questions
+  \item
+    Insert code chunks directly under any problems that require you to
+    use R and type in code as needed. In particular, make sure code
+    chunks are included for any requested plots.
+  \item
+    Answer any questions related to the problem in the .Rmd document
+    directly under the question
+  \item
+    Note: Occasionally when you insert a code chunk it may not go where
+    you intend it to. If this happens, you can cut and paste it into the
+    correct spot. Make sure the code chunk is aligned to the left margin
+    of this document. Often it may be easier to just store a code chunk
+    on your clip board and paste it in when you need one.
+  \item
+    You may need to knit your document occasionally to answer questions
+    related to R output.
+  \end{enumerate}
+\item
+  Submit two documents: a R Markdown file and a pdf. These files should
+  be named ``\emph{LastF}-HW2.Rmd'' and ``\emph{LastF}-HW2.pdf''.
+\end{enumerate}
+
+\#\#SurveyData
+
+An in-class survey was given to 362 introductory statistics students
+over several years. The StudentSurvey data contains 17 variables
+recorded for each student. They are as follows:
+
+\emph{Year}: Year in school: FirstYear, Sophomore, Junior, or Senior
+
+\emph{Gender}: M or F
+
+\emph{Smoke}: ``No'' or ``Yes''
+
+\emph{Award}: Preferred award: Academy, Nobel or Olympic
+
+\emph{HigherSAT}: Which SAT score was higher: Math or Verbal
+
+\emph{Exercise}: Hours of exercise per week
+
+\emph{TV}: Hours of TV viewing per week
+
+\emph{Height}: Height in inches
+
+\emph{Weight}: Weight in pounds
+
+\emph{Siblings}: Number of Siblings
+
+\emph{BirthOrder}: Birth order: 1=oldest, 2=second oldest, etc.
+
+\emph{VerbalSAT}: Verbal SAT score
+
+\emph{MathSAT}: Math SAT score
+
+\emph{SAT}: Combined Verbal + Math SAT
+
+\emph{GPA}: College GPA
+
+\emph{Pulse}: Pulse Rate (beats per minute)
+
+\emph{Piercings}: Number of body piercings
+
+The \textbf{StudentSurvey} data can be downloaded from the folder for
+homework 2 on Blackboard. Put this data set in your folder for homework
+2.
+
+To read these data into your R Console:
+
+\begin{enumerate}
+\def\labelenumi{\roman{enumi}.}
+\item
+  In the menu for RStudio above, select \emph{Tools-\textgreater Import
+  Dataset-\textgreater From Text File\ldots{}} (depending on the version
+  of RStudio you are using, you may need to select
+  \emph{File-\textgreater Import Dataset-\textgreater From
+  CSV\ldots{}}).
+\item
+  Navigate to the correct file in your folder for homework 2.
+\item
+  Click on the StudentSurvey file and choose \emph{Open}.
+\item
+  A window will pop up where you can preview the data set and possibly
+  choose different options for downloading this data. For this data set,
+  the defaults are appropriate. Click once on \emph{Import} to read the
+  data into the R Console.
+\end{enumerate}
+
+You now should see this data listed in the ``Environment'' window in the
+upper right corner of RStudio.
+
+\hypertarget{problem-1}{%
+\subsubsection{Problem 1}\label{problem-1}}
+
+To read the data into this R Markdown document, we will use the
+\texttt{read.csv()} function in R. Fortunately, this function was just
+used in the R Console. {[}Some versions of RStudio may use the function
+\texttt{read\_csv()} from the library \texttt{readr}.{]}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  Create a code chunk here. Copy the code in the R console below that
+  starts with \texttt{StudentSurvey\textless{}-read.csv} (or
+  \texttt{StudentSurvey\textless{}-read\_csv}) and paste it into this
+  code chunk.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{SS <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/HW2/StudentSurvey(3).txt"}\NormalTok{)}
+
+\KeywordTok{names}\NormalTok{(SS)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "Year"       "Gender"     "Smoke"      "Award"      "HigherSAT" 
+##  [6] "Exercise"   "TV"         "Height"     "Weight"     "Siblings"  
+## [11] "BirthOrder" "VerbalSAT"  "MathSAT"    "SAT"        "GPA"       
+## [16] "Pulse"      "Piercings"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{dim}\NormalTok{(SS)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 362  17
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\item
+  In the code chunk above also include code to do the following:
+
+  \begin{enumerate}
+  \def\labelenumii{\roman{enumii}.}
+  \tightlist
+  \item
+    list the variable names
+  \item
+    get the dimension of the data
+  \end{enumerate}
+\item
+  Suppose the population of interest is all college students. What would
+  you call the sampling method used for this study? How does this affect
+  the interpretation of any analysis performed on these data?
+\end{enumerate}
+
+\begin{quote}
+I would consider this a Non-probability sample because there are many
+units in the population whose probability of selection is 0,
+e.g.~students NOT in stats. Furthermore, I would consider this a
+convenience study because it's a lot easier to reach out to the
+population that you already have access too rather than attempting to
+randomly sample all university students*
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{3}
+\item
+  List the variable types of the following (be as specific as
+  possible!):
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \item
+    TV - \emph{Numerical, Discrete, Ratio, Integer}
+  \item
+    Award - \emph{Nominal Categorical Factor w/ 3 Levels}
+  \item
+    Birth Order - \emph{Ordinal, Categorical, Integer}
+  \item
+    Pulse - \emph{Numerical, Continuous, Ratio, Integer}
+  \item
+    GPA - \emph{Numerical, Continuous, Ratio, Float}
+  \item
+    Piercings - \emph{Numerical, Discrete, Ratio, Integer}
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{problem-2}{%
+\subsubsection{Problem 2}\label{problem-2}}
+
+One of the questions asked on the \texttt{StudentSurvey} was, ``Which
+award would you prefer to win: an Academy Award, a Nobel Prize, or an
+Olympic gold medal?''
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  Which award was most popular amongst students? Create a table of
+  counts for \texttt{Award} with R's \texttt{table()} function.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t =}\StringTok{ }\KeywordTok{table}\NormalTok{(SS}\OperatorTok{$}\NormalTok{Award)}
+\KeywordTok{print}\NormalTok{(t)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Academy   Nobel Olympic 
+##      31     149     182
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{paste0}\NormalTok{(}\StringTok{"The most popular award is "}\NormalTok{, }\KeywordTok{names}\NormalTok{(}\KeywordTok{which}\NormalTok{(t }\OperatorTok{==}\StringTok{ }\KeywordTok{max}\NormalTok{(t))))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "The most popular award is Olympic"
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Was the proportion of students preferring each award different for
+  women and men? Explain. Complete the following steps to answer this
+  question.
+
+  \begin{enumerate}
+  \def\labelenumii{\roman{enumii}.}
+  \tightlist
+  \item
+    Create a relative frequency bar chart for \texttt{Award} by
+    \texttt{Gender}. The proportions of the preferred awards for each
+    gender should sum to 1. You may get the necessary counts using the
+    \texttt{table()} function in R, but it may take more than 1 step. Do
+    all calculations necessary in the code chunk.
+  \item
+    Title this chart ``Award by Gender''
+  \item
+    The bars for Males and Females should be side by side
+  \item
+    Include a legend for gender using ``F'' and ``M'' as the labels
+  \item
+    Make the bars vertical
+  \item
+    Set \texttt{ylim=c(0,\ 0.6)}
+
+    \begin{enumerate}
+    \def\labelenumiii{\roman{enumiii}.}
+    \setcounter{enumiii}{6}
+    \tightlist
+    \item
+      Include the option, \texttt{args.legend\ =\ list(x="topleft")}
+    \item
+      Don't forget to answer the question!
+    \end{enumerate}
+  \end{enumerate}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{barplot}\NormalTok{(}\KeywordTok{prop.table}\NormalTok{(}\KeywordTok{table}\NormalTok{(SS}\OperatorTok{$}\NormalTok{Gender,SS}\OperatorTok{$}\NormalTok{Award)),}
+        \DataTypeTok{main =} \StringTok{"Award by Gender"}\NormalTok{,}
+        \DataTypeTok{legend.text =} \KeywordTok{c}\NormalTok{(}\KeywordTok{levels}\NormalTok{(SS}\OperatorTok{$}\NormalTok{Gender)),}
+        \DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\FloatTok{0.6}\NormalTok{),}
+        \DataTypeTok{args.legend =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{x=}\StringTok{"topleft"}\NormalTok{),}
+        
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW2-3-_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\hypertarget{problem-3}{%
+\subsubsection{Problem 3}\label{problem-3}}
+
+Another variable recorded for the \texttt{StudentSurvey} is college GPA.
+Here we will look at the relationship between college GPA and
+\texttt{Award}.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  First, create a probability histogram of \texttt{GPA}, set
+  \texttt{breaks=50}.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(SS}\OperatorTok{$}\NormalTok{GPA, }\DataTypeTok{breaks =} \DecValTok{50}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW2-3-_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\begin{verbatim}
+  i. How would you describe the distribution of GPA?
+  
+\end{verbatim}
+
+\begin{quote}
+I would describe the distribution of this graph as bimodal*
+\end{quote}
+
+\begin{verbatim}
+  ii. Based on the histogram alone, estimate the range of the most common GPA values.
+  
+\end{verbatim}
+
+\begin{quote}
+I would say that 50\% of the GPA values fall between 2.9 and 3.4*
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Create boxplots for \texttt{GPA} separated by \texttt{Award}.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(SS}\OperatorTok{$}\NormalTok{GPA}\OperatorTok{~}\NormalTok{SS}\OperatorTok{$}\NormalTok{Award,SS)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW2-3-_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\roman{enumi}.}
+\tightlist
+\item
+  Do there appear to be any differences between the median GPAs of the
+  three groups? Support your answer using information from the plots.
+\end{enumerate}
+
+\begin{quote}
+While the median GPA for those who chose Academy and Nobel prizes appear
+very similar, the GPA of those who chose the Olympic Medal appear lower
+as indicated by the median line in the boxplot.**
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{\roman{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  One group has a student whose GPA is different from the others. Which
+  group does he/she belong to? What is the statistical term for this
+  observation?
+\end{enumerate}
+
+\begin{quote}
+The outlier in the dataset belongs to the Nobel group. This is indicated
+by the circle well below the lower hinge.**
+\end{quote}
+
+\hypertarget{problem-4}{%
+\subsubsection{Problem 4}\label{problem-4}}
+
+Yet another variable collected by the student survey was
+\texttt{Exercise}. This variable recorded the number of hours each
+student exercised per week. Here we will look at the relationship
+between \texttt{Exercise} and \texttt{Award}.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  Use the function \texttt{hist} to create a histogram of the number of
+  hours of exercise per week for Sophomores. Be sure to customize the
+  plot so that it is clear what it is conveying (e.g., label the axes to
+  convey what is being shown) and perhaps adjust \texttt{breaks}
+  manually (recall that \texttt{?hist} will give you information about
+  the arguments). How would you describe the distribution of
+  \texttt{Exercise} for the Sophomore students?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(SS}\OperatorTok{$}\NormalTok{Exercise[}\KeywordTok{which}\NormalTok{(SS}\OperatorTok{$}\NormalTok{Year}\OperatorTok{==}\StringTok{"Sophomore"}\NormalTok{)],}
+     \DataTypeTok{breaks=}\DecValTok{20}\NormalTok{,}
+     \DataTypeTok{main =} \StringTok{"Histogram of hrs/wk of exercise of Sophomores"}\NormalTok{,}
+     \DataTypeTok{xlab =} \StringTok{"hr of exercise/week"}
+\NormalTok{     )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW2-3-_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\begin{quote}
+I would describe the distribution as unimodal with a left skew
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Use the \texttt{summary} function to get summary statistics for
+  \texttt{Exercise}. What was the range of \texttt{Exercise}? If a
+  student exercised more hours per week than half of the sample, what is
+  the least amount of exercise he/she was getting per week?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(SS}\OperatorTok{$}\NormalTok{Exercise)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##   0.000   5.000   8.000   9.054  12.000  40.000       1
+\end{verbatim}
+
+\begin{quote}
+The range of exercise is 0 - 40. A student exercising more than half of
+sample would have to be exercising at least 10 hrs/week
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Create boxplots of \texttt{Exercise} by \texttt{Award}. What can be
+  said about the distribution of \texttt{Exercise} for the students who
+  preferred to win an Olympic gold medal in comparison to the
+  distribution of \texttt{Exercise} for those who chose an Academy Award
+  or a Nobel Prize?
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(SS}\OperatorTok{$}\NormalTok{Exercise}\OperatorTok{~}\NormalTok{SS}\OperatorTok{$}\NormalTok{Award,SS)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW2-3-_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{quote}
+Those who aspire to an olympic medal, on average exercise more than
+those who aspire to a nobel prize or an academy award.
+\end{quote}
+
+\hypertarget{problem-5}{%
+\subsubsection{Problem 5}\label{problem-5}}
+
+Is there a relationship between the number of hours of TV you watch and
+your GPA?
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  Create a scatterplot of \texttt{GPA} by \texttt{TV} using the code
+  below.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(SS}\OperatorTok{$}\NormalTok{TV, SS}\OperatorTok{$}\NormalTok{GPA)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW2-3-_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Does there appear to be a relationship between the number of hours
+  watching TV and college GPA?
+\end{enumerate}
+
+\begin{quote}
+There seems to be a compression in the variation of scores as tv
+watching increases but the mean appears to remain the same.
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Let's take a look at this relationship again after excluding students
+  who watches 40 hours of TV a week. Do this in two lines. First, create
+  a new data frame (using the \texttt{subset} function). Second, use
+  \texttt{plot}.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# First line: create new data frame that keeps only students with TV under 40  }
+\NormalTok{ss.subset =}\StringTok{ }\KeywordTok{subset}\NormalTok{(SS,SS}\OperatorTok{$}\NormalTok{TV}\OperatorTok{<}\DecValTok{40}\NormalTok{)}
+\CommentTok{# Second line: call plot function with this newly created data frame}
+\KeywordTok{plot}\NormalTok{(ss.subset}\OperatorTok{$}\NormalTok{TV,ss.subset}\OperatorTok{$}\NormalTok{GPA)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW2-3-_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  We can look at the difference in this relationship between males and
+  females by coloring the female observation red. Is this relationship
+  any different for females compared to males? You will do this in three
+  lines of code. In the first line, simply repeat the previous call to
+  \texttt{plot} that you wrote in part c; in the second line, create a
+  data frame called \texttt{females} that only has the rows
+  corresponding to women; the third line is written for you.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# First line: Call to plot function from second line of part c}
+\KeywordTok{plot}\NormalTok{(ss.subset}\OperatorTok{$}\NormalTok{TV,ss.subset}\OperatorTok{$}\NormalTok{GPA)}
+\CommentTok{# Second line: create data frame called females}
+\NormalTok{females =}\StringTok{ }\KeywordTok{subset}\NormalTok{(SS,SS}\OperatorTok{$}\NormalTok{Gender}\OperatorTok{==}\StringTok{"F"}\NormalTok{)}
+\KeywordTok{points}\NormalTok{(females}\OperatorTok{$}\NormalTok{TV, females}\OperatorTok{$}\NormalTok{GPA, }\DataTypeTok{col=}\StringTok{'red'}\NormalTok{) }\CommentTok{# this is third line}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW2-3-_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+\begin{quote}
+There does not seem to be a difference in the the effect of TV watching
+on college GPA between males and females.
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  What was the effect of the \texttt{points()} function above?
+  \textgreater{} \texttt{points()} draws points at specified coordinates
+  and the argument \texttt{col\ =\ "red"} colors the red.
+\end{enumerate}
+
+\hypertarget{problem-6}{%
+\subsubsection{Problem 6}\label{problem-6}}
+
+For this problem, we will examine the variable, \texttt{Piercings}.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  In R, output from using the \texttt{class()} function on a variable
+  tells you what class R has given that variable.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{class}\NormalTok{(SS}\OperatorTok{$}\NormalTok{Year)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "factor"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{class}\NormalTok{(SS}\OperatorTok{$}\NormalTok{Piercings)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "integer"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{class}\NormalTok{(SS}\OperatorTok{$}\NormalTok{GPA)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  \texttt{Piercings} is of class ``integer''. For this problem, we will
+  consider \texttt{Piercings} as a ``factor'' (categorical variable).
+  Run the following to change the class of \texttt{Piercings}.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Piercings <-}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(SS}\OperatorTok{$}\NormalTok{Piercings)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Create a pie chart of \texttt{Piercings} using the following code. Is
+  this a good graphical summary of these data? Explain.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pie}\NormalTok{(}\KeywordTok{table}\NormalTok{(Piercings))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW2-3-_files/figure-latex/unnamed-chunk-14-1.pdf}
+
+\begin{quote}
+It's a pretty terrible image. It's hard to read, or to make observations
+and inferences from.
+\end{quote}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  What might be a better way to graphically describe the distribution of
+  \texttt{Piercings}?
+\end{enumerate}
+
+\begin{quote}
+A barplot might be nice. I would have said a histogram, but since we can
+no longer considering the values as integers, but rather as factors, the
+histogram would not be appropriate.
+\end{quote}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{barplot}\NormalTok{(}\KeywordTok{table}\NormalTok{(SS}\OperatorTok{$}\NormalTok{Piercings))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW2-3-_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Suppose we want to reduce the number of levels for \texttt{Piercings}
+  from 11 to 8. What might be the best way to re-group these data so
+  that the pie chart is a better representation of the distribution of
+  \texttt{Piercings}?
+\end{enumerate}
+
+\begin{quote}
+Looking at a histogram of the data it becomes clear that very few people
+have 7 or more piercings. Therefore it would make the pie chart easier
+to ready if we collapse the last 3 factors resulting in the factors
+0,1,2,3,4,5,6,7+.
+\end{quote}
+
+
+\end{document}
