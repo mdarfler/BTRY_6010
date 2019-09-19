@@ -1,0 +1,183 @@
+---
+title: 'Homework 3: Probability'
+output: html_document
+---
+  
+----
+
+# NAME: Your Name 
+# NETID: Your NetID 
+**DUE DATE: September 23, 2019 by 11:59pm (deadline is on Monday instead of Saturday)**  
+
+----
+
+## Instructions
+
+For this homework:
+
+1. All calculations (e.g., multiplying two numbers) must be done in code chunks (i.e., use R as a calculator).  This will allow us to see the steps you took to get the final answer.
+
+2. Furthermore, DO NOT JUST INCLUDE A CALCULATION:
+  
+    i) You must explain the probability rules you are using for each calculation.
+  
+    ii) You must include any probability formulas you are using.
+  
+3. Note that when you write formulas in a Rmd file, you do not put these in a code chunk (since you only put R code in a code chunk).  Instead, you can write this out as text.  For example, P(A|B)=P(A and B) / P(B).  Or if you want to use math symbols such as the intersection sign, you can put this between dollar signs.  For example, $P(A|B) = P(A\cap B) / P(B)$ (knit this to see what it produces).  Or even fancier, $P(A|B) = \frac{P(A\cap B)}{P(B)}$.  This would look better if we put it on its own line (by using a double dollar sign):
+$$P(A|B) = \frac{P(A\cap B)}{P(B)}.$$
+However, notice that $P(A and B)$ doesn't look great when between dollar signs.  To make it so that "and" is displayed as a word you can use $P(A\text{ and }B)$.  To express the complement of $A$, use $A^C$.
+
+4. To write out that two variables $x$ and $y$ are multiplied, you can use $x \times y$ or even just $xy$.
+
+### Problem 1
+
+A box contains 20 tickets, numbered from 1 to 20. A ticket is drawn at random from the box.  Then this ticket is replaced in the box and a second ticket is drawn at random.  Find the probabilities of the following events:
+
+
+  a) $A$: the first ticket is 6 and the second ticket is 17.
+  
+  b) $B$: the numbers on the two tickets are consecutive integers, meaning the first number is one smaller than the second.
+  
+  c) $C$: the second number is bigger than the first number drawn. If it is helpful, you can use the following fact: The sum of the numbers 1 through n is equal to n(n+1)/2. 
+  
+  d) Now assume the first number drawn is not replaced back into the box.  Repeat (a) - (c).
+  
+  e) In this part, we use Monte Carlo simulation to check our calculations.  For example, for part (a), the following code draws two tickets with replacement from the box  repeatedly (100000 times) and then checks in each case whether event $A$ occurred or not.
+
+```{r}
+set.seed(1) # this line sets the state of the random number generator so we all 
+# will get the same answer.
+num_simulations = 100000 # how many simulations?
+counter = 0 # how many times has A occurred in our simulation?
+for (i in 1:num_simulations) {
+  twotickets = sample(1:20, 2, replace = TRUE) # choose 2 random ticket with replacement
+  if (twotickets[1] == 6 & twotickets[2] == 17) {
+    counter <- counter + 1
+  }
+}
+counter / num_simulations
+```
+
+i) Write a code chunk to approximate the answer to part (b). Hint: Start by copying and pasting the code chunk above and then modify it.
+ii) Do the same for part (c).
+iii) Now approximate the probability of event $A$ in the case that the first number drawn is not replaced back into the box.  Hint: Type `?sample` in the console and look at the arguments `size` and `replace`. 
+
+
+### Problem 2
+
+Betsy, a veteran girl scout, has determined over time the exact distribution of the number of boxes of cookies she will sell at a given house in her neighborhood.  Each box of cookies can be purchased for $5.  Assume the number of boxes of cookies sold at a house is independent of the number sold at any other house and that her neighbors never buy more than 2 boxes of cookies.
+
+
++-------------+-------+---------+-------+
+| Number Sold |  0    |   1     |   2   |
++=============+=======+=========+=======+
+| Probability |   x   |   0.4   |  0.5  |
++-------------+-------+---------+-------+
+
+  a) What is x?
+  
+  b) What is the sample space for the first house she stops at to sell cookies?
+  
+  c) What is the sample space for the first 2 houses?
+  
+  d) What is the probability of event $A$: the first and second houses both buy at least one box?
+  
+  e) What is the probability of event $B$: Betsy has sold exactly $10 worth of cookies after stopping at two houses?
+  
+  f) What is the probability of event $C$: Betsy makes her first sale at the 4th house?
+ 
+
+### Problem 3
+
+Suppose the world is in an umbrella crisis and a family of 3, Bob, Abby, and Kelly, can only afford one umbrella that they will share.  Every day, an individual from this family is randomly selected to carry the umbrella (Umbrellas are now luxury items; so whether it rains or not, you want to carry it).  The forecast for the next 3 days is the following: 
+
+  * 20% chance rain on Sunday
+  * 50% chance rain on Monday
+  * 80% chance rain on Tuesday
+  
+Assume the events for rain on different days are all independent.
+  
+
+  a) What is the sample space for:
+  
+     $X$ = Who carries the umbrella on any given day
+     
+     $Y$ = Whether it rains on any given day
+    
+  b) What is the joint sample space of $X$ and $Y$ for any given day?
+  
+  c) Kelly would really like to get the umbrella on Monday and Tuesday because she wants everyone at school to see her umbrella.  
+  
+    i. What is the sample space for $Z$ = Who gets the umbrella on Monday and Tuesday?
+    
+    ii. What is the probability of event $A$: Kelly gets the umbrella on Monday and Tuesday?
+    
+    iii. What is the probability of event $B$: Kelly gets the umbrella on Monday and it rains?
+    
+  d) What is the probability of event $C$: it rains Sunday and Monday, but not on Tuesday?
+  
+  e) What is the sample space for $T$ =  whether it rains on Monday and Tuesday?  Assign probabilities to all of the simple events in this sample space.
+  
+  f) Using your result from (e), determine the probability of event $D$: it rains on Monday or Tuesday (but not both).
+  
+ 
+  g) What is the complement to the event $E$: It rains all three days?
+  
+  h) What is the probability of event $F$: Bob gets the umbrella at least once in the three days?
+  
+  i) What is the probability of event $G$: it rains 2 of the three days?
+  
+### Problem 4
+
+A manufacturing process produces integrated circuit chips.  Over the long run the fraction of bad chips produced by the process is about 20%.  Thoroughly testing a chip to determine whether it is good or bad is rather expensive, so a cheap test is tried.  All good chips will pass the cheap test, but so will 10% of the bad chips.
+
+  a) Given a chip passes the test what is the probability that it is a good chip?
+  
+  b) If a company using this manufacturing process sells all chips which pass the cheap test, over the long run what percentage of chips sold will be bad?
+  
+### Problem 5
+
+From its founding through 2012 the Hockey Hall of Fame has inducted 251 players.  The following table shows the number of players by place of birth and position played.
+
++-----------+------------+------------+----------+
+|           |  Offense   |   Defense  |   Goalie |
++===========+============+============+==========+
+|Canada     |    123     |    71      |    33    | 
++-----------+------------+------------+----------+
+|USA        |    7       |    2       |    1     |
++-----------+------------+------------+----------+
+|Europe     |    6       |    3       |    2     |
++-----------+------------+------------+----------+ 
+|Other      |    2       |    1       |    0     |
++-----------+------------+------------+----------+  
+
+Define events:
+
+C: Born in Canada
+
+D: Plays defense
+
+
+  a) What is the probability an inductee chosen at random is Canadian?
+  
+  b) What is the probability a player chosen at random is not a defenseman?
+  
+  c) What is the probability a player chosen at random is a defenseman born in Canada?
+  
+  d) What is the probability a player chosen at random is either born in Canada or a defenseman?
+  
+  e) What is the probability a Canadian inductee plays defense?
+  
+  f) What is the probability that an inductee who plays defense is Canadian?
+  
+ 
+### Problem 6 (Bonus Problem, optional)
+
+This is a continuation of the poker hand exercise from the lab (Problem 5 of Lab 4). Perform a Monte Carlo simulation to compute the probability of...
+
+a) a full house (a full house has a 3-of-a-kind and a pair: e.g., 5, 5, 8, 8, 8).
+
+b) a three-of-a-kind (e.g., 5, 5, 5, 1, 2).
+
+c) a hand with the values of all five cards being different from each other.
+
