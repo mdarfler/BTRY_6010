@@ -1,0 +1,316 @@
+---
+title: "DarflerM-HW2"
+output:
+  html_document:
+    highlight: pygments
+    theme: cerulean
+  pdf_document: default
+  word_document: default
+---
+
+----
+
+# NAME: Michael Darfler
+# NETID: mbd25
+**DUE DATE: September 14, 2019 by 11:59pm **  
+
+----
+
+
+## **Homework 2 Instructions **
+ 
+1.  In this homework we will explore the `StudentSurvey` data described below.  For each problem:
+
+    a)  Answer all questions
+    
+    b)  Insert code chunks directly under any problems that require you to use R and type in code as needed.  In particular, make sure code chunks are included for any requested plots.
+    
+    c) Answer any questions related to the problem in the .Rmd document directly under the question 
+    
+    d) Note: Occasionally when you insert a code chunk it may not go where you intend it to.  If this happens, you can cut and paste it into the correct spot.  Make sure the code chunk is aligned to the left margin of this document.  Often it may be easier to just store a code chunk on your clip board and paste it in when you need one.
+    
+    e) You may need to knit your document occasionally to answer questions related to R output.
+  
+2. Submit two documents:  a R Markdown file and a pdf.  These files should be named "*LastF*-HW2.Rmd" and "*LastF*-HW2.pdf".
+
+
+## SurveyData
+
+An in-class survey was given to 362 introductory statistics students over several years. The StudentSurvey data contains 17 variables recorded for each student.  They are as follows:
+
+*Year*: Year in school: FirstYear, Sophomore, Junior, or Senior
+
+*Gender*: M or F
+
+*Smoke*: "No" or "Yes"
+
+*Award*: Preferred award: Academy, Nobel or Olympic
+
+*HigherSAT*: Which SAT score was higher: Math or Verbal
+
+*Exercise*: Hours of exercise per week
+
+*TV*: Hours of TV viewing per week
+
+*Height*: Height in inches
+
+*Weight*: Weight in pounds
+
+*Siblings*: Number of Siblings
+
+*BirthOrder*: Birth order: 1=oldest, 2=second oldest, etc.
+
+*VerbalSAT*: Verbal SAT score
+
+*MathSAT*: Math SAT score
+
+*SAT*: Combined Verbal + Math SAT
+
+*GPA*: College GPA
+
+*Pulse*: Pulse Rate (beats per minute)
+
+*Piercings*: Number of body piercings
+
+The **StudentSurvey** data can be downloaded from the folder for homework 2 on Blackboard.  Put this data set in your folder for homework 2.
+
+To read these data into your R Console:
+
+  i. In the menu for RStudio above, select *Tools->Import Dataset->From Text File...* (depending on the version of RStudio you are using, you may need to select *File->Import Dataset->From CSV...*).
+    
+  ii. Navigate to the correct file in your folder for homework 2.
+    
+  iii. Click on the StudentSurvey file and choose *Open*. 
+    
+  iv. A window will pop up where you can preview the data set and possibly choose different options for downloading this data.  For this data set, the defaults are appropriate.  Click once on *Import* to read the data into the R Console.
+    
+You now should see this data listed in the "Environment" window in the upper right corner of RStudio.
+ 
+### Problem 1
+ 
+To read the data into this R Markdown document, we will use the `read.csv()` function in R. Fortunately, this function was just used in the R Console. [Some versions of RStudio may use the function `read_csv()` from the library `readr`.] 
+
+  a) Create a code chunk here.  Copy the code in the R console below that starts with `StudentSurvey<-read.csv` (or `StudentSurvey<-read_csv`) and paste it into this code chunk.
+  
+```{r}
+SS <- read.csv("https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/HW2/StudentSurvey(3).txt")
+
+names(SS)
+dim(SS)
+```
+  
+
+  b) In the code chunk above also include code to do the following:
+    
+      i. list the variable names
+      ii. get the dimension of the data
+
+  c) Suppose the population of interest is all college students. What would you call the sampling method used for this study?  How does this affect the interpretation of any analysis performed on these data?
+  
+> I would consider this a Non-probability sample because there are many units in the population whose probability of selection is 0, e.g. students NOT in stats. Furthermore, I would consider this a convenience study because it's a lot easier to reach out to the population that you already have access too rather than attempting to randomly sample all university students. This could not be used to make generalized statements about the populations*
+
+  d) List the variable types of the following (be as specific as possible!):
+    
+        1. TV  - **Numerical, Discrete, Ratio, Integer**
+        
+        2. Award - **Categorical Factor w/ 3 Levels**
+        
+        3. Birth Order -  **Ordinal, Categorical, Integer**
+        
+        4. Pulse - **Numerical, Continuous, Ratio, Integer**
+        
+        5. GPA - **Numerical, Continuous, Ratio, Float**
+        
+        6. Piercings - **Numerical, Discrete, Ratio, Integer**
+        
+### Problem 2
+
+One of the questions asked on the `StudentSurvey` was, "Which award would you prefer to win: an Academy Award, a Nobel Prize, or an Olympic gold medal?"
+
+  a) Which award was most popular amongst students?  Create a table of counts for `Award` with R's `table()` function.
+
+```{r}
+t = table(SS$Award)
+print(t)
+paste0("The most popular award is ", names(which(t == max(t))))
+```  
+  
+  b) Was the proportion of students preferring each award different for women and men? Explain.  Complete the following steps to answer this question.
+      i. Create a relative frequency bar chart for `Award` by `Gender`. The proportions of the preferred awards for each gender should sum to 1.  You may get the necessary counts using the `table()` function in R, but it may take more than 1 step.  Do all calculations necessary in the code chunk.
+      ii. Title this chart "Award by Gender"
+      iii. The bars for Males and Females should be side by side
+      iv. Include a legend for gender using "F" and "M" as the labels
+      v. Make the bars vertical
+     vi. Set `ylim=c(0, 0.6)`
+    vii. Include the option, `args.legend = list(x="topleft")`
+    viii. Don't forget to answer the question!
+    
+```{r}
+
+
+barplot(prop.table(table(SS$Gender,SS$Award)),
+        main = "Award by Gender",
+        legend.text = c(levels(SS$Gender)),
+        ylim = c(0,0.6),
+        args.legend = list(x="topleft"),
+        col=c("orange","blue"),
+        xlab = "Award Type",
+        ylab = "Probability",
+        beside = T
+)
+```
+
+> The proportions for each award *were* different for men and women. Women preferred Academy awards more than men, and men preferred Olympic medals more than women. Men and women preferred Nobel prizes at about the same rate.
+    
+### Problem 3
+
+Another variable recorded for the `StudentSurvey` is college GPA.  Here we will look at the relationship between college GPA and `Award`.
+
+  a) First, create a probability histogram of `GPA`, set `breaks=50`.
+  
+```{r}
+h <- hist(SS$GPA, 
+          breaks = 50,
+          plot = F)
+h$counts=h$counts/sum(h$counts)
+plot(h,
+    xlab = "GPA",
+    main = "Histogram of GPA")
+```
+      
+      i. How would you describe the distribution of GPA?
+      
+>I would describe the distribution of this graph as bimodal*
+      
+      ii. Based on the histogram alone, estimate the range of the most common GPA values.
+      
+>I would say that 50% of the GPA values fall between 2.9 and 3.4*
+      
+  b) Create boxplots for `GPA` separated by `Award`.
+  
+```{r}
+boxplot(SS$GPA~SS$Award, xlab = "Award Type", ylab = "GPA", main = "GPA by Award")
+```
+  
+  
+  i. Does there appear to be any differences between the median GPAs of the three groups?  Support your answer using information from the plots.
+      
+>While the median GPA for those who chose Academy and Nobel prizes appear very similar, the GPA of those who chose the Olympic Medal appear lower as indicated by the median line in the boxplot.
+      
+  ii. One group has a student whose GPA is different from the others.  Which group does he/she belong to?  What is the statistical term for this observation?
+      
+>The *outlier* in the dataset belongs to the Nobel group. This is indicated by the circle well below the lower whisker**
+
+### Problem 4
+
+Yet another variable collected by the student survey was `Exercise`.  This variable recorded the number of hours each student exercised per week.  Here we will look at the relationship between `Exercise` and `Award`.
+
+  a) Use the function `hist` to create a histogram of the number of hours of exercise per week for Sophomores.  Be sure to customize the plot so that it is clear what it is conveying (e.g., label the axes to convey what is being shown) and perhaps adjust `breaks` manually (recall that `?hist` will give you information about the arguments).   How would you describe the distribution of `Exercise` for the Sophomore students?
+
+```{r}
+ss.sophomores = subset(SS, Year == "Sophomore")
+hist(ss.sophomores$Exercise,
+     breaks=20,
+     main = "Histogram of hrs/wk of exercise of Sophomores",
+     xlab = "hr of exercise/week"
+     )
+```
+
+> I would describe the distribution as unimodal with a left skew
+
+  b) Use the `summary` function to get summary statistics for `Exercise`.  What was the range of `Exercise`?  If a student exercised more hours per week than half of the sample, what is the least amount of exercise he/she was getting per week?
+  
+```{r}
+summary(SS$Exercise)
+```
+
+>The range of exercise is 0 - 40. A student exercising more than half of sample would have to be exercising at least 10 hrs/week since the data is a discrete integer.
+ 
+  c) Create boxplots of `Exercise` by `Award`.  What can be said about the distribution of `Exercise` for the students who preferred to win an Olympic gold medal in comparison to the distribution of `Exercise` for those who chose an Academy Award or a Nobel Prize?
+  
+```{r}
+boxplot(SS$Exercise~SS$Award)
+```
+
+> Those who aspire for an Olympic medal on average exercise more than those who aspire to a Nobel prize or an academy award.
+    
+### Problem 5    
+
+Is there a relationship between the number of hours of TV you watch and your GPA?
+
+  a) Create a scatterplot of `GPA` by `TV` using the code below.
+  
+```{r,eval=TRUE}
+plot(SS$TV, SS$GPA)
+```   
+  
+  b) Does there appear to be a relationship between the number of hours watching TV and college GPA?
+  
+>There seems to be a compression in the variation of scores as TV watching increases but the mean GPA appears to remain the same, i.e. the line of best fit has a slope of 0.
+  
+  c) Let's take a look at this relationship again after excluding students who watch 40 hours of TV a week or more. Do this in two lines.  First, create a new data frame (using the `subset` function). Second, use `plot`.
+  
+```{r,eval=TRUE}
+# First line: create new data frame that keeps only students with TV under 40  
+ss.lessthan40 = subset(SS,TV<40)
+# Second line: call plot function with this newly created data frame
+plot(ss.lessthan40$TV,ss.lessthan40$GPA)
+```
+    
+  d) We can look at the difference in this relationship between males and females by coloring the female observation red.  Is this relationship any different for females compared to males?  You will do this in three lines of code.  In the first line, simply repeat the previous call to `plot` that you wrote in part c; in the second line, create a data frame called `females` that only has the rows corresponding to women; the third line is written for you.
+  
+```{r,eval=TRUE}
+# First line: Call to plot function from second line of part c
+plot(ss.lessthan40$TV,ss.lessthan40$GPA)
+# Second line: create data frame called females
+ss.females = subset(SS,Gender=="F")
+points(ss.females$TV, ss.females$GPA, col='red') # this is third line
+```
+
+>There does not seem to be a difference in the the effect of TV watching on college GPA between males and females.
+  
+  e) What was the effect of the `points()` function above?
+> `points()` draws points at specified coordinates and the argument `col = "red"` colors them red.
+
+### Problem 6 
+ For this problem, we will examine the variable, `Piercings`.  
+ 
+  a) In R, output from using the `class()` function on a variable tells you what class R has given that variable.  
+ 
+```{r, eval=TRUE}
+class(SS$Year)
+class(SS$Piercings)
+class(SS$GPA)
+```
+ 
+  b) `Piercings` is of class "integer".  For this problem, we will consider `Piercings` as a "factor" (categorical variable).  Run the following to change the class of `Piercings`.  
+  
+```{r,eval=TRUE}
+Piercings <- as.factor(SS$Piercings)
+```
+  
+  c) Create a pie chart of `Piercings` using the following code.
+  Is this a good graphical summary of these data?  Explain.
+  
+```{r,eval=TRUE}
+pie(table(Piercings))
+```
+
+> It's a pretty terrible image. It's hard to read, or to make observations and inferences from. This is especially true as the number of piercings goes above 7.
+
+  d) What might be a better way to graphically describe the distribution of `Piercings`?
+  
+> A bar plot might be nice. I would have said a histogram, but since we can no longer considering the values as integers, but rather as factors, the histogram would not be appropriate.
+
+```{r}
+barplot(table(SS$Piercings),
+        xlab = "# of Piercings",
+        ylab = "Count",
+        main = "Distribution of Number of Piercings")
+```
+  
+  
+  e) Suppose we want to reduce the number of levels for `Piercings` from 11 to 8.  What might be the best way to re-group these data so that the pie chart is a better representation of the distribution of `Piercings`?  
+
+
+>Looking at a histogram of the data it becomes clear that very few people have 7 or more piercings. Therefore it would make the pie chart easier to ready if we collapse the last 3 factors resulting in the factors 0,1,2,3,4,5,6,7+.
