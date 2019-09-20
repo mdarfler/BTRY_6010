@@ -1,12 +1,12 @@
 ---
-title: 'Homework 3: Probability'
+title: 'DarflerM-HW3'
 output: html_document
 ---
   
 ----
 
-# NAME: Your Name 
-# NETID: Your NetID 
+# NAME: Michael Darfler
+# NETID: mbd25
 **DUE DATE: September 23, 2019 by 11:59pm (deadline is on Monday instead of Saturday)**  
 
 ----
@@ -33,15 +33,63 @@ However, notice that $P(A and B)$ doesn't look great when between dollar signs. 
 
 A box contains 20 tickets, numbered from 1 to 20. A ticket is drawn at random from the box.  Then this ticket is replaced in the box and a second ticket is drawn at random.  Find the probabilities of the following events:
 
+$$\Omega\ =  \begin{bmatrix}
+    (1,1)       & (1,2) & (1,3) & \dots & (1,20) \\
+    (2,1)       & (2,2) & (2,3) & \dots & (2,20) \\
+     \vdots & \vdots & \vdots & \ddots & \vdots \\
+   (20,1)       & (20,2) & (20,3) &  \dots & (20,20)
+\end{bmatrix} 
+$$
+
+$$n\{\Omega\} = 400$$
+
+```{r}
+n = 20*20 #size of Omega
+```
 
   a) $A$: the first ticket is 6 and the second ticket is 17.
   
+  $P(\text{pick 6 first} \cap \text{pick 17 second}) = {1/400} \times {1/400} = 6.25 \times 10^{-6}$
+  
+```{r}
+1/n * 1/n
+```
+  
+  
   b) $B$: the numbers on the two tickets are consecutive integers, meaning the first number is one smaller than the second.
+  
+  $A = \{ \text{pick two consecutive numbers} \}$
+  $A = \{ (1,2), (2,3), (3,4) \dots (19,20) \}$
+  $n\{A\} = 19$
+  $P(A) = \frac{19}{n} = 0.0475$
+```{r}
+19/n
+```
+  
   
   c) $C$: the second number is bigger than the first number drawn. If it is helpful, you can use the following fact: The sum of the numbers 1 through n is equal to n(n+1)/2. 
   
+  $A = \{\text{the second number is bigger than the first}\}$
+  $n\{ A \} = \sum_{1}^{18} = \frac{18 \times 19}{2} = 171$
+  $P(A) = \frac{171}{n} = 0.4275$
+```{r}
+(18*19/2)/n
+
+```
+  
   d) Now assume the first number drawn is not replaced back into the box.  Repeat (a) - (c).
   
+    d.a)
+    $$ P(6 \cap 17 \text(w/o replacement)) = \frac{1}{n} \times \frac{1}{n-1} =  0.002$$
+```{r}
+(1/20)*(1/19)
+```
+    
+    
+    d.b)
+    
+    d.c)
+    
   e) In this part, we use Monte Carlo simulation to check our calculations.  For example, for part (a), the following code draws two tickets with replacement from the box  repeatedly (100000 times) and then checks in each case whether event $A$ occurred or not.
 
 ```{r}
