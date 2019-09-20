@@ -40,7 +40,6 @@ $$\Omega\ =  \begin{bmatrix}
    (20,1)       & (20,2) & (20,3) &  \dots & (20,20)
 \end{bmatrix} 
 $$
-
 $$n\{\Omega\} = 400$$
 
 ```{r}
@@ -49,19 +48,19 @@ n = 20*20 #size of Omega
 
   a) $A$: the first ticket is 6 and the second ticket is 17.
   
-  $P(\text{pick 6 first} \cap \text{pick 17 second}) = {1/400} \times {1/400} = 6.25 \times 10^{-6}$
-  
+  $$P((6,17)) = \frac{1}{20} \times \frac{1}{20} = \frac{1}{400}$$
 ```{r}
-1/n * 1/n
+1/400
 ```
-  
+
   
   b) $B$: the numbers on the two tickets are consecutive integers, meaning the first number is one smaller than the second.
   
-  $A = \{ \text{pick two consecutive numbers} \}$
-  $A = \{ (1,2), (2,3), (3,4) \dots (19,20) \}$
-  $n\{A\} = 19$
-  $P(A) = \frac{19}{n} = 0.0475$
+  $$A = \{ \text{pick two consecutive numbers} \}$$
+  $$A = \{ (1,2), (2,3), (3,4) \dots (19,20) \}$$
+  $$n\{A\} = 19$$
+  $$P(A) = \frac{19}{n} = 0.0475$$
+  
 ```{r}
 19/n
 ```
@@ -70,25 +69,42 @@ n = 20*20 #size of Omega
   c) $C$: the second number is bigger than the first number drawn. If it is helpful, you can use the following fact: The sum of the numbers 1 through n is equal to n(n+1)/2. 
   
   $A = \{\text{the second number is bigger than the first}\}$
-  $n\{ A \} = \sum_{1}^{18} = \frac{18 \times 19}{2} = 171$
+  
+  $n\{ A \} = \sum_{i = 1}^{19}i = \frac{19 \times 20}{2} = 171$
+  
   $P(A) = \frac{171}{n} = 0.4275$
 ```{r}
-(18*19/2)/n
-
+((19*20)/2)/400
 ```
   
   d) Now assume the first number drawn is not replaced back into the box.  Repeat (a) - (c).
   
     d.a)
-    $$ P(6 \cap 17 \text(w/o replacement)) = \frac{1}{n} \times \frac{1}{n-1} =  0.002$$
+    
+$$ P((6,17) \text{ w/o replacement}) = \frac{1}{n} \times \frac{1}{n-1} =  1 \times 10 ^{-6}$$
+    
 ```{r}
-(1/20)*(1/19)
+(1/n)*(1/(n-1))
 ```
     
     
     d.b)
     
+$$P((i,i+1) \text{ w/o replacement}) = \frac{1}{20} \times  \frac{1}{19} =  0.0026$$    
+```{r}
+(1/20) * (1/19)
+```
+
+$$P(A|B) = \dfrac{P(A \cap B)}{P(B)}$$
+$$\dfrac{\frac{1}{20} \times \frac{1}{19}}{\frac{1}{19}}$$
+
+```{r}
+(1/19)*(1/20)
+```
+
     d.c)
+    
+$$P((i, i < j) \text{ w/o replacement)}) = $$
     
   e) In this part, we use Monte Carlo simulation to check our calculations.  For example, for part (a), the following code draws two tickets with replacement from the box  repeatedly (100000 times) and then checks in each case whether event $A$ occurred or not.
 
@@ -107,9 +123,48 @@ counter / num_simulations
 ```
 
 i) Write a code chunk to approximate the answer to part (b). Hint: Start by copying and pasting the code chunk above and then modify it.
+```{r}
+set.seed(1) # this line sets the state of the random number generator so we all 
+# will get the same answer.
+num_simulations = 100000 # how many simulations?
+counter = 0 # how many times has A occurred in our simulation?
+for (i in 1:num_simulations) {
+  twotickets = sample(1:20, 2, replace = TRUE) # choose 2 random ticket with replacement
+  if (twotickets[2] == twotickets[1] + 1) {
+    counter <- counter + 1
+  }
+}
+counter / num_simulations
+```
 ii) Do the same for part (c).
+```{r}
+#set.seed(1) # this line sets the state of the random number generator so we all 
+# will get the same answer.
+num_simulations = 100000 # how many simulations?
+counter = 0 # how many times has A occurred in our simulation?
+for (i in 1:num_simulations) {
+  twotickets = sample(1:20, 2, replace = TRUE) # choose 2 random ticket with replacement
+  if (twotickets[1] < twotickets[2]) {
+    counter <- counter + 1
+  }
+}
+counter / num_simulations
+```
 iii) Now approximate the probability of event $A$ in the case that the first number drawn is not replaced back into the box.  Hint: Type `?sample` in the console and look at the arguments `size` and `replace`. 
 
+```{r}
+set.seed(1) # this line sets the state of the random number generator so we all 
+# will get the same answer.
+num_simulations = 100000 # how many simulations?
+counter = 0 # how many times has A occurred in our simulation?
+for (i in 1:num_simulations) {
+  twotickets = sample(1:20, 2, replace = F) # choose 2 random ticket with replacement
+  if (twotickets[1] == 6 & twotickets[2] == 17) {
+    counter <- counter + 1
+  }
+}
+counter / num_simulations
+```
 
 ### Problem 2
 
