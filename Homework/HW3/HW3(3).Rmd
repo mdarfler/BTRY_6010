@@ -81,30 +81,27 @@ n = 20*20 #size of Omega
   
     d.a)
     
-$$ P((6,17) \text{ w/o replacement}) = \frac{1}{n} \times \frac{1}{n-1} =  1 \times 10 ^{-6}$$
+$$ P((6,17) \text{ w/o replacement}) = \frac{1}{20} \times \frac{1}{19} =  0.00263$$
     
 ```{r}
-(1/n)*(1/(n-1))
+(1/20)*(1/19)
 ```
     
     
     d.b)
     
-$$P((i,i+1) \text{ w/o replacement}) = \frac{1}{20} \times  \frac{1}{19} =  0.0026$$    
-```{r}
-(1/20) * (1/19)
-```
-
-$$P(A|B) = \dfrac{P(A \cap B)}{P(B)}$$
-$$\dfrac{\frac{1}{20} \times \frac{1}{19}}{\frac{1}{19}}$$
+$$P((i,i+1 \text{ w/o replacement})) = \dfrac{19}{20} \times \dfrac{1}{19} = 0.05 $$
 
 ```{r}
-(1/19)*(1/20)
+(19/20)*(1/19)
 ```
 
     d.c)
     
-$$P((i, i < j) \text{ w/o replacement)}) = $$
+$$P((i, i < j) \text{ w/o replacement)}) = \dfrac{19}{20} \times \dfrac{10}{19} = 0.5$$
+```{r}
+19/20 * 10/19
+```
     
   e) In this part, we use Monte Carlo simulation to check our calculations.  For example, for part (a), the following code draws two tickets with replacement from the box  repeatedly (100000 times) and then checks in each case whether event $A$ occurred or not.
 
@@ -137,6 +134,7 @@ for (i in 1:num_simulations) {
 counter / num_simulations
 ```
 ii) Do the same for part (c).
+
 ```{r}
 #set.seed(1) # this line sets the state of the random number generator so we all 
 # will get the same answer.
@@ -166,6 +164,34 @@ for (i in 1:num_simulations) {
 counter / num_simulations
 ```
 
+```{r}
+set.seed(1) # this line sets the state of the random number generator so we all 
+# will get the same answer.
+num_simulations = 100000 # how many simulations?
+counter = 0 # how many times has A occurred in our simulation?
+for (i in 1:num_simulations) {
+  twotickets = sample(1:20, 2, replace = F) # choose 2 random ticket with replacement
+  if (twotickets[2] == twotickets[1] + 1) {
+    counter <- counter + 1
+  }
+}
+counter / num_simulations
+```
+
+```{r}
+#set.seed(1) # this line sets the state of the random number generator so we all 
+# will get the same answer.
+num_simulations = 100000 # how many simulations?
+counter = 0 # how many times has A occurred in our simulation?
+for (i in 1:num_simulations) {
+  twotickets = sample(1:20, 2, replace = F) # choose 2 random ticket with replacement
+  if (twotickets[1] < twotickets[2]) {
+    counter <- counter + 1
+  }
+}
+counter / num_simulations
+```
+
 ### Problem 2
 
 Betsy, a veteran girl scout, has determined over time the exact distribution of the number of boxes of cookies she will sell at a given house in her neighborhood.  Each box of cookies can be purchased for $5.  Assume the number of boxes of cookies sold at a house is independent of the number sold at any other house and that her neighbors never buy more than 2 boxes of cookies.
@@ -177,18 +203,36 @@ Betsy, a veteran girl scout, has determined over time the exact distribution of 
 | Probability |   x   |   0.4   |  0.5  |
 +-------------+-------+---------+-------+
 
-  a) What is x?
+  a) What is x? **0.1**
   
-  b) What is the sample space for the first house she stops at to sell cookies?
+  b) What is the sample space for the first house she stops at to sell cookies? $\Omega = \{0,1,2 \}$
   
-  c) What is the sample space for the first 2 houses?
+  c) What is the sample space for the first 2 houses? 
+  
+  $$\Omega = \begin{Bmatrix}
+  (0,0) & (0,1) & (0,2) \\
+  (1,0) & (1,1) & (1,2) \\
+  (2,0) & (2,1) & (2,2)
+  \end{Bmatrix}$$
   
   d) What is the probability of event $A$: the first and second houses both buy at least one box?
   
+  $P(A) = P(1 \cup 2) \times P(1 \cup 2) = 0.9 * 0.9 = .81 $
+  
+```{r}
+0.9 * 0.9
+```
+  
   e) What is the probability of event $B$: Betsy has sold exactly $10 worth of cookies after stopping at two houses?
+  
+  $B = \{(0,2),(1,1),(2,0) \} P(B) = \dfrac{3}{9} = 0.3\bar{3}$
   
   f) What is the probability of event $C$: Betsy makes her first sale at the 4th house?
  
+ $C = \{ (0,0,0) \} P(C) = 0.1^3 = 0.001$
+```{r}
+0.1^3
+```
 
 ### Problem 3
 
@@ -205,36 +249,101 @@ Assume the events for rain on different days are all independent.
   
      $X$ = Who carries the umbrella on any given day
      
+$$ X = \{\text{Bob, Abby, Kelly} \}$$
+     
      $Y$ = Whether it rains on any given day
+$$Y = \{ \text{Rain, No Rain} \}$$
     
   b) What is the joint sample space of $X$ and $Y$ for any given day?
+  
+  $$ XY = \begin{Bmatrix}
+  (\text{Bob, Rain}) & (\text{Bob, No Rain}) \\
+  (\text{Abby, Rain}) & (\text{Abby, No Rain}) \\
+  (\text{Kelly, Rain}) & (\text{Kelly, No Rain}) 
+  
+  \end{Bmatrix}
+  $$
   
   c) Kelly would really like to get the umbrella on Monday and Tuesday because she wants everyone at school to see her umbrella.  
   
     i. What is the sample space for $Z$ = Who gets the umbrella on Monday and Tuesday?
+ $$ Z = \begin{Bmatrix}
+(Bob, Bob) & (Bob, Abby) & (Bob, Kelly) \\
+(Abby, Bob) & (Abby, Abby) & (Abby, Kelly) \\
+(Kelly, Bob) & (Kelly, Abby) & (Kelly, Kelly) 
+\end{Bmatrix}
+
+  $$
     
     ii. What is the probability of event $A$: Kelly gets the umbrella on Monday and Tuesday?
     
+$ P(A) = \frac{1}{3} \times \frac{1}{3} = \frac{1}{9}$
+    
     iii. What is the probability of event $B$: Kelly gets the umbrella on Monday and it rains?
+$ P(B) = P(K) \times P(\text{rain on Monday}) = \frac{1}{3} \times \frac{1}{2} = \frac{1}{6}$
     
   d) What is the probability of event $C$: it rains Sunday and Monday, but not on Tuesday?
-  
+$P(C) = P(\text{rain on Sunday}) \times P(\text{rain on Monday}) \ times 1 - P(\text{rain on Tuesday})$
+
+$$\begin{align*} 
+P(C) &= P(\text{rain on Sunday}) \times P(\text{rain on Monday}) \times 1 - P(\text{rain on Tuesday}) \\ 
+&=  0.2 \times 0.5 \times 1 - 0.8 \\
+&= 0.08
+\end{align*}$$
+```{r}
+.2 * .5 * .8
+```
+
   e) What is the sample space for $T$ =  whether it rains on Monday and Tuesday?  Assign probabilities to all of the simple events in this sample space.
   
-  f) Using your result from (e), determine the probability of event $D$: it rains on Monday or Tuesday (but not both).
+$$ 
+T = \begin{Bmatrix}
+(\text{Rain, Rain}) \hspace{0.1cm} P(0.4) & (\text{Rain, No Rain}) \hspace{0.1cm} P(0.4) \\
+(\text{No Rain, Rain}) \hspace{0.1cm} P(0.1) & (\text{No Rain, No Rain}) \hspace{0.1cm} P(0.1) 
+
+\end{Bmatrix}
+$$
+  
+  f) Using your result from (e), determine the probability of event $D$: it rains on Monday or Tuesday (but not both). $P(D) = 0.4 + 0.1 = 0.5$
   
  
   g) What is the complement to the event $E$: It rains all three days?
   
+  $$E^C$$
+  
   h) What is the probability of event $F$: Bob gets the umbrella at least once in the three days?
   
+  $$
+  n \{ \Omega \} = 3^3 = 27 \\
+  \\
+  
+  \begin{align*}
+  P(F) &= P(\text{one day}) + P(\text{two days}) + P(\text{three days}) \\
+  &= 1 - P(F^C) = P(\text{zero days}) \\
+  &= 1- (\dfrac{2}{3} \times \dfrac{2}{3} \times \dfrac{2}{3}) \\
+  &= 1 - \dfrac{8}{27} = \dfrac{19}{27} = 0.70
+  
+  \end{align*}$$
+```{r}
+19/27
+```
+  
   i) What is the probability of event $G$: it rains 2 of the three days?
+  $$ \begin{align*}
+  G &= \{(N,Y,Y), (Y,N,Y), (Y,Y,N) \}\\
+  P(G) &= \sum G_i \prod P(G_{i_{j}}) \\
+  &=  (0.8 \times 0.5 \times 0.8) +  (0.2 \times 0.5 \times 0.8) +  (0.2 \times 0.5 \times 0.2) \\
+  &= 0.32 + 0.08 + 0.02
+  &= 0.42
+  \end{align*}$$
   
 ### Problem 4
 
 A manufacturing process produces integrated circuit chips.  Over the long run the fraction of bad chips produced by the process is about 20%.  Thoroughly testing a chip to determine whether it is good or bad is rather expensive, so a cheap test is tried.  All good chips will pass the cheap test, but so will 10% of the bad chips.
 
   a) Given a chip passes the test what is the probability that it is a good chip?
+  
+  $$P(Good) = P(Pass | Good) \times (P (Good)) + P(Pass | Bad) + P(bad) $$
   
   b) If a company using this manufacturing process sells all chips which pass the cheap test, over the long run what percentage of chips sold will be bad?
   
