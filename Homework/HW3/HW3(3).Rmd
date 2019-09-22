@@ -450,9 +450,46 @@ This is a continuation of the poker hand exercise from the lab (Problem 5 of Lab
 
 a) a full house (a full house has a 3-of-a-kind and a pair: e.g., 5, 5, 8, 8, 8).
 
+```{r}
+n <-  10000
+deck = c(rep(1:13, 4))
+
+fullhouse <- 0
+
+for(i in 1:n){
+  hand <- sample(deck, 5, replace = F)
+  hand.table <- table(hand)
+  if(length(hand.table) != 2) next()
+  if(hand.table[1] == 2 | hand.table[1] == 3) fullhouse = fullhouse + 1
+}
+
+fullhouse/n
+```
 
 
 b) a three-of-a-kind (e.g., 5, 5, 5, 1, 2).
+```{r}
+threes <- 0
+
+for(i in 1:n){
+  hand <- sample(deck, 5, replace = F)
+  hand.table <- table(hand)
+  if(max(hand.table == 3) & length(hand.table) > 2) threes <- threes + 1
+}
+
+threes/n
+```
 
 c) a hand with the values of all five cards being different from each other.
 
+```{r}
+noHand <- 0
+
+for(i in 1:n){
+  hand <- sample(deck, 5, replace = F)
+  hand.table <- table(hand)
+  if(max(hand.table == 1)) noHand <- noHand + 1
+}
+
+noHand/n
+```
