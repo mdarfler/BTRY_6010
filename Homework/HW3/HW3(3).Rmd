@@ -343,9 +343,31 @@ A manufacturing process produces integrated circuit chips.  Over the long run th
 
   a) Given a chip passes the test what is the probability that it is a good chip?
   
-  $$P(Good) = P(Pass | Good) \times (P (Good)) + P(Pass | Bad) + P(bad) $$
+  $$P(bad) = 0.20 \quad P(Good | Pass) = 1 \quad P(Good | Bad) = 0.1 \\
+  \text{Using Bayes Theorem}\\
+  \begin{align*}
+  P(Good | Pass) &= \dfrac{P(Pass | Good) \times P(Good)}{P(Pass | Good) P(Good) + P(Pass | Bad) P(Bad)} \\
+  &=\dfrac{1 \times 0.8}{1 \times 0.8 + 0.1 \times 0.2}\\
+  &= \dfrac{0.8}{0.82}\\
+  &= 0.9756
+  \end{align*}$$
+  
+```{r}
+(1*0.8)/(1*0.8 + 0.1 * 0.2)
+```
   
   b) If a company using this manufacturing process sells all chips which pass the cheap test, over the long run what percentage of chips sold will be bad?
+  
+  $$\begin{align*}
+  \text{%chips sold} &= P(Pass | Good)*P(Good) + P(Pass | Bad) * P(Bad) \\
+  &= 1 \times 0.8 + 0.1 \times 0.2\\
+  &= 0.82
+  \end{align*}$$
+  
+```{r}
+1*0.8 + 0.1 * 0.2
+```
+
   
 ### Problem 5
 
@@ -362,6 +384,13 @@ From its founding through 2012 the Hockey Hall of Fame has inducted 251 players.
 +-----------+------------+------------+----------+ 
 |Other      |    2       |    1       |    0     |
 +-----------+------------+------------+----------+  
+```{r}
+hof <- read.csv("https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/Homework/HW3/hof.csv", header=F)
+rownames(hof) <- c("Canada","USA","Europe","Other")
+colnames(hof)<-c("Offense","Defense","Goalie")
+hof.prop <- prop.table(hof)
+n <- sum(hof)
+```
 
 Define events:
 
@@ -371,23 +400,57 @@ D: Plays defense
 
 
   a) What is the probability an inductee chosen at random is Canadian?
+
+```{r}
+paste0("P(Born in Canda) = ", sum(hof.prop["Canada",]))
+
+
+```
   
   b) What is the probability a player chosen at random is not a defenseman?
   
-  c) What is the probability a player chosen at random is a defenseman born in Canada?
+```{r}
+paste0("P(Defense) = ", sum(hof$Defense)/sum(hof))
+```
   
+  c) What is the probability a player chosen at random is a defenseman born in Canada?
+```{r}
+paste0("P(C and D) = ", hof.prop["Canada","Defense"] )
+```
+
   d) What is the probability a player chosen at random is either born in Canada or a defenseman?
   
+$P(\text{Canada } \cup \text{ Defense}) = P(Canada) + P(Defense) - P(Canada \cap Defense) $
+  
+```{r}
+paste0("P(Canada or Defense" = sum(hof.prop["Canada",] + sum(hof.prop$Defense) - hof.prop["Canada","Defense"]))
+```
+
   e) What is the probability a Canadian inductee plays defense?
+  
+$P(Defense | Canada) = \dfrac{P(Defense \cap Canada)}{P(Canada)}$
+
+```{r}
+hof.prop["Canada","Defense"]/sum(hof.prop["Canada",])
+```
+
   
   f) What is the probability that an inductee who plays defense is Canadian?
   
+$P(Canada | Defense) = \dfrac{P(Canada \cap Defense)}{P(Defense)}$
+
+```{r}
+hof.prop["Canada","Defense"]/sum(hof.prop$Defense)
+```
+
  
 ### Problem 6 (Bonus Problem, optional)
 
 This is a continuation of the poker hand exercise from the lab (Problem 5 of Lab 4). Perform a Monte Carlo simulation to compute the probability of...
 
 a) a full house (a full house has a 3-of-a-kind and a pair: e.g., 5, 5, 8, 8, 8).
+
+
 
 b) a three-of-a-kind (e.g., 5, 5, 5, 1, 2).
 
