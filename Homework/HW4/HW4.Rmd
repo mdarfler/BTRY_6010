@@ -1,0 +1,170 @@
+---
+title: 'DarflerM-HW4'
+output:
+  html_document: default
+  pdf_document: default
+---
+  
+----
+
+# NAME: Michael Darfler 
+# NETID: mbd25
+**DUE DATE: September 28, 2019 by 11:59pm **  
+
+
+----
+
+## Instructions
+
+For this homework:
+
+1. All calculations must be done within your document in code chunks.  Provide all intermediate steps.
+
+2. DO NOT JUST INCLUDE A CALCULATION:
+
+    i) Incude any formulas you are using for a calculation.  You can put these immediately before the code chunk where you actually do the calculation.
+    
+    ii) The corresponding lab provides some notation you can use to express your formulas in R Markdown as well as R Code that can help you calculate probabilities in code chunks.
+    
+
+
+In lecture we have worked out the pmf of a random variable $X$, the number of heads in $3$ independent tosses of a coin which lands heads with probability $p$. The pmf looked as follows:
+
+$$
+\begin{align*}
+P(X=0) &= (1-p)^3\\
+P(X=1) &= 3p(1-p)^2 \\
+P(X=2) &= 3p^2(1-p) \\
+P(X=3) &= p^3
+\end{align*}
+
+$$
+
+This is an example of a **binomial random variable** with $n=3$ trials and success probability $p$, often written as  $X \sim Binomial(3, p)$. The probabilities in the above pmf can be calculated in R using the function `dbinom`. For example, for $n=3$ and $p=1/2$, the above $4$ probabilities can be obtained using the commands
+
+```{r, eval = TRUE, echo = TRUE}
+PX_0 = dbinom(0, size = 3, prob = 1/2)
+PX_0
+```
+
+```{r}
+PX_1 = dbinom(1, size = 3, prob = 1/2)
+PX_1
+```
+
+```{r}
+PX_2 = dbinom(2, size = 3, prob = 1/2)
+PX_2
+```
+
+```{r}
+PX_3 = dbinom(3, size = 3, prob = 1/2)
+PX_3
+```
+
+Check if these probabilities match the ones we calculated in lecture. Next we list a few properties of a binomial random variable $X \sim Binomial(n, p)$.
+
+## Binomial Distribution
+
+A binomial random variable, $X \sim Binomial(n,p)$, is characterized by the following:
+
+1. X = Number of "successes" out of n "trials"
+1. n is fixed in advance
+1. The trials are independent of each other
+1. For each trial there is a probability of success, p, that is the same for each trial
+
+Some examples:
+
+  1. X = Number of hits in n "at bats"
+  2. X = Number of cars with defective airbags out of n manufactured
+  3. X = Number of days you wake up on time in a week
+    
+The probability mass function for X~Binomial(n,p) is  
+
+$$P(X=k) = \binom n k p^k(1-p)^{n-k}$$  
+for $k\in\{0,1,2,...,n\}$.  Here, $\binom n k$ is the number of ways to choose k items from n and is defined as
+
+$\binom n k$ $:=$ $\frac{n!}{k!(n-k)!}$
+
+The mean and variance of a binomial distribution are
+
+   $E(X) = \mu = np$  
+   
+   $Var(X) = \sigma^2 = np(1-p)$
+
+
+
+
+### Problem 1
+
+An experimental drug with $80\%$ success rate of lowering blood pressure in mice is administered on $10$ mice. Let $X$ denote the number of mice on which the drug worked. 
+
+ a) Write down the distribution of $X$. [Name the family and specify all parameters].
+ 
+ b) Calculate the probability that the drug worked on all $10$ mice, given that the drug worked on at least $8$ mice.
+  
+### Problem 2
+
+Harold and Timmy are playing a game of chance.  In each round of the game, both players roll a fair die.  If the sum of the numbers on both dice is less than or equal to 3, Harold is considered the "winner." If the sum of the numbers on both dice is greater than or equal to 10, Timmy is considered the "winner."  Whoever loses picks a card from a standard deck where all Aces have been removed and must pay the winner according to the table below.  If the sum of the dice is between 4 and 9, inclusively, there is no winner of that round.  After the completion of each round, they roll the dice again to start the next round.  
+
+Each player starts the game with $10.  Assume all die rolls and card draws are independent.
+
++-------------+-------+---------+
+| Card Drawn  |  2-10 |   J-K   |  
++=============+=======+=========+
+| Amount      |  $1   |   $5    | 
++-------------+-------+---------+
+
+ 
+ a) Is this a fair game? Explain.
+ 
+ b) If Timmy wins in round 1, what is his expected earnings?
+ 
+ c) What is the probability that one of them is broke after 2 rounds of the game?
+ 
+ d) Let X = Amount of money earned by Harold in a round of the game (when Harold loses to Timmy his earnings are negative).  
+     
+     i. Give the distribution of X
+     ii. Calculate E(X)
+     iii. Calculate Var(X)
+     
+ e) How many rounds can Harold expect to play before he goes broke?
+
+### Problem 3 
+
+A lepidopterist is studying changes in butterfly flight patterns in the first 30 days after metamorphisis. For every cocoon collected for the study, there is a 20% chance in lab conditions that the butterfly will not complete metamorphisis.  Hint: Use the R function `dbinom`.
+
+ a) What probability distribution can be used to model the number of butterflies that can be used for the study from an initial batch of cocoons?
+ 
+ b) If the researcher starts with 50 cocoons, what is the probability she will have at least 48 surviving butterflies?
+ 
+ c) The lepidopterist must have at least 60 surviving butterflies to find significant results in her research on flight behavior.  To be comfortable that she will have at least 60 surviving butterflies, she will collect enough cocoons such that the expected number of surviving cocoons is 80.  How many cocoons should she collect?
+ 
+ d) Unfortunately, the lepidopterist is only able to collect 40 cocoons on her own.  She calls a friend in another lab who is willing to collect additional cocoons (and data).  Her friend collects 50 cocoons.  The rate of successful metamorphisis in her friend's lab is 75%.  What is the expected number of surviving butterflies from both labs?
+  
+  
+
+### Problem 4
+
+Suppose the number X of tornadoes observed in a particular region during a 1 year period has a Poisson distribution with $\lambda = 8$.
+
+  a) Compute $P(X<3)$.
+  b) Compute $P(6 \le X<9)$.
+  c) Compute $P(X>2)$.
+  d) What is the probability the observed number of tornadoes is less than the expected value minus 2 standard deviations?
+  
+
+### Problem 5
+
+Chickenpox has predominately been eradicated in the United States due to the development of the varicella vaccine.  However, approximately .08% of infants immunized experience a serious reaction to the vaccine (febrile seizures).  Suppose on a given day, one million infants are vaccinated against Chickenpox.
+
+  a) What is the expected number of infants that will experience febrile seizures from the Chickenpox vaccine on a given day?  Be sure to justify your answer.
+  
+  b) What is the variance of the number of infants experiencing febrile seizures from the Chickenpox vaccine on a given day?
+  
+  c) Using the `dbinom()` function in R, calculate the probability that exactly 850 infants develop febrile seizures after being vaccinated for Chickenpox.
+  
+  d) Is it appropriate to use the Poisson distribution in this situation (to approximate the binomial distribution) to model the number of serious reactions to the varicella vaccine?  Explain why.  What is the mean of the approximating Poisson distribution?  Considering that the Poisson distribution is often used to model counts over space or time, how could you interpret the mean of the approximating Poisson distribution for this problem?
+  
+  e) Using (d), and the R function, `dpois()`, determine the approximate probability that exactly 850 of the 1 million infants vaccinated against the Chickenpox experience a febrile seizure.  How does this probability compare to that calculated in part (c)?
+  
