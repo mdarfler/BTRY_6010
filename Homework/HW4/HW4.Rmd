@@ -101,6 +101,7 @@ An experimental drug with $80\%$ success rate of lowering blood pressure in mice
 
  a) Write down the distribution of $X$. [Name the family and specify all parameters].
  
+<<<<<<< HEAD
  $$X \sim Binomial(10,0.8)$$
  
  b) Calculate the probability that the drug worked on all $10$ mice, given that the drug worked on at least $8$ mice.
@@ -110,6 +111,9 @@ An experimental drug with $80\%$ success rate of lowering blood pressure in mice
 dbinom(8, size = 10, prob = 0.8)
 factorial(10)/(factorial(8) * factorial(2)) * 0.8^8 * 0.2^2
 ```
+=======
+ b) Calculate the probability that the drug worked on all $10$ mice, given that the drug worked on at least $8$ mice.
+>>>>>>> 278d2e5d91f23ce2b1f09f2e58e238199cabb65d
   
 ### Problem 2
 
@@ -124,6 +128,7 @@ Each player starts the game with $10.  Assume all die rolls and card draws are i
 +-------------+-------+---------+
 
  
+<<<<<<< HEAD
  a) Is this a fair game? Explain. 
  
 $\text{Let } X = \{ \text{rolling a 3 or less}\} \quad \text{Let } Y = \{ \text{rolling a 10 or greater}\}$
@@ -138,6 +143,12 @@ $n\{ X \} < n\{Y\}$
  
  E(X)
  
+=======
+ a) Is this a fair game? Explain.
+ 
+ b) If Timmy wins in round 1, what is his expected earnings?
+ 
+>>>>>>> 278d2e5d91f23ce2b1f09f2e58e238199cabb65d
  c) What is the probability that one of them is broke after 2 rounds of the game?
  
  d) Let X = Amount of money earned by Harold in a round of the game (when Harold loses to Timmy his earnings are negative).  
