@@ -448,8 +448,21 @@ for <span class="math inline">\(k\in\{0,1,2,...,n\}\)</span>. Here, <span class=
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Calculate the probability that the drug worked on all <span class="math inline">\(10\)</span> mice, given that the drug worked on at least <span class="math inline">\(8\)</span> mice.</li>
 </ol>
-<pre class="r"><code>dbinom(2,2,0.8)</code></pre>
-<pre><code>## [1] 0.64</code></pre>
+<p>$$<span class="math display">\[\begin{align*}
+ P(P = 10 | P \leq 8) &amp;= \dfrac{P(X = 10) \cap P(X \geq 8)}{P(X \geq 8)}\\
+ &amp;=\dfrac{P(X = 10)}{P(X \geq 8)}\\
+ &amp;= 0.107/0.6242 = 0.172
+ 
+ \end{align*}\]</span>$$</p>
+<pre class="r"><code>pX10 &lt;- dbinom(10,10,0.8)
+pXgeq8 &lt;- pbinom(8,10,0.8, lower.tail = T)
+
+pX10</code></pre>
+<pre><code>## [1] 0.1073742</code></pre>
+<pre class="r"><code>pXgeq8</code></pre>
+<pre><code>## [1] 0.6241904</code></pre>
+<pre class="r"><code>pX10/pXgeq8</code></pre>
+<pre><code>## [1] 0.1720215</code></pre>
 </div>
 <div id="problem-2" class="section level3">
 <h3>Problem 2</h3>
@@ -480,7 +493,7 @@ for <span class="math inline">\(k\in\{0,1,2,...,n\}\)</span>. Here, <span class=
 <li>Is this a fair game? Explain.</li>
 </ol>
 <p><span class="math inline">\(\text{Let } X = \{ \text{rolling a 3 or less}\} \quad \text{Let } Y = \{ \text{rolling a 10 or greater}\}\)</span></p>
-<p><span class="math inline">\(X = \{ (1,1), (1,2), (2,1)\} \quad Y = \{ (4,6), (5,5), (5,6), (6,4), (6,5), (6,6)\}\)</span></p>
+<p><span class="math inline">\(X = \{ (1,1), (1,2), (2,1)\} \quad Y = \{ (4,6), (5,5), (6,5), (6,4), (6,5), (6,6)\}\)</span></p>
 <p><span class="math inline">\(n\{ X \} &lt; n\{Y\}\)</span></p>
 <p><strong>This game is not fair because there are only three ways for Harold to win and there are 6 ways for Timmy to win</strong></p>
 <ol start="2" style="list-style-type: lower-alpha">
@@ -496,7 +509,7 @@ for <span class="math inline">\(k\in\{0,1,2,...,n\}\)</span>. Here, <span class=
 <p>Let X = Someone going broke after two rounds Let A = Harold wins twice Let B = Timmy wins twice Let C = Two face cards are drawn</p>
 <p>$$ <span class="math display">\[\begin{align*}
 X &amp;= ((A \cup B) \cap C)\\
-P(X) &amp;= P(A) + P(B) \times P(C)\\
+P(X) &amp;= (P(A) + P(B)) \times P(C)\\
 P(A) &amp;= \frac{3}{36}^2 = 0.0069\\
 P(B) &amp;= \frac{6}{36}^2 = 0.0278\\
 P(C) &amp;= \frac{2}{12}^2 = 0.0625\\
@@ -522,26 +535,28 @@ broke &lt;-  0
 for(i in 1:n){
   roll1 = sample(1:6, 2, replace = T)
   roll2 = sample(1:6, 2, replace = T)
-  pick1 = sample(2:13, 1, replace =T)
-  pick2 = sample(2:13, 1, replace =T)
+  pick1 = sample(2:13, 1, replace = T)
+  pick2 = sample(2:13, 1, replace = T)
   
   if(sum(roll1) &lt;= 3 &amp; sum(roll2) &lt;= 3 &amp; pick1 &gt; 10 &amp; pick2 &gt; 10) broke &lt;- broke + 1
   if(sum(roll1) &gt;= 10 &amp; sum(roll2) &gt;=10 &amp; pick1 &gt; 10 &amp; pick2 &gt; 10) broke &lt;- broke + 1
 }
 broke/n</code></pre>
-<pre><code>## [1] 0.00212</code></pre>
+<pre><code>## [1] 0.00215</code></pre>
 <ol start="4" style="list-style-type: lower-alpha">
 <li><p>Let X = Amount of money earned by Harold in a round of the game (when Harold loses to Timmy his earnings are negative).</p>
 <ol style="list-style-type: lower-roman">
-<li>Give the distribution of X <span class="math display">\[\begin{align*}
+<li>Give the distribution of X</li>
+</ol></li>
+</ol>
+<p><span class="math display">\[ \begin{align*}
 P(X = -5) &amp;= \frac{6}{36} \times \frac{3}{12} = 0.0417\\
 P(X = -1) &amp;= \frac{6}{26} \times \frac{9}{12} = 0.125\\
 P(X = 0) &amp;= \frac{27}{36} = 0.75\\
 P(X = 1) &amp;= \frac{3}{36} \times \frac{9}{12} = 0.0625\\
 P(X = 5) &amp;= \frac{3}{36} \times \frac{3}{12} = 0.0208
-\end{align*}\]</span></li>
-</ol></li>
-</ol>
+\end{align*}
+\]</span></p>
 <pre class="r"><code>px_5 = 6/36 * 3/12
 px_1 = 6/36 * 9/12
 px0 = 27/36
@@ -564,9 +579,21 @@ px_5</code></pre>
 <pre class="r"><code>Ex = -5*px_5 + -1*px_1 + 0*px0 + 1*px1 + 5*px5
 paste0(&quot;The expected value E[X] is: &quot;,Ex)</code></pre>
 <pre><code>## [1] &quot;The expected value E[X] is: -0.166666666666667&quot;</code></pre>
-<pre><code> iii. Calculate Var(X)
- 
- </code></pre>
+<p>Var(X) = (x - µ)2 P(X = x)<br />
+iii. Calculate Var(X)</p>
+<p><span class="math display">\[ Var[X] = \sum_{i=1}^{n}(x_i - E[X])^2P(X = x_i) = 1.72\]</span></p>
+<pre class="r"><code>vals &lt;- c(-5,-1,0,1,5) 
+weights &lt;- c(px_5,px_1,px0,px1,px5)
+
+mu = sum(vals * weights)
+
+var = 0
+for(i in 1:length(vals)){
+  var &lt;- var + (vals[i]-mu)^2 * weights[i]
+}
+
+var</code></pre>
+<pre><code>## [1] 1.722222</code></pre>
 <ol start="5" style="list-style-type: lower-alpha">
 <li>How many rounds can Harold expect to play before he goes broke?</li>
 </ol>
