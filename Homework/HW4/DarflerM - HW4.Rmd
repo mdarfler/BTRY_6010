@@ -112,8 +112,20 @@ factorial(10)/(factorial(8) * factorial(2)) * 0.8^8 * 0.2^2
 ```
  b) Calculate the probability that the drug worked on all $10$ mice, given that the drug worked on at least $8$ mice.
  
+ $$\begin{align*}
+ P(P = 10 | P \leq 8) &= \dfrac{P(X = 10) \cap P(X \geq 8)}{P(X \geq 8)}\\
+ &=\dfrac{P(X = 10)}{P(X \geq 8)}\\
+ &= 0.107/0.6242 = 0.172
+ 
+ \end{align*}$$
 ```{r}
-dbinom(2,2,0.8)
+pX10 <- dbinom(10,10,0.8)
+pXgeq8 <- pbinom(8,10,0.8, lower.tail = T)
+
+pX10
+pXgeq8
+
+pX10/pXgeq8
 ```
  
   
@@ -134,7 +146,7 @@ Each player starts the game with $10.  Assume all die rolls and card draws are i
  
 $\text{Let } X = \{ \text{rolling a 3 or less}\} \quad \text{Let } Y = \{ \text{rolling a 10 or greater}\}$
   
-$X = \{ (1,1), (1,2), (2,1)\}  \quad Y = \{ (4,6), (5,5), (5,6), (6,4), (6,5), (6,6)\}$
+$X = \{ (1,1), (1,2), (2,1)\}  \quad Y = \{ (4,6), (5,5), (6,5), (6,4), (6,5), (6,6)\}$
 
 $n\{ X \} < n\{Y\}$
 
@@ -159,13 +171,14 @@ Let C = Two face cards are drawn
 
 $$ \begin{align*}
 X &= ((A \cup B) \cap C)\\
-P(X) &= P(A) + P(B) \times P(C)\\
+P(X) &= (P(A) + P(B)) \times P(C)\\
 P(A) &= \frac{3}{36}^2 = 0.0069\\
 P(B) &= \frac{6}{36}^2 = 0.0278\\
 P(C) &= \frac{2}{12}^2 = 0.0625\\
 P(X) &= 0.0022
 
 \end{align*}$$
+
 ```{r}
 pA = (3/36)^2 
 pB = (6/36)^2
@@ -185,8 +198,8 @@ broke <-  0
 for(i in 1:n){
   roll1 = sample(1:6, 2, replace = T)
   roll2 = sample(1:6, 2, replace = T)
-  pick1 = sample(2:13, 1, replace =T)
-  pick2 = sample(2:13, 1, replace =T)
+  pick1 = sample(2:13, 1, replace = T)
+  pick2 = sample(2:13, 1, replace = T)
   
   if(sum(roll1) <= 3 & sum(roll2) <= 3 & pick1 > 10 & pick2 > 10) broke <- broke + 1
   if(sum(roll1) >= 10 & sum(roll2) >=10 & pick1 > 10 & pick2 > 10) broke <- broke + 1
@@ -198,13 +211,15 @@ broke/n
  d) Let X = Amount of money earned by Harold in a round of the game (when Harold loses to Timmy his earnings are negative).  
      
      i. Give the distribution of X
-$$\begin{align*}
+     
+$$ \begin{align*}
 P(X = -5) &= \frac{6}{36} \times \frac{3}{12} = 0.0417\\
 P(X = -1) &= \frac{6}{26} \times \frac{9}{12} = 0.125\\
 P(X = 0) &= \frac{27}{36} = 0.75\\
 P(X = 1) &= \frac{3}{36} \times \frac{9}{12} = 0.0625\\
 P(X = 5) &= \frac{3}{36} \times \frac{3}{12} = 0.0208
-\end{align*}$$
+\end{align*}
+$$
 ```{r}
 px_5 = 6/36 * 3/12
 px_1 = 6/36 * 9/12
@@ -226,9 +241,24 @@ sum(px_5,px_1,px0,px1,px5)
 Ex = -5*px_5 + -1*px_1 + 0*px0 + 1*px1 + 5*px5
 paste0("The expected value E[X] is: ",Ex)
 ```
-
+Var(X) = (x - µ)2 P(X = x)  
      iii. Calculate Var(X)
      
+$$ Var[X] = \sum_{i=1}^{n}(x_i - E[X])^2P(X = x_i) = 1.72$$
+     
+```{r}
+vals <- c(-5,-1,0,1,5) 
+weights <- c(px_5,px_1,px0,px1,px5)
+
+mu = sum(vals * weights)
+
+var = 0
+for(i in 1:length(vals)){
+  var <- var + (vals[i]-mu)^2 * weights[i]
+}
+
+var
+```
      
  e) How many rounds can Harold expect to play before he goes broke?
 ```{r}
