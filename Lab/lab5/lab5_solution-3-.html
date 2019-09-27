@@ -462,25 +462,24 @@ summary {
 <ol style="list-style-type: lower-alpha">
 <li>Suppose in this game, you go forward 2X spaces when you roll X. On average how many spaces forward do you go? (Which of the properties did you use?)</li>
 </ol>
-<p><strong>E[2X] = 2 x E[X] = 2(3.5) = 7</strong></p>
+<p><em>By the first property, we have that E[2X]=2E[X] and thus on average we will go ahead 7=2(3.5) spaces.</em></p>
 <ol start="2" style="list-style-type: lower-alpha">
 <li>For the same rules as above, what is the standard deviation of the number of spaces you move ahead? Your answer can be expressed in terms of “SD(X),” the standard deviation of X. (Which of the properties did you use?)</li>
 </ol>
-<p><strong>Var(cX) = c^2 Var(x)</strong></p>
-<p><span class="math display">\[SD (2x) = \sqrt{Var(2X)} = \sqrt{4 Var(x)} = 2 \times SD(x)\]</span></p>
+<p><em>By the third property, SD(number of spaces forward) = SD(2X) = 2SD(X).</em></p>
 <ol start="3" style="list-style-type: lower-alpha">
 <li>Now suppose the rules are different. If we roll X, then we go forward X+4 spaces. What is the expected number of spaces that you go forward?</li>
 </ol>
-<p>E(X + c) = E(X) + c E(X + 4) = 3.5 + 4</p>
+<p><em>By the second property, <span class="math inline">\(E[X+4]=3.5+4=7\)</span></em></p>
 <ol start="4" style="list-style-type: lower-alpha">
 <li>Using the rules in (c), what is the standard deviation for the number of spaces you go forward?</li>
 </ol>
-<p><span class="math display">\[SD(X + 4) = \sqrt{Var(X+4)} = \sqrt{Var(X)} = SD(X)\]</span></p>
+<p><em>By the fourth property, the standard deviation is unchanged by adding 4. This makes sense since adding 4 doesn’t affect how variable the outcome is.</em></p>
 <p>One more property:</p>
 <p>For any random variables X and Y,</p>
 <p>E(X+Y) = E(X) + E(Y)</p>
 <p>Suppose you roll two dice and X and Y are random variables representing the values. What is the expected sum of the two dice?</p>
-<p><strong>E[X + Y] = E[X[] + E[Y] = 3.5 + 3.5 = 7</strong></p>
+<p><em>3.5+3.5=7</em></p>
 </div>
 </div>
 <div id="binomial-distribution" class="section level2">
@@ -509,22 +508,52 @@ for <span class="math inline">\(k\in\{0,1,2,...,n\}\)</span>. Here, <span class=
 <h3>Problem 2</h3>
 <p>The proportion of Norwegians in their early 40s who drink at least 1 cup of coffee per day is about p = 0.894. Suppose that we take a random sample of 50 Norwegians from this age group. Let X = the number of Norwegians in the sample that drink at least 1 cup of coffee a day. In your answers to the questions below, include the correct notation for the probability being asked for in terms of the random variable X.</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>What is the expected value of the number of Norwegians that drink at least 1 cup of coffee a day in the sample?</p></li>
-<li><p>What is the standard deviation of the number of Norwegians that drink at least 1 cup of coffee a day in the sample?</p></li>
+<li>What is the expected value of the number of Norwegians that drink at least 1 cup of coffee a day in the sample?</li>
 </ol>
+<p><em>X <span class="math inline">\(\sim\)</span> Binomial(50,.894). The mean of this distribution is np = </em></p>
+<pre class="r"><code>n=50
+p=.894
+n*p</code></pre>
+<pre><code>## [1] 44.7</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>What is the standard deviation of the number of Norwegians that drink at least 1 cup of coffee a day in the sample?</li>
+</ol>
+<p><em>X <span class="math inline">\(\sim\)</span> Binomial(50,.894). The standard deviation of this distribution is <span class="math inline">\((np(1-p))^{1/2}\)</span> = </em></p>
+<pre class="r"><code>n=50
+p=.894
+(n*p*(1-p))^(.5)</code></pre>
+<pre><code>## [1] 2.176741</code></pre>
 <p>For questions 1.(c)-(e), calculate the required probabilities using R as only a calculator. Include all formulas used.</p>
 <ol start="3" style="list-style-type: lower-alpha">
 <li>What is the probability that exactly 48 Norwegians in the sample drink at least 1 cup of coffee a day?</li>
 </ol>
-<p><em><span class="math inline">\(P(X=48) = 50!/48!2!\)</span> <span class="math inline">\(0.894^{48}(1-0.894)^{2}\)</span> =</em></p>
+<p><em><span class="math inline">\(P(X=48) = 50!/48!2!\)</span> <span class="math inline">\(.894^{48}(1-.894)^{2}\)</span> =</em></p>
+<pre class="r"><code>n=50
+p=.894
+k=48
+choose(n,k)*(p^k)*(1-p)^(n-k)</code></pre>
+<pre><code>## [1] 0.06352559</code></pre>
 <ol start="4" style="list-style-type: lower-alpha">
-<li><p>What is the probability that exactly 2 Norwegians in the sample do not drink at least 1 cup of coffee a day?</p></li>
-<li><p>What is the probability that more than 2 Norwegians in the sample do not drink at least 1 cup of coffee a day?</p></li>
-<li><p>The following simulates 10,000 observations from a Binomial(50,.894) distribution. <code>numCoffee</code> is the simulated observations. The last three lines of code use the simulated values to approximate the answers to (a)-(c).</p></li>
+<li>What is the probability that exactly 2 Norwegians in the sample do not drink at least 1 cup of coffee a day?</li>
+</ol>
+<p><em>Let Y = Number of Norwegians in the sample that do not drink at least 1 cup of coffee a day. Y <span class="math inline">\(\sim\)</span> Binomial(50, 1-.894). <span class="math inline">\(P(Y=2) = P(X=48) = 50!/48!2!\)</span> <span class="math inline">\(.894^{48}(1-.894)^{2}\)</span> =</em></p>
+<pre class="r"><code>choose(n,k)*(p^k)*(1-p)^(n-k)</code></pre>
+<pre><code>## [1] 0.06352559</code></pre>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>What is the probability that more than 2 Norwegians in the sample do not drink at least 1 cup of coffee a day?</li>
+</ol>
+<p><em>P(Y &gt; 2) = 1 - P(Y <span class="math inline">\(\leq\)</span> 2) = 1 - (P(Y=0) + P(Y=1) + P(Y=2)) =</em></p>
+<pre class="r"><code>PX0 = p^50
+PX1 = 50*(1-p)*p^49
+PX2 = choose(n,2)*((1-p)^2)*p^(n-2)
+1-PX0-PX1-PX2</code></pre>
+<pre><code>## [1] 0.9109174</code></pre>
+<ol start="6" style="list-style-type: lower-alpha">
+<li>The following simulates 10,000 observations from a Binomial(50,.894) distribution. <code>numCoffee</code> is the simulated observations. The last three lines of code use the simulated values to approximate the answers to (a)-(c).</li>
 </ol>
 <pre class="r"><code>set.seed(1)
-num_simulations = 10000
-numCoffee = rbinom(num_simulations, size=50, p=0.894)
+num.simulations = 10000
+numCoffee = rbinom(num.simulations, size=50, p=0.894)
 # check a
 mean(numCoffee)</code></pre>
 <pre><code>## [1] 44.6968</code></pre>
@@ -550,11 +579,40 @@ mean(numCoffee == 48)</code></pre>
 <p>The <code>pbinom(k,n,p)</code> function in R is the probability distribution function for the binomial distribution, i.e. <span class="math inline">\(P(X \le k)\)</span> =<code>pbinom(k,n,p)</code>. Here <code>k</code>, <code>n</code>, and <code>p</code> are as specified above.</p>
 <p>The <code>pbinom(k,n,p)</code> function can also be used to find the upper tail probabilities, i.e. <span class="math inline">\(P(X&gt;k)\)</span>, by using the optional parameter <code>lower.tail=FALSE</code>. Thus, <span class="math inline">\(P(X&gt;k)\)</span> = <code>pbinom(k,n,p,lower.tail=FALSE)</code></p>
 <p>For 3. (a)-(c), repeat the probability calculations for 2. (c)-(e) using these R functions.</p>
+<ol style="list-style-type: lower-alpha">
+<li></li>
+</ol>
+<pre class="r"><code>k=48
+dbinom(48,n,p)</code></pre>
+<pre><code>## [1] 0.06352559</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li></li>
+</ol>
+<pre class="r"><code>k=2
+dbinom(2,n,(1-p))</code></pre>
+<pre><code>## [1] 0.06352559</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
+<li></li>
+</ol>
+<pre class="r"><code>1 - pbinom(2,n,(1-p))</code></pre>
+<pre><code>## [1] 0.9109174</code></pre>
 <p>The <code>qbinom(p_quant,n,p)</code> function in R is the quantile function for the binomial distribution. It finds the smallest value of k such that <span class="math inline">\(P(X \le k)\)</span> <span class="math inline">\(\ge\)</span> <code>p_quant</code>. Here <code>k</code>, <code>n</code>, and <code>p</code> are as specified above. <code>p_quant</code> is such that the 100 <span class="math inline">\(\times\)</span> <code>pquant</code> percentile of the binomial distribution is given by <code>qbinom(p_quant,n,p)</code>.For instance, specifying <code>p_quant = .5</code> will return the median of the binomial distribution.</p>
 <ol start="4" style="list-style-type: lower-alpha">
-<li><p>Find the 25th and 75th percentiles of the binomial distribution specified in problem 2.</p></li>
-<li><p>Find the smallest number such that the probability of the number of Norwegians that drink at least 1 cup of coffee a day in the sample is greater than this number is less than or equal to 10%.</p></li>
+<li>Find the 25th and 75th percentiles of the binomial distribution specified in problem 2.</li>
 </ol>
+<pre class="r"><code>p_quant=.25
+qbinom(p_quant,n,p)</code></pre>
+<pre><code>## [1] 43</code></pre>
+<pre class="r"><code>p_quant=.75
+qbinom(p_quant,n,p)</code></pre>
+<pre><code>## [1] 46</code></pre>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>Find the smallest number such that the probability of the number of Norwegians that drink at least 1 cup of coffee a day in the sample is greater than this number is less than or equal to 10%.</li>
+</ol>
+<p><em>This is the 90th percentile of Binomial(50,.894) =</em></p>
+<pre class="r"><code>p_quant=.90
+qbinom(p_quant,n,p)</code></pre>
+<pre><code>## [1] 47</code></pre>
 </div>
 </div>
 <div id="poisson-distribution" class="section level2">
@@ -582,11 +640,33 @@ mean(numCoffee == 48)</code></pre>
 <p>X = number of mosquito bites this person receives in the first hour.</p>
 <p>Y = number of mosquito bites the person receives in the second hour.</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>What is the probability in the first hour outside this individual does not get bit by a mosquito?</p></li>
-<li><p>What is <span class="math inline">\(P(10&lt;X \leq 12)\)</span>?</p></li>
-<li><p>If this Minnesotan plans to stay outside for 2 hours in total and he applies mosquito repellant after the first hour, how many mosquito bites can he expect to receive?</p></li>
-<li><p>After spending two hours outdoors, this Minnesotan will treat his mosquito bites with a topical ointment. For complete relief from the allergic reaction caused by the mosquito bites, the ointment must be applied to every mosquito bite 3 times. How many times in total will he expect to apply the ointment after the 2 hours to alleviate the allergic reaction of every bite?</p></li>
+<li>What is the probability in the first hour outside this individual does not get bit by a mosquito?</li>
 </ol>
+<p><em>X <span class="math inline">\(\sim\)</span> Poisson(10), <span class="math inline">\(P(X=0)\)</span> = <span class="math inline">\(e^{-10}10^{0}/0!\)</span> =</em></p>
+<pre class="r"><code>(exp(-10)*10^(0))/factorial(0)</code></pre>
+<pre><code>## [1] 4.539993e-05</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>What is <span class="math inline">\(P(10&lt;X \leq 12)\)</span>?</li>
+</ol>
+<p><em><span class="math inline">\(P(10&lt;X \leq 12)\)</span> = <span class="math inline">\(P(X=11)\)</span> + <span class="math inline">\(P(X=12)\)</span> = <span class="math inline">\(e^{-10}10^{11}/11!\)</span> + <span class="math inline">\(e^{-10}10^{12}/12!\)</span></em></p>
+<pre class="r"><code>PK11 = (exp(-10)*10^(11))/factorial(11)
+
+PK12 = (exp(-10)*10^(12))/factorial(12)
+
+PK11 + PK12</code></pre>
+<pre><code>## [1] 0.2085167</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>If this Minnesotan plans to stay outside for 2 hours in total and he applies mosquito repellant after the first hour, how many mosquito bites can he expect to receive?</li>
+</ol>
+<p><em>Let X = # of mosquito bites in the first hour and Y = # mosquito bites in the second hour E(X+Y) = E(X) + E(Y) =10 + 3</em></p>
+<pre class="r"><code>10+3</code></pre>
+<pre><code>## [1] 13</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>After spending two hours outdoors, this Minnesotan will treat his mosquito bites with a topical ointment. For complete relief from the allergic reaction caused by the mosquito bites, the ointment must be applied to every mosquito bite 3 times. How many times in total will he expect to apply the ointment after the 2 hours to alleviate the allergic reaction of every bite?</li>
+</ol>
+<pre><code>*E(3X + 3Y) = 3E(X) + 3E(Y) = 3 $\times$ 10 + 3 $\times$ 3 =*</code></pre>
+<pre class="r"><code>3*10 + 3*3</code></pre>
+<pre><code>## [1] 39</code></pre>
 </div>
 <div id="problem-5" class="section level3">
 <h3>Problem 5</h3>
@@ -599,10 +679,25 @@ mean(numCoffee == 48)</code></pre>
 <p>The <code>ppois</code><span class="math inline">\((k,\lambda)\)</span> function in R is the cumulative probability distribution function for the Poisson distribution, i.e. <span class="math inline">\(P(X \le k)\)</span> = <code>ppois</code><span class="math inline">\((k,\lambda)\)</span>. Here <code>k</code> and <span class="math inline">\(\lambda\)</span> are as specified above.</p>
 <p>Similar to the <code>pbinom()</code> function, the <code>ppois</code><span class="math inline">\((k,\lambda)\)</span> function can also be used to find the upper tail probabilities, i.e. <span class="math inline">\(P(X&gt;k)\)</span>, by using the optional parameter <code>lower.tail=FALSE</code>. Thus, <span class="math inline">\(P(X&gt;k)\)</span> = <code>ppois(</code>k,<span class="math inline">\(\lambda\)</span>,<code>lower.tail=FALSE)</code></p>
 <p>For 5. (a)-(b), repeat the probability calculations for 4. (a)-(b) using these R functions.</p>
+<ol style="list-style-type: lower-alpha">
+<li></li>
+</ol>
+<pre class="r"><code>dpois(0,10)</code></pre>
+<pre><code>## [1] 4.539993e-05</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li></li>
+</ol>
+<pre class="r"><code>ppois(12, 10) - ppois(10, 10)</code></pre>
+<pre><code>## [1] 0.2085167</code></pre>
+<pre class="r"><code>## equivalently
+dpois(11, 10) + dpois(12, 10)</code></pre>
+<pre><code>## [1] 0.2085167</code></pre>
 <p>The <code>qpois</code>(p_quant,<span class="math inline">\(\lambda\)</span>) function in R is the quantile function for the Poisson distribution. It finds the smallest value of k such that <span class="math inline">\(P(X \le k)\)</span> <span class="math inline">\(\ge\)</span> <code>p_quant</code>. Here <code>k</code> and <span class="math inline">\(\lambda\)</span> are as specified above. <code>p_quant</code> is such that the 100 <span class="math inline">\(\times\)</span> <code>pquant</code> percentile of the Poisson distribution is given by <code>qpois</code>(p_quant,<span class="math inline">\(\lambda\)</span>).</p>
 <ol start="3" style="list-style-type: lower-alpha">
 <li>Find the median of the first Poisson distribution specified in problem 4.</li>
 </ol>
+<pre class="r"><code>qpois(.5,10)</code></pre>
+<pre><code>## [1] 10</code></pre>
 </div>
 </div>
 

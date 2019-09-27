@@ -119,13 +119,24 @@ These rules actually make sense if you think about an example.  Suppose we are p
 
 ### Problem 1 
 
-a) Suppose in this game, you go forward 2X spaces when you roll X.  On average how many spaces forward do you go?  (Which of the properties did you use?)
+a) Suppose in this game, you go forward 2X spaces when you roll X.  On average how many spaces forward do you go?  (Which of the properties did you use?) 
+
+**E[2X] = 2 x E[X] = 2(3.5) = 7**
 
 b) For the same rules as above, what is the standard deviation of the number of spaces you move ahead? Your answer can be expressed in terms of "SD(X)," the standard deviation of X. (Which of the properties did you use?)
 
+**Var(cX) = c^2 Var(x)**
+
+$$SD (2x) = \sqrt{Var(2X)} = \sqrt{4 Var(x)} = 2 \times SD(x)$$
+
 c) Now suppose the rules are different.  If we roll X, then we go forward X+4 spaces.  What is the expected number of spaces that you go forward?
 
+E(X + c) = E(X) + c
+E(X + 4) = 3.5 + 4
+
 d) Using the rules in (c), what is the standard deviation for the number of spaces you go forward?
+
+$$SD(X + 4) = \sqrt{Var(X+4)} = \sqrt{Var(X)} = SD(X)$$
 
 One more property:
 
@@ -134,6 +145,8 @@ For any random variables X and Y,
  E(X+Y) = E(X) + E(Y)
 
 Suppose you roll two dice and X and Y are random variables representing the values.  What is the expected sum of the two dice?
+
+**E[X + Y] = E[X[] + E[Y] = 3.5 + 3.5 = 7**
 
 ## Binomial Distribution
 
@@ -173,11 +186,37 @@ The proportion of Norwegians in their early 40s who drink at least 1 cup of coff
 
   a) What is the expected value of the number of Norwegians that drink at least 1 cup of coffee a day in the sample?
   
+  $$X \sim Binomial(50, 0.894) \\
+  E[X] = 50 \times 0.894 = 44.7$$
+  
+```{r}
+50 * 0.894
+```
+  
+  
   b) What is the standard deviation of the number of Norwegians that drink at least 1 cup of coffee a day in the sample?
+  
+  $$sd = \sqrt{np(1-p)} = \sqrt{50 \times 0.894 \times (1 - 0.894)} = \sqrt{4.7382} = 2.177$$
+```{r}
+50 * 0.894 * 0.106
+sqrt(.Last.value)
+```
+  
   
   For questions 1.(c)-(e), calculate the required probabilities using R as only a calculator. Include all formulas used.
   
   c) What is the probability that exactly 48 Norwegians in the sample drink at least 1 cup of coffee a day?
+  
+  $$\begin{align*}
+  P(X = k) &= \binom{n}{k} p^k(1-p)^{n-k} \\
+  P(X = 48) &= \binom{50}{48} 0.894^{48}(1-0.894)^{50-48} \\
+  &= \dfrac{50!}{48!(50 - 48)!} 0.894^{48} (0.106) ^2 \\
+  &= 0.0635
+  
+  \end{align*}$$
+```{r}
+choose(50,48) * 0.894^48 * 0.106^2
+```
   
   *$P(X=48) = 50!/48!2!$ $0.894^{48}(1-0.894)^{2}$ =*
   
