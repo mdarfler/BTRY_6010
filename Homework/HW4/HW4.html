@@ -434,7 +434,6 @@ for <span class="math inline">\(k\in\{0,1,2,...,n\}\)</span>. Here, <span class=
 <h3>Problem 1</h3>
 <p>An experimental drug with <span class="math inline">\(80\%\)</span> success rate of lowering blood pressure in mice is administered on <span class="math inline">\(10\)</span> mice. Let <span class="math inline">\(X\)</span> denote the number of mice on which the drug worked.</p>
 <ol style="list-style-type: lower-alpha">
-<<<<<<< HEAD
 <li>Write down the distribution of <span class="math inline">\(X\)</span>. [Name the family and specify all parameters].</li>
 </ol>
 <p><span class="math display">\[X \sim Binomial(10,0.8)\]</span></p>
@@ -446,11 +445,11 @@ for <span class="math inline">\(k\in\{0,1,2,...,n\}\)</span>. Here, <span class=
 <pre><code>## [1] 0.3019899</code></pre>
 <pre class="r"><code>factorial(10)/(factorial(8) * factorial(2)) * 0.8^8 * 0.2^2</code></pre>
 <pre><code>## [1] 0.3019899</code></pre>
-=======
-<li><p>Write down the distribution of <span class="math inline">\(X\)</span>. [Name the family and specify all parameters].</p></li>
-<li><p>Calculate the probability that the drug worked on all <span class="math inline">\(10\)</span> mice, given that the drug worked on at least <span class="math inline">\(8\)</span> mice.</p></li>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Calculate the probability that the drug worked on all <span class="math inline">\(10\)</span> mice, given that the drug worked on at least <span class="math inline">\(8\)</span> mice.</li>
 </ol>
->>>>>>> 278d2e5d91f23ce2b1f09f2e58e238199cabb65d
+<pre class="r"><code>dbinom(2,2,0.8)</code></pre>
+<pre><code>## [1] 0.64</code></pre>
 </div>
 <div id="problem-2" class="section level3">
 <h3>Problem 2</h3>
@@ -478,58 +477,199 @@ for <span class="math inline">\(k\in\{0,1,2,...,n\}\)</span>. Here, <span class=
 </tbody>
 </table>
 <ol style="list-style-type: lower-alpha">
-<<<<<<< HEAD
 <li>Is this a fair game? Explain.</li>
 </ol>
 <p><span class="math inline">\(\text{Let } X = \{ \text{rolling a 3 or less}\} \quad \text{Let } Y = \{ \text{rolling a 10 or greater}\}\)</span></p>
 <p><span class="math inline">\(X = \{ (1,1), (1,2), (2,1)\} \quad Y = \{ (4,6), (5,5), (5,6), (6,4), (6,5), (6,6)\}\)</span></p>
 <p><span class="math inline">\(n\{ X \} &lt; n\{Y\}\)</span></p>
-<p><strong>This game is not fair because there are only three ways for Harold to win</strong> b) If Timmy wins in round 1, what is his expected earnings?</p>
+<p><strong>This game is not fair because there are only three ways for Harold to win and there are 6 ways for Timmy to win</strong></p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>If Timmy wins in round 1, what is his expected earnings?</li>
+</ol>
+<p><strong>E(X) = 1 * 9/12 + 5 * 3/12 = 2</strong></p>
+<pre class="r"><code>1 * 9/12 + 5 * 3/12</code></pre>
+<pre><code>## [1] 2</code></pre>
 <ol start="3" style="list-style-type: lower-alpha">
-=======
-<li><p>Is this a fair game? Explain.</p></li>
-<li><p>If Timmy wins in round 1, what is his expected earnings?</p></li>
->>>>>>> 278d2e5d91f23ce2b1f09f2e58e238199cabb65d
-<li><p>What is the probability that one of them is broke after 2 rounds of the game?</p></li>
+<li>What is the probability that one of them is broke after 2 rounds of the game?</li>
+</ol>
+<p>The chance that either one is broke is the chance that either Harold OR Timmy wins both rounds AND picks two face cards.</p>
+<p>Let X = Someone going broke after two rounds Let A = Harold wins twice Let B = Timmy wins twice Let C = Two face cards are drawn</p>
+<p>$$ <span class="math display">\[\begin{align*}
+X &amp;= ((A \cup B) \cap C)\\
+P(X) &amp;= P(A) + P(B) \times P(C)\\
+P(A) &amp;= \frac{3}{36}^2 = 0.0069\\
+P(B) &amp;= \frac{6}{36}^2 = 0.0278\\
+P(C) &amp;= \frac{2}{12}^2 = 0.0625\\
+P(X) &amp;= 0.0022
+
+\end{align*}\]</span>$$</p>
+<pre class="r"><code>pA = (3/36)^2 
+pB = (6/36)^2
+pC = (3/12)^2
+pX = (pA + pB) * pC
+
+pA</code></pre>
+<pre><code>## [1] 0.006944444</code></pre>
+<pre class="r"><code>pB</code></pre>
+<pre><code>## [1] 0.02777778</code></pre>
+<pre class="r"><code>pC</code></pre>
+<pre><code>## [1] 0.0625</code></pre>
+<pre class="r"><code>pX</code></pre>
+<pre><code>## [1] 0.002170139</code></pre>
+<pre class="r"><code>n &lt;-  100000
+broke &lt;-  0
+
+for(i in 1:n){
+  roll1 = sample(1:6, 2, replace = T)
+  roll2 = sample(1:6, 2, replace = T)
+  pick1 = sample(2:13, 1, replace =T)
+  pick2 = sample(2:13, 1, replace =T)
+  
+  if(sum(roll1) &lt;= 3 &amp; sum(roll2) &lt;= 3 &amp; pick1 &gt; 10 &amp; pick2 &gt; 10) broke &lt;- broke + 1
+  if(sum(roll1) &gt;= 10 &amp; sum(roll2) &gt;=10 &amp; pick1 &gt; 10 &amp; pick2 &gt; 10) broke &lt;- broke + 1
+}
+broke/n</code></pre>
+<pre><code>## [1] 0.00212</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
 <li><p>Let X = Amount of money earned by Harold in a round of the game (when Harold loses to Timmy his earnings are negative).</p>
 <ol style="list-style-type: lower-roman">
-<li>Give the distribution of X</li>
-<li>Calculate E(X)</li>
-<li>Calculate Var(X)</li>
+<li>Give the distribution of X <span class="math display">\[\begin{align*}
+P(X = -5) &amp;= \frac{6}{36} \times \frac{3}{12} = 0.0417\\
+P(X = -1) &amp;= \frac{6}{26} \times \frac{9}{12} = 0.125\\
+P(X = 0) &amp;= \frac{27}{36} = 0.75\\
+P(X = 1) &amp;= \frac{3}{36} \times \frac{9}{12} = 0.0625\\
+P(X = 5) &amp;= \frac{3}{36} \times \frac{3}{12} = 0.0208
+\end{align*}\]</span></li>
 </ol></li>
-<li><p>How many rounds can Harold expect to play before he goes broke?</p></li>
 </ol>
+<pre class="r"><code>px_5 = 6/36 * 3/12
+px_1 = 6/36 * 9/12
+px0 = 27/36
+px1 = 3/36 * 9/12
+px5 = 3/36 * 3/12
+
+px_5</code></pre>
+<pre><code>## [1] 0.04166667</code></pre>
+<pre class="r"><code>px_1</code></pre>
+<pre><code>## [1] 0.125</code></pre>
+<pre class="r"><code>px0</code></pre>
+<pre><code>## [1] 0.75</code></pre>
+<pre class="r"><code>px1</code></pre>
+<pre><code>## [1] 0.0625</code></pre>
+<pre class="r"><code>px5</code></pre>
+<pre><code>## [1] 0.02083333</code></pre>
+<pre class="r"><code>sum(px_5,px_1,px0,px1,px5)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre><code> ii. Calculate E(X)</code></pre>
+<pre class="r"><code>Ex = -5*px_5 + -1*px_1 + 0*px0 + 1*px1 + 5*px5
+paste0(&quot;The expected value E[X] is: &quot;,Ex)</code></pre>
+<pre><code>## [1] &quot;The expected value E[X] is: -0.166666666666667&quot;</code></pre>
+<pre><code> iii. Calculate Var(X)
+ 
+ </code></pre>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>How many rounds can Harold expect to play before he goes broke?</li>
+</ol>
+<pre class="r"><code>paste0(&quot;Harold can expect to go broke after &quot;,abs(10/Ex),&quot; rounds&quot;)</code></pre>
+<pre><code>## [1] &quot;Harold can expect to go broke after 60 rounds&quot;</code></pre>
 </div>
 <div id="problem-3" class="section level3">
 <h3>Problem 3</h3>
-<p>A lepidopterist is studying changes in butterfly flight patterns in the first 30 days after metamorphisis. For every cocoon collected for the study, there is a 20% chance in lab conditions that the butterfly will not complete metamorphisis. Hint: Use the R function <code>dbinom</code>.</p>
+<p>A lepidopterist is studying changes in butterfly flight patterns in the first 30 days after metamorphosis. For every cocoon collected for the study, there is a 20% chance in lab conditions that the butterfly will not complete metamorphosis. Hint: Use the R function <code>dbinom</code>.</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>What probability distribution can be used to model the number of butterflies that can be used for the study from an initial batch of cocoons?</p></li>
-<li><p>If the researcher starts with 50 cocoons, what is the probability she will have at least 48 surviving butterflies?</p></li>
-<li><p>The lepidopterist must have at least 60 surviving butterflies to find significant results in her research on flight behavior. To be comfortable that she will have at least 60 surviving butterflies, she will collect enough cocoons such that the expected number of surviving cocoons is 80. How many cocoons should she collect?</p></li>
-<li><p>Unfortunately, the lepidopterist is only able to collect 40 cocoons on her own. She calls a friend in another lab who is willing to collect additional cocoons (and data). Her friend collects 50 cocoons. The rate of successful metamorphisis in her friend’s lab is 75%. What is the expected number of surviving butterflies from both labs?</p></li>
+<li>What probability distribution can be used to model the number of butterflies that can be used for the study from an initial batch of cocoons?</li>
 </ol>
+<p><strong>The Binomial Distribution could be used to model these events</strong></p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>If the researcher starts with 50 cocoons, what is the probability she will have at least 48 surviving butterflies?</li>
+</ol>
+<p><span class="math inline">\(X \sim Binomial(50,0.8)\)</span></p>
+<p><span class="math inline">\(P(X = 48) = \binom{50}{48} (0.8)^{48} (1-0.8)^2 = 0.0011\)</span></p>
+<pre class="r"><code>dbinom(48,50,0.8)</code></pre>
+<pre><code>## [1] 0.001092737</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>The lepidopterist must have at least 60 surviving butterflies to find significant results in her research on flight behavior. To be comfortable that she will have at least 60 surviving butterflies, she will collect enough cocoons such that the expected number of surviving cocoons is 80. How many cocoons should she collect?</li>
+</ol>
+<p>E(X) = n<em>p 80 = n</em>0.8 n = 100</p>
+<pre class="r"><code>80/0.8</code></pre>
+<pre><code>## [1] 100</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Unfortunately, the lepidopterist is only able to collect 40 cocoons on her own. She calls a friend in another lab who is willing to collect additional cocoons (and data). Her friend collects 50 cocoons. The rate of successful metamorphosis in her friend’s lab is 75%. What is the expected number of surviving butterflies from both labs?</li>
+</ol>
+<p><span class="math inline">\(aX + bY\)</span></p>
+<p><span class="math inline">\(a \times E(X) = b \times E(Y)\)</span></p>
+<pre class="r"><code>EX1 = 40*0.8
+EX2 = 50*0.75
+
+EXT = EX1 + EX2
+EXT</code></pre>
+<pre><code>## [1] 69.5</code></pre>
 </div>
 <div id="problem-4" class="section level3">
 <h3>Problem 4</h3>
 <p>Suppose the number X of tornadoes observed in a particular region during a 1 year period has a Poisson distribution with <span class="math inline">\(\lambda = 8\)</span>.</p>
 <ol style="list-style-type: lower-alpha">
 <li>Compute <span class="math inline">\(P(X&lt;3)\)</span>.</li>
+</ol>
+<pre class="r"><code>ppois(3,8)</code></pre>
+<pre><code>## [1] 0.04238011</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
 <li>Compute <span class="math inline">\(P(6 \le X&lt;9)\)</span>.</li>
+</ol>
+<pre class="r"><code>ppois(9,8) - ppois(6,8)</code></pre>
+<pre><code>## [1] 0.40325</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
 <li>Compute <span class="math inline">\(P(X&gt;2)\)</span>.</li>
+</ol>
+<pre class="r"><code>1 - ppois(2,8)</code></pre>
+<pre><code>## [1] 0.986246</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
 <li>What is the probability the observed number of tornadoes is less than the expected value minus 2 standard deviations?</li>
 </ol>
+<p>$$<span class="math display">\[\begin{align*}
+  X &amp;\sim Poisson(\lambda)\\
+  E(X) &amp;= \lambda \\
+  Var(X) &amp;= \lambda \\
+  SD(X) &amp;= \sqrt\lambda
+
+  \end{align*}\]</span>$$</p>
+<pre class="r"><code>lambda = 8
+ppois(lambda - 2*sqrt(lambda),lambda)</code></pre>
+<pre><code>## [1] 0.01375397</code></pre>
 </div>
 <div id="problem-5" class="section level3">
 <h3>Problem 5</h3>
 <p>Chickenpox has predominately been eradicated in the United States due to the development of the varicella vaccine. However, approximately .08% of infants immunized experience a serious reaction to the vaccine (febrile seizures). Suppose on a given day, one million infants are vaccinated against Chickenpox.</p>
 <ol style="list-style-type: lower-alpha">
-<li><p>What is the expected number of infants that will experience febrile seizures from the Chickenpox vaccine on a given day? Be sure to justify your answer.</p></li>
-<li><p>What is the variance of the number of infants experiencing febrile seizures from the Chickenpox vaccine on a given day?</p></li>
-<li><p>Using the <code>dbinom()</code> function in R, calculate the probability that exactly 850 infants develop febrile seizures after being vaccinated for Chickenpox.</p></li>
-<li><p>Is it appropriate to use the Poisson distribution in this situation (to approximate the binomial distribution) to model the number of serious reactions to the varicella vaccine? Explain why. What is the mean of the approximating Poisson distribution? Considering that the Poisson distribution is often used to model counts over space or time, how could you interpret the mean of the approximating Poisson distribution for this problem?</p></li>
-<li><p>Using (d), and the R function, <code>dpois()</code>, determine the approximate probability that exactly 850 of the 1 million infants vaccinated against the Chickenpox experience a febrile seizure. How does this probability compare to that calculated in part (c)?</p></li>
+<li>What is the expected number of infants that will experience febrile seizures from the Chickenpox vaccine on a given day? Be sure to justify your answer. Let’s assume that <span class="math inline">\(X \sim Binomial(1000000, 0.0008)\)</span> if this is true then <span class="math inline">\(E(X) = np = 800\)</span></li>
 </ol>
+<pre class="r"><code>n = 1000000
+p = 0.0008
+
+n*p</code></pre>
+<pre><code>## [1] 800</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>What is the variance of the number of infants experiencing febrile seizures from the Chickenpox vaccine on a given day?</li>
+</ol>
+<p><span class="math inline">\(Var(X) = \sigma^2 = np(1-p) = 799.36\)</span></p>
+<pre class="r"><code>n*p*(1-p)</code></pre>
+<pre><code>## [1] 799.36</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Using the <code>dbinom()</code> function in R, calculate the probability that exactly 850 infants develop febrile seizures after being vaccinated for Chickenpox.</li>
+</ol>
+<pre class="r"><code>dbinom(850,1000000,0.0008)</code></pre>
+<pre><code>## [1] 0.002957505</code></pre>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Is it appropriate to use the Poisson distribution in this situation (to approximate the binomial distribution) to model the number of serious reactions to the varicella vaccine? Explain why. What is the mean of the approximating Poisson distribution? Considering that the Poisson distribution is often used to model counts over space or time, how could you interpret the mean of the approximating Poisson distribution for this problem?</li>
+</ol>
+<p>Yes, it is appropriate to use the Poisson distribution to approximate the binomial distribution. For a Binomial Distribution, as <span class="math inline">\(n \rightarrow \infty \text{ and } p \rightarrow 0\)</span> the distribution approaches a Poisson distribution.</p>
+<p><span class="math inline">\(X \sim Poisson(\lambda) \quad E(X)= \lambda\)</span>. For this problem the mean of the approximating Poisson distribution is essentially equal to the expected value of the binomial distribution. Furthermore, the expected value for a Poisson distribution of <span class="math inline">\(\lambda\)</span> is <span class="math inline">\(\lambda\)</span> so we can use the value calculated above for our <span class="math inline">\(\lambda\)</span></p>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>Using (d), and the R function, <code>dpois()</code>, determine the approximate probability that exactly 850 of the 1 million infants vaccinated against the Chickenpox experience a febrile seizure. How does this probability compare to that calculated in part (c)?</li>
+</ol>
+<pre class="r"><code>dpois(850, 800)</code></pre>
+<pre><code>## [1] 0.002959949</code></pre>
+<p>I’d say that the calculated value from the Poisson distribution is a pretty good approximation for this Binomial Distribution.</p>
 </div>
 </div>
 </div>

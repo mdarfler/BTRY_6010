@@ -101,7 +101,6 @@ An experimental drug with $80\%$ success rate of lowering blood pressure in mice
 
  a) Write down the distribution of $X$. [Name the family and specify all parameters].
  
-<<<<<<< HEAD
  $$X \sim Binomial(10,0.8)$$
  
  b) Calculate the probability that the drug worked on all $10$ mice, given that the drug worked on at least $8$ mice.
@@ -111,9 +110,12 @@ An experimental drug with $80\%$ success rate of lowering blood pressure in mice
 dbinom(8, size = 10, prob = 0.8)
 factorial(10)/(factorial(8) * factorial(2)) * 0.8^8 * 0.2^2
 ```
-=======
  b) Calculate the probability that the drug worked on all $10$ mice, given that the drug worked on at least $8$ mice.
->>>>>>> 278d2e5d91f23ce2b1f09f2e58e238199cabb65d
+ 
+```{r}
+dbinom(2,2,0.8)
+```
+ 
   
 ### Problem 2
 
@@ -128,7 +130,6 @@ Each player starts the game with $10.  Assume all die rolls and card draws are i
 +-------------+-------+---------+
 
  
-<<<<<<< HEAD
  a) Is this a fair game? Explain. 
  
 $\text{Let } X = \{ \text{rolling a 3 or less}\} \quad \text{Let } Y = \{ \text{rolling a 10 or greater}\}$
@@ -137,50 +138,182 @@ $X = \{ (1,1), (1,2), (2,1)\}  \quad Y = \{ (4,6), (5,5), (5,6), (6,4), (6,5), (
 
 $n\{ X \} < n\{Y\}$
 
- **This game is not fair because there are only three ways for Harold to win**
+ **This game is not fair because there are only three ways for Harold to win and there are 6 ways for Timmy to win**
  
  b) If Timmy wins in round 1, what is his expected earnings?
  
- E(X)
+ **E(X) = 1 * 9/12 + 5 * 3/12 = 2**
  
-=======
- a) Is this a fair game? Explain.
+```{r}
+1 * 9/12 + 5 * 3/12
+```
  
- b) If Timmy wins in round 1, what is his expected earnings?
- 
->>>>>>> 278d2e5d91f23ce2b1f09f2e58e238199cabb65d
  c) What is the probability that one of them is broke after 2 rounds of the game?
+ 
+The chance that either one is broke is the chance that either Harold OR Timmy wins both rounds AND picks two face cards.
+
+Let X = Someone going broke after two rounds
+Let A = Harold wins twice
+Let B = Timmy wins twice
+Let C = Two face cards are drawn
+
+$$ \begin{align*}
+X &= ((A \cup B) \cap C)\\
+P(X) &= P(A) + P(B) \times P(C)\\
+P(A) &= \frac{3}{36}^2 = 0.0069\\
+P(B) &= \frac{6}{36}^2 = 0.0278\\
+P(C) &= \frac{2}{12}^2 = 0.0625\\
+P(X) &= 0.0022
+
+\end{align*}$$
+```{r}
+pA = (3/36)^2 
+pB = (6/36)^2
+pC = (3/12)^2
+pX = (pA + pB) * pC
+
+pA
+pB
+pC
+pX
+```
+
+```{r}
+n <-  100000
+broke <-  0
+
+for(i in 1:n){
+  roll1 = sample(1:6, 2, replace = T)
+  roll2 = sample(1:6, 2, replace = T)
+  pick1 = sample(2:13, 1, replace =T)
+  pick2 = sample(2:13, 1, replace =T)
+  
+  if(sum(roll1) <= 3 & sum(roll2) <= 3 & pick1 > 10 & pick2 > 10) broke <- broke + 1
+  if(sum(roll1) >= 10 & sum(roll2) >=10 & pick1 > 10 & pick2 > 10) broke <- broke + 1
+}
+broke/n
+```
+ 
  
  d) Let X = Amount of money earned by Harold in a round of the game (when Harold loses to Timmy his earnings are negative).  
      
      i. Give the distribution of X
+$$\begin{align*}
+P(X = -5) &= \frac{6}{36} \times \frac{3}{12} = 0.0417\\
+P(X = -1) &= \frac{6}{26} \times \frac{9}{12} = 0.125\\
+P(X = 0) &= \frac{27}{36} = 0.75\\
+P(X = 1) &= \frac{3}{36} \times \frac{9}{12} = 0.0625\\
+P(X = 5) &= \frac{3}{36} \times \frac{3}{12} = 0.0208
+\end{align*}$$
+```{r}
+px_5 = 6/36 * 3/12
+px_1 = 6/36 * 9/12
+px0 = 27/36
+px1 = 3/36 * 9/12
+px5 = 3/36 * 3/12
+
+px_5
+px_1
+px0
+px1
+px5
+
+sum(px_5,px_1,px0,px1,px5)
+```
+     
      ii. Calculate E(X)
+```{r}
+Ex = -5*px_5 + -1*px_1 + 0*px0 + 1*px1 + 5*px5
+paste0("The expected value E[X] is: ",Ex)
+```
+
      iii. Calculate Var(X)
      
+     
  e) How many rounds can Harold expect to play before he goes broke?
+```{r}
+paste0("Harold can expect to go broke after ",abs(10/Ex)," rounds")
+```
+ 
 
 ### Problem 3 
 
-A lepidopterist is studying changes in butterfly flight patterns in the first 30 days after metamorphisis. For every cocoon collected for the study, there is a 20% chance in lab conditions that the butterfly will not complete metamorphisis.  Hint: Use the R function `dbinom`.
+A lepidopterist is studying changes in butterfly flight patterns in the first 30 days after metamorphosis. For every cocoon collected for the study, there is a 20% chance in lab conditions that the butterfly will not complete metamorphosis.  Hint: Use the R function `dbinom`.
 
  a) What probability distribution can be used to model the number of butterflies that can be used for the study from an initial batch of cocoons?
  
+ **The Binomial Distribution could be used to model these events**
+ 
  b) If the researcher starts with 50 cocoons, what is the probability she will have at least 48 surviving butterflies?
+ 
+ $X \sim Binomial(50,0.8)$
+ 
+ $P(X = 48) = \binom{50}{48} (0.8)^{48} (1-0.8)^2 = 0.0011$
+ 
+```{r}
+dbinom(48,50,0.8)
+```
+ 
  
  c) The lepidopterist must have at least 60 surviving butterflies to find significant results in her research on flight behavior.  To be comfortable that she will have at least 60 surviving butterflies, she will collect enough cocoons such that the expected number of surviving cocoons is 80.  How many cocoons should she collect?
  
- d) Unfortunately, the lepidopterist is only able to collect 40 cocoons on her own.  She calls a friend in another lab who is willing to collect additional cocoons (and data).  Her friend collects 50 cocoons.  The rate of successful metamorphisis in her friend's lab is 75%.  What is the expected number of surviving butterflies from both labs?
-  
-  
+ E(X) = n*p
+ 80 = n*0.8
+ n = 100
+ 
+```{r}
+80/0.8
+```
+ 
+ d) Unfortunately, the lepidopterist is only able to collect 40 cocoons on her own.  She calls a friend in another lab who is willing to collect additional cocoons (and data).  Her friend collects 50 cocoons.  The rate of successful metamorphosis in her friend's lab is 75%.  What is the expected number of surviving butterflies from both labs?
+
+$aX + bY$
+
+$a \times E(X) = b \times E(Y)$
+```{r}
+EX1 = 40*0.8
+EX2 = 50*0.75
+
+EXT = EX1 + EX2
+EXT
+```
+
 
 ### Problem 4
 
 Suppose the number X of tornadoes observed in a particular region during a 1 year period has a Poisson distribution with $\lambda = 8$.
 
   a) Compute $P(X<3)$.
+```{r}
+ppois(3,8)
+```
+  
   b) Compute $P(6 \le X<9)$.
+```{r}
+ppois(9,8) - ppois(6,8)
+```
+  
+  
   c) Compute $P(X>2)$.
+```{r}
+1 - ppois(2,8)
+```
+
   d) What is the probability the observed number of tornadoes is less than the expected value minus 2 standard deviations?
+  
+  $$\begin{align*}
+  X &\sim Poisson(\lambda)\\
+  E(X) &= \lambda \\
+  Var(X) &= \lambda \\
+  SD(X) &= \sqrt\lambda
+
+  \end{align*}$$
+  
+```{r}
+lambda = 8
+ppois(lambda - 2*sqrt(lambda),lambda)
+```
+
   
 
 ### Problem 5
@@ -188,12 +321,39 @@ Suppose the number X of tornadoes observed in a particular region during a 1 yea
 Chickenpox has predominately been eradicated in the United States due to the development of the varicella vaccine.  However, approximately .08% of infants immunized experience a serious reaction to the vaccine (febrile seizures).  Suppose on a given day, one million infants are vaccinated against Chickenpox.
 
   a) What is the expected number of infants that will experience febrile seizures from the Chickenpox vaccine on a given day?  Be sure to justify your answer.
+  Let's assume that $X \sim Binomial(1000000, 0.0008)$ if this is true then $E(X) = np = 800$
+  
+```{r}
+n = 1000000
+p = 0.0008
+
+n*p
+```
   
   b) What is the variance of the number of infants experiencing febrile seizures from the Chickenpox vaccine on a given day?
   
+  $Var(X) = \sigma^2 = np(1-p) = 799.36$
+  
+```{r}
+n*p*(1-p)
+```
+  
   c) Using the `dbinom()` function in R, calculate the probability that exactly 850 infants develop febrile seizures after being vaccinated for Chickenpox.
+```{r}
+dbinom(850,1000000,0.0008)
+```
+  
   
   d) Is it appropriate to use the Poisson distribution in this situation (to approximate the binomial distribution) to model the number of serious reactions to the varicella vaccine?  Explain why.  What is the mean of the approximating Poisson distribution?  Considering that the Poisson distribution is often used to model counts over space or time, how could you interpret the mean of the approximating Poisson distribution for this problem?
   
+Yes, it is appropriate to use the Poisson distribution to approximate the binomial distribution. For a Binomial Distribution, as $n \rightarrow \infty \text{ and } p \rightarrow 0$ the distribution approaches a Poisson distribution. 
+
+$X \sim Poisson(\lambda) \quad E(X)= \lambda$. For this problem the mean of the approximating Poisson distribution is essentially equal to the expected value of the binomial distribution. Furthermore, the expected value for a Poisson distribution of $\lambda$ is $\lambda$ so we can use the value calculated above for our $\lambda$
+  
   e) Using (d), and the R function, `dpois()`, determine the approximate probability that exactly 850 of the 1 million infants vaccinated against the Chickenpox experience a febrile seizure.  How does this probability compare to that calculated in part (c)?
   
+```{r}
+dpois(850, 800)
+```
+  
+  I'd say that the calculated value from the Poisson distribution is a pretty good approximation for this Binomial Distribution. 
