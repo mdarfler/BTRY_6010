@@ -218,11 +218,20 @@ sqrt(.Last.value)
 choose(50,48) * 0.894^48 * 0.106^2
 ```
   
-  *$P(X=48) = 50!/48!2!$ $0.894^{48}(1-0.894)^{2}$ =*
-  
   d) What is the probability that exactly 2 Norwegians in the sample do not drink at least 1 cup of coffee a day?
   
+  0.0635
+  
   e) What is the probability that more than 2 Norwegians in the sample do not drink at least 1 cup of coffee a day?
+ $$ \begin{align*}
+ P(X ≤ 47) &= \sum_{i = 1}^{47} \binom{50}{i} p^i (1-p)^{50 - i} \\
+ &= 1-P(X > 47)
+ \end{align*}
+$$
+```{r}
+?pbinom
+```
+  
   
   f) The following simulates 10,000 observations from a Binomial(50,.894) distribution.  `numCoffee` is the simulated observations.  The last three lines of code use the simulated values to approximate the answers to (a)-(c). 
 

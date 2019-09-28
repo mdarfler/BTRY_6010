@@ -30,15 +30,12 @@ For this homework:
 
 In lecture we have worked out the pmf of a random variable $X$, the number of heads in $3$ independent tosses of a coin which lands heads with probability $p$. The pmf looked as follows:
 
-$$
-\begin{align*}
+$$\begin{align*}
 P(X=0) &= (1-p)^3\\
 P(X=1) &= 3p(1-p)^2 \\
 P(X=2) &= 3p^2(1-p) \\
 P(X=3) &= p^3
-\end{align*}
-
-$$
+\end{align*} $$
 
 This is an example of a **binomial random variable** with $n=3$ trials and success probability $p$, often written as  $X \sim Binomial(3, p)$. The probabilities in the above pmf can be calculated in R using the function `dbinom`. For example, for $n=3$ and $p=1/2$, the above $4$ probabilities can be obtained using the commands
 
@@ -105,19 +102,11 @@ An experimental drug with $80\%$ success rate of lowering blood pressure in mice
  
  b) Calculate the probability that the drug worked on all $10$ mice, given that the drug worked on at least $8$ mice.
  
- $$P(X = 8) = \binom{10}{8} 0.8^8 \times (0.2)^2 = 0.302$$
-```{r}
-dbinom(8, size = 10, prob = 0.8)
-factorial(10)/(factorial(8) * factorial(2)) * 0.8^8 * 0.2^2
-```
- b) Calculate the probability that the drug worked on all $10$ mice, given that the drug worked on at least $8$ mice.
- 
- $$\begin{align*}
- P(P = 10 | P \leq 8) &= \dfrac{P(X = 10) \cap P(X \geq 8)}{P(X \geq 8)}\\
- &=\dfrac{P(X = 10)}{P(X \geq 8)}\\
- &= 0.107/0.6242 = 0.172
- 
- \end{align*}$$
+$$\begin{align*} P(X = 10 | X \leq 8) &= \dfrac{P(X = 10) \cap P(X \geq 8)}{P(X \geq 8)}\\
+&=\dfrac{P(X = 10)}{P(X \geq 8)}\\
+&=\dfrac{\binom{10}{10}0.8^{10}(1-0.8)^0}{\sum_{i=0}^{8}\binom{10}{i}0.8^i(1-0.8)^{10-i}}\\
+&=\dfrac{\texttt{dbinom(10,10.0.8)}}{\texttt{pbinom(8,10,0.8)}}\\
+&= \dfrac{0.107}{0.6242} = 0.172 \end{align*}$$
 ```{r}
 pX10 <- dbinom(10,10,0.8)
 pXgeq8 <- pbinom(8,10,0.8, lower.tail = T)
@@ -146,15 +135,15 @@ Each player starts the game with $10.  Assume all die rolls and card draws are i
  
 $\text{Let } X = \{ \text{rolling a 3 or less}\} \quad \text{Let } Y = \{ \text{rolling a 10 or greater}\}$
   
-$X = \{ (1,1), (1,2), (2,1)\}  \quad Y = \{ (4,6), (5,5), (6,5), (6,4), (6,5), (6,6)\}$
+$X = \{ (1,1), (1,2), (2,1)\}  \quad \quad Y = \{ (4,6), (5,5), (6,5), (6,4), (6,5), (6,6)\}$
 
 $n\{ X \} < n\{Y\}$
 
- **This game is not fair because there are only three ways for Harold to win and there are 6 ways for Timmy to win**
+ >This game is not fair because there are only three ways for Harold to win and there are six ways for Timmy to win
  
  b) If Timmy wins in round 1, what is his expected earnings?
  
- **E(X) = 1 * 9/12 + 5 * 3/12 = 2**
+ >E(X) = $1 \times \frac{9}{12}$ (Chance of picking a pip card) + $5 \times \frac{3}{12}$ (chance of picking a face card) $= 2$
  
 ```{r}
 1 * 9/12 + 5 * 3/12
@@ -162,12 +151,12 @@ $n\{ X \} < n\{Y\}$
  
  c) What is the probability that one of them is broke after 2 rounds of the game?
  
-The chance that either one is broke is the chance that either Harold OR Timmy wins both rounds AND picks two face cards.
+>The chance that either one is broke is the chance that either Harold OR Timmy wins both rounds AND picks two face cards.
 
-Let X = Someone going broke after two rounds
-Let A = Harold wins twice
-Let B = Timmy wins twice
-Let C = Two face cards are drawn
+>Let X = Someone going broke after two rounds
+>Let A = Harold wins twice
+>Let B = Timmy wins twice
+>Let C = Two face cards are drawn
 
 $$ \begin{align*}
 X &= ((A \cup B) \cap C)\\
@@ -175,7 +164,7 @@ P(X) &= (P(A) + P(B)) \times P(C)\\
 P(A) &= \frac{3}{36}^2 = 0.0069\\
 P(B) &= \frac{6}{36}^2 = 0.0278\\
 P(C) &= \frac{2}{12}^2 = 0.0625\\
-P(X) &= 0.0022
+P(X) &= (0.0069 + 0.0278) \times 0.0625 = 0.0022
 
 \end{align*}$$
 
@@ -191,8 +180,9 @@ pC
 pX
 ```
 
-```{r}
-n <-  100000
+```{r, eval=T}
+#Monte Carlo simulation to verify results
+n <-  500000
 broke <-  0
 
 for(i in 1:n){
@@ -214,7 +204,7 @@ broke/n
      
 $$ \begin{align*}
 P(X = -5) &= \frac{6}{36} \times \frac{3}{12} = 0.0417\\
-P(X = -1) &= \frac{6}{26} \times \frac{9}{12} = 0.125\\
+P(X = -1) &= \frac{6}{36} \times \frac{9}{12} = 0.125\\
 P(X = 0) &= \frac{27}{36} = 0.75\\
 P(X = 1) &= \frac{3}{36} \times \frac{9}{12} = 0.0625\\
 P(X = 5) &= \frac{3}{36} \times \frac{3}{12} = 0.0208
@@ -241,23 +231,16 @@ sum(px_5,px_1,px0,px1,px5)
 Ex = -5*px_5 + -1*px_1 + 0*px0 + 1*px1 + 5*px5
 paste0("The expected value E[X] is: ",Ex)
 ```
-Var(X) = (x - µ)2 P(X = x)  
-     iii. Calculate Var(X)
+      iii. Calculate Var(X)
      
 $$ Var[X] = \sum_{i=1}^{n}(x_i - E[X])^2P(X = x_i) = 1.72$$
      
 ```{r}
 vals <- c(-5,-1,0,1,5) 
 weights <- c(px_5,px_1,px0,px1,px5)
+mu <- sum(vals * weights)
 
-mu = sum(vals * weights)
-
-var = 0
-for(i in 1:length(vals)){
-  var <- var + (vals[i]-mu)^2 * weights[i]
-}
-
-var
+var  <-  sum((vals-mu)^2*weights)
 ```
      
  e) How many rounds can Harold expect to play before he goes broke?
@@ -272,7 +255,7 @@ A lepidopterist is studying changes in butterfly flight patterns in the first 30
 
  a) What probability distribution can be used to model the number of butterflies that can be used for the study from an initial batch of cocoons?
  
- **The Binomial Distribution could be used to model these events**
+>The Binomial Distribution could be used to model these events
  
  b) If the researcher starts with 50 cocoons, what is the probability she will have at least 48 surviving butterflies?
  
@@ -281,13 +264,17 @@ A lepidopterist is studying changes in butterfly flight patterns in the first 30
  $P(X = 48) = \binom{50}{48} (0.8)^{48} (1-0.8)^2 = 0.0011$
  
 ```{r}
-dbinom(48,50,0.8)
+n <- 50
+k <- 48
+p <- 0.8
+dbinom(k,n,p)
+choose(n,k)*p^k*(1-p)^(n-k)
 ```
  
  
  c) The lepidopterist must have at least 60 surviving butterflies to find significant results in her research on flight behavior.  To be comfortable that she will have at least 60 surviving butterflies, she will collect enough cocoons such that the expected number of surviving cocoons is 80.  How many cocoons should she collect?
  
- E(X) = n*p
+ >E(X) = n*p
  80 = n*0.8
  n = 100
  
@@ -305,7 +292,7 @@ EX1 = 40*0.8
 EX2 = 50*0.75
 
 EXT = EX1 + EX2
-EXT
+paste0("The total expected number of surviving butterflies is ",EXT)
 ```
 
 
@@ -331,13 +318,11 @@ ppois(9,8) - ppois(6,8)
 
   d) What is the probability the observed number of tornadoes is less than the expected value minus 2 standard deviations?
   
-  $$\begin{align*}
-  X &\sim Poisson(\lambda)\\
-  E(X) &= \lambda \\
-  Var(X) &= \lambda \\
-  SD(X) &= \sqrt\lambda
-
-  \end{align*}$$
+$$\begin{align*}
+X &\sim Poisson(\lambda)\\
+E(X) &= \lambda \\
+Var(X) &= \lambda \\
+SD(X) &= \sqrt\lambda \end{align*}$$
   
 ```{r}
 lambda = 8
@@ -351,7 +336,8 @@ ppois(lambda - 2*sqrt(lambda),lambda)
 Chickenpox has predominately been eradicated in the United States due to the development of the varicella vaccine.  However, approximately .08% of infants immunized experience a serious reaction to the vaccine (febrile seizures).  Suppose on a given day, one million infants are vaccinated against Chickenpox.
 
   a) What is the expected number of infants that will experience febrile seizures from the Chickenpox vaccine on a given day?  Be sure to justify your answer.
-  Let's assume that $X \sim Binomial(1000000, 0.0008)$ if this is true then $E(X) = np = 800$
+
+>Let's assume that $X \sim Binomial(1000000, 0.0008)$ if this is true then $E(X) = np = 800$
   
 ```{r}
 n = 1000000
@@ -362,7 +348,7 @@ n*p
   
   b) What is the variance of the number of infants experiencing febrile seizures from the Chickenpox vaccine on a given day?
   
-  $Var(X) = \sigma^2 = np(1-p) = 799.36$
+>$Var(X) = \sigma^2 = np(1-p) = 799.36$
   
 ```{r}
 n*p*(1-p)
@@ -376,9 +362,9 @@ dbinom(850,1000000,0.0008)
   
   d) Is it appropriate to use the Poisson distribution in this situation (to approximate the binomial distribution) to model the number of serious reactions to the varicella vaccine?  Explain why.  What is the mean of the approximating Poisson distribution?  Considering that the Poisson distribution is often used to model counts over space or time, how could you interpret the mean of the approximating Poisson distribution for this problem?
   
-Yes, it is appropriate to use the Poisson distribution to approximate the binomial distribution. For a Binomial Distribution, as $n \rightarrow \infty \text{ and } p \rightarrow 0$ the distribution approaches a Poisson distribution. 
+>Yes, it is appropriate to use the Poisson distribution to approximate the binomial distribution. For a Binomial Distribution, as $n \rightarrow \infty \text{ and } p \rightarrow 0$ the distribution approaches a Poisson distribution. 
 
-$X \sim Poisson(\lambda) \quad E(X)= \lambda$. For this problem the mean of the approximating Poisson distribution is essentially equal to the expected value of the binomial distribution. Furthermore, the expected value for a Poisson distribution of $\lambda$ is $\lambda$ so we can use the value calculated above for our $\lambda$
+>$X \sim Poisson(\lambda) \quad E(X)= \lambda$. For this problem the mean of the approximating Poisson distribution is essentially equal to the expected value of the binomial distribution. Furthermore, the expected value for a Poisson distribution of $\lambda$ is $\lambda$ so we can use the value calculated above for our $\lambda$
   
   e) Using (d), and the R function, `dpois()`, determine the approximate probability that exactly 850 of the 1 million infants vaccinated against the Chickenpox experience a febrile seizure.  How does this probability compare to that calculated in part (c)?
   
@@ -386,4 +372,4 @@ $X \sim Poisson(\lambda) \quad E(X)= \lambda$. For this problem the mean of the 
 dpois(850, 800)
 ```
   
-  I'd say that the calculated value from the Poisson distribution is a pretty good approximation for this Binomial Distribution. 
+>I'd say that the calculated value from the Poisson distribution (0.0029599) is a pretty good approximation for this Binomial Distribution (0.0029575). 
