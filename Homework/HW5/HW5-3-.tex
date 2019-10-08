@@ -1,0 +1,528 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Homework 5: Uniform and Normal Distributions, the Central Limit Theorem (CLT)},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Homework 5: Uniform and Normal Distributions, the Central Limit Theorem
+(CLT)}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+
+\begin{document}
+\maketitle
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\hypertarget{name-your-name}{%
+\section{NAME: Your Name}\label{name-your-name}}
+
+\hypertarget{netid-your-netid}{%
+\section{NETID: Your NetID}\label{netid-your-netid}}
+
+\textbf{DUE DATE: October 12, 2019 by 11:59pm}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{For this homework, it will be helpful to have a copy of the
+knitted version of this document to answer the questions as much of it
+is written using mathematical notation that may be difficult to read
+when the document is not knitted.}
+
+\hypertarget{instructions}{%
+\subsection{Instructions}\label{instructions}}
+
+For this homework:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  All calculations must be done within your document in code chunks.
+  Provide all intermediate steps.
+\item
+  Include any mathematical formulas you are using for a calculation.
+  Surrounding mathematical expresses by dollar signs makes the math look
+  nicer and lets you use a special syntax (called latex) that allows for
+  Greek letters, fractions, etc. Note that this is not R code and
+  therefore should not be put in a code chunk. You can put these
+  immediately before the code chunk where you actually do the
+  calculation.
+\end{enumerate}
+
+\hypertarget{some-notation}{%
+\subsubsection{Some Notation}\label{some-notation}}
+
+Your solutions to the problems below must include the formula used for
+each calculation. To get you started, here is some mathematical
+expressions written in latex that you may find helpful when writing out
+the math in your answers. You can copy, paste, and edit these
+expressions as needed.
+
+For \(X \sim N(\mu, \sigma)\) and real numbers \(a\) and \(b\):
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\tightlist
+\item
+  \(P(X \leq b) = P(Z \leq (b-\mu)/\sigma)\)
+\item
+  \(P(X \geq a) = P(Z \geq (a-\mu)/\sigma)\)
+\item
+  \(P(a \leq X \leq b) = P((a-\mu)/\sigma \leq Z \leq (b-\mu)/\sigma)\)
+\end{enumerate}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\textbf{In this homework we will explore two continuous distributions
+(uniform and normal) and the Central Limit Theorem. For uniform
+distribution, probability calculation often reduces to calculating areas
+of rectangles. For normal distribution, one needs to use z-scores along
+with normal probability tables (see Appendix B of textbook). Here is a
+brief review of normal distribution and z-scores. }
+
+For \(X\sim N(\mu,\sigma)\) and an interval \((a,b)\) on the real line,
+
+\[P(X \in (a,b)) = \int_{a}^{b} \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}(x-\mu)^2}dx\]
+
+(i.e., area under the pdf between \(a\) and \(b\)). As noted in lecture,
+this cannot be computed in closed form; however, in R this can be
+computed numerically.
+
+For \(X \sim N(\mu, \sigma)\), the probability of getting a value in any
+interval on the real line can be expressed solely in terms of the
+cumulative distribution function, \(P(X \leq x)\). For any real numbers,
+\(a\) and \(b\), \(a < b\):
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \(P(X < b)\) = \(P(X \leq b)\), the probability of getting a value
+  less than (or equal to) \(b\)
+\item
+  \(P(X > a)\) = \(P(X \geq a)\) = \(1 - P(X < a)\), the probability of
+  getting a value greater than (or equal to) a
+\item
+  \(P(a < X < b)\) = \(P(X < b) - P(X < a)\), the probability of getting
+  a value between a and b
+\item
+  \(P(X = a) = 0\), the probability of getting the value a
+\end{enumerate}
+
+In R, the \texttt{pnorm}(x,\(\mu\),\(\sigma\)) function is the
+cumulative probability distribution function for the normal distribution
+with mean, \(\mu\) and standard deviation, \(\sigma\), evaluated at x,
+i.e.~\(P(X \leq x)\) =\texttt{pnorm}(x,\(\mu\),\(\sigma\)) for
+\(X \sim N(\mu,\sigma)\).
+
+\hypertarget{calculating-probabilities-associated-with-the-normal-distribution-using-z-scores}{%
+\subsubsection{Calculating Probabilities Associated with The Normal
+Distribution Using
+z-scores}\label{calculating-probabilities-associated-with-the-normal-distribution-using-z-scores}}
+
+Every normal distribution, \(N(\mu,\sigma)\), can be seen as a shifted
+and scaled standard normal distribution, \(N(0,1)\).
+
+Assume, \(X \sim N(\mu,\sigma)\) and \(Z \sim N(0,1)\). Then
+
+\(\frac{X-\mu}{\sigma} \sim Z\).
+
+Thus, every quantile in the sample space of \(X\) has a corresponding
+``standardized'' quantile in the sample space of \(Z\) (called the
+z-score). If \(b\) is an outcome in the sample space of \(X\), the
+corresponding standardized value of \(b\) in the sample space of \(Z\)
+is
+
+\(\frac{b-\mu}{\sigma}\) = z-score for \(b\).
+
+Using z-scores, probabilities for \(X\) can be determined by
+transforming each quantile of \(X\) into a standardized quantile and
+using the probability distribution function for the standard normal
+distribution. For example, for any real \(b\),
+
+\(P(X \leq b) = P(Z \leq \frac{b-\mu}{\sigma})\)
+
+In R, the \texttt{pnorm(x)} function without a mean or standard
+deviation specified is the cumulative probability distribution function
+for the standard normal distribution evaluated at x,
+i.e.~\(P(Z \leq z)\) =\texttt{pnorm(z)}.
+
+\hypertarget{problem-1}{%
+\subsubsection{Problem 1}\label{problem-1}}
+
+Let \(X\) denote the checkout time (in minutes) of a customer in a
+Grocery store. Assume \(X\) is a random variable uniformly distributed
+between \(10\) and \(20\) minutes, i.e., \(X \sim Unif(10, 20)\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  Write down the probability density function (pdf) of \(X\), by
+  replacing the question marks (?) with appropriate values in the next
+  two lines. \[
+  f(x) = ? \mbox{ for }  10 \le x \le 20
+  \] and
+\end{enumerate}
+
+\[
+f(x) = ? \mbox{ for } x < 10 \mbox{ or } x > 20.
+\]
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\item
+  What is the expected checkout time?
+\item
+  What is the first quartile (\(Q_1\)) of checkout times? Show your
+  calculations.
+\item
+  What is the chance that a randomly selected customer at that store
+  will have to wait more than \(15\) minutes? Show your calculations.
+\item
+  Now answer the question in d) using R function \texttt{punif} (Type
+  \texttt{help(punif)} on the R console to know more about this
+  function). Insert a code chunk below that uses \texttt{punif} to
+  calculate this probability. Make sure to set \texttt{echo=TRUE} and
+  \texttt{eval=TRUE} at the start of your code chunk.
+\end{enumerate}
+
+\hypertarget{problem-2}{%
+\subsubsection{Problem 2}\label{problem-2}}
+
+The daily milk production of a Guernsey cow has a normal distribution
+with \(\mu = 70\) pounds and \(\sigma = 13\). A Guernsey cow is chosen
+at random. Let \(X\) = Milk production in one day for a Guernsey cow.
+
+\textbf{For (a) - (c) answer each question in two ways:}
+
+\textbf{1) Using the \texttt{pnorm()} function with the mean and
+standard deviation for X specified.}
+
+\textbf{2) By converting all probabilities in terms of the standard
+normal distribution and using the \texttt{pnorm()} function without the
+mean and standard deviation specified.}
+
+\textbf{For both (1) and (2), the formula you are using to calculate
+each probability must be included before the code chunk where the answer
+is evaluated.}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\item
+  What is the probability that a Guernsey cow chosen at random produces
+  more than 90 pounds of milk in a given day?
+\item
+  What is the probability that a Guernsey cow chosen at random produces
+  between 85 and 100 pounds of milk in a given day?
+\item
+  What is the probability that the quantity of milk produced by a
+  Guernsey cow chosen at random is within 1.5 standard deviations of the
+  mean number of pounds of milk produced by a Guernsey cow?
+\end{enumerate}
+
+\hypertarget{problem-3}{%
+\subsubsection{Problem 3}\label{problem-3}}
+
+As we have seen for other probability calculations, we can simulate from
+a \(N(70, 13)\) distribution to estimate the probabilities computed
+above in Problem 2.
+
+The \texttt{rnorm}(n,\(\mu\),\(\sigma\)) function in R will simulate n
+draws from a normal distribution with mean, \(\mu\) and standard
+deviation, \(\sigma\).
+
+\begin{enumerate}
+\def\labelenumi{\roman{enumi})}
+\tightlist
+\item
+  Include a code chunk here that simulates 10,000 draws from the N(70,
+  13) distribution to estimate the probability computed in 2c). As in
+  previous code for estimating probabilities through simulation, you
+  will need to count the number of simulated draws that meet the
+  criterion associated with the event defined in 2c) to be able to
+  estimate this probability.
+\end{enumerate}
+
+\hypertarget{another-way-to-simulate-random-draws-from-n7013}{%
+\subsubsection{\texorpdfstring{Another Way to Simulate Random Draws from
+\(N(70,13)\)}{Another Way to Simulate Random Draws from N(70,13)}}\label{another-way-to-simulate-random-draws-from-n7013}}
+
+Randomly drawing from \(X \sim N(70, 13)\) using \texttt{rnorm(n,70,13)}
+is equivalent to:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\tightlist
+\item
+  Drawing randomly from a N(0,1) distribution
+\item
+  Multiplying (1) by the standard deviation of X
+\item
+  Adding the mean of X to (2)
+\end{enumerate}
+
+So, instead of using \texttt{rnorm(n,70,13)} to draw from
+\(X \sim N(70,13)\), you can also use 13 \(\times\) \texttt{rnorm(n)} +
+70 to draw from \(N(70, 13)\).
+
+\begin{enumerate}
+\def\labelenumi{\roman{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Include a code chunk here that estimates the probability of 2c)
+  through simulating 10,000 draws from the standard normal distribution
+  and using the criterion for counting events associated with 2c)
+  determined in (i).
+\end{enumerate}
+
+\hypertarget{problem-4}{%
+\subsubsection{Problem 4}\label{problem-4}}
+
+Here we will take a look at how an entire probability density function
+can be approximated by simulation.
+
+\begin{enumerate}
+\def\labelenumi{\roman{enumi})}
+\item
+  In a code chunk here simulate 10,000 draws from a \(N(2,3)\)
+  distribution. Call these simulated values, \texttt{Sim\_N23}.
+\item
+  In another code chunk, create a probability histogram of
+  \texttt{Sim\_N23} using \texttt{hist()}. Remember to set
+  \texttt{freq=FALSE.} Set \texttt{breaks\ =\ 75} and
+  \texttt{main=\ \textquotesingle{}10,000\ Simulated\ Draws\ from\ N(2,3)\textquotesingle{}}.
+\item
+  The R function \texttt{lines(x,y)} will add a line to an existing
+  plot. The arguments, \texttt{x} and \texttt{y}, are vectors of x and y
+  coordinates that together define all the points the line must run
+  through. In the code chunk you used to create the histogram above, we
+  will now add code to overlay the histogram with the probability
+  density function for the \(N(2,3)\) distribution. You can do this in
+  three lines of code:
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\item
+  Define the x coordinates as
+  \texttt{xvalues=seq(-10,\ 15,\ length=150)}. \texttt{xvalues} will
+  include an evenly spaced grid of x coordinates.
+\item
+  Assign the output of \texttt{dnorm(xvalues,\ 2,\ 3)} to a vector named
+  \texttt{yvalues}.
+\item
+  Use the \texttt{lines()} function to overlay the histogram created in
+  (ii) with the probability density function for \(N(2,3)\). In
+  particular \texttt{lines(xvalues,\ yvalues)} should do the trick.
+\end{enumerate}
+
+\hypertarget{problem-5}{%
+\subsubsection{Problem 5}\label{problem-5}}
+
+In lecture we saw that the sampling distribution of the sample mean when
+you draw simple random samples seemed to look like a normal. This is a
+general phenomenon, known as the Central Limit Theorem. In particular,
+if \(X_i, i = 1, \ldots, n\) is an independent random sample from just
+about \emph{any} distribution with mean, \(\mu\) and standard deviation
+\(\sigma\), then for large enough \(n\),
+
+\hypertarget{bar-x_n-approx-nmu-sigmasqrtn.}{%
+\subsection{\texorpdfstring{\(\bar X_n \approx N(\mu, \sigma/\sqrt{n})\).}{\textbackslash bar X\_n \textbackslash approx N(\textbackslash mu, \textbackslash sigma/\textbackslash sqrt\{n\}).}}\label{bar-x_n-approx-nmu-sigmasqrtn.}}
+
+Here we will illustrate the Central Limit Theorem by simulating
+independent draws from the X \(\sim\) Poisson(\(\lambda\) = .5)
+distribution.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  We start by looking at the PMF of a Poisson(0.5). Change the code from
+  \texttt{eval=FALSE} to \texttt{eval=TRUE} once you make sure you
+  understand every line of the code chunk.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{probs =}\StringTok{ }\KeywordTok{dpois}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\OperatorTok{:}\DecValTok{6}\NormalTok{), }\FloatTok{0.5}\NormalTok{)}
+\KeywordTok{barplot}\NormalTok{(probs,}\DataTypeTok{names.arg =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{),}\DataTypeTok{main=}\StringTok{'PMF for Poisson(0.5)'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\item
+  Using one or two lines in a code chunk, generate a realization of the
+  sample mean of 4 independent draws from Poisson(.5). You can generate
+  the sample using, \texttt{rpois(4,.5)}.
+\item
+  To simulate draws from the sampling distribution of \(\bar X_4\), we
+  want to repeat (b) many times, storing the results in a vector.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{(\roman{enumi})}
+\item
+  In a code chunk, define the vector of sample means as
+  \texttt{xbar.realizations\ =\ rep(NA,num.simulations)} where
+  \texttt{num.simulations\ =\ 10000}.
+\item
+  In this code chunk, write a \texttt{for} loop that repeats part (b)
+  10,000 times, storing the sample mean generated in iteration i as
+  \texttt{xbar.realizations{[}i{]}}. \texttt{xbar.realizations} will now
+  contain 10,000 draws from the sampling distribution of \(\bar X_4\).
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{3}
+\item
+  Create a probability histogram of \texttt{xbar.realizations.} Set
+  \texttt{main=expression(paste(\textquotesingle{}Histogram\ of\ 10,000\ Draws\ of\ \textquotesingle{},bar(X){[}n{]}))}.
+\item
+  Include a code chunk here that defines, \texttt{n=3}. In this code
+  chunk, include code that repeats parts (b) - (d) using a random sample
+  of \texttt{n} observations instead of 4. Also, as in Problem 4iii),
+  overlay the probability histogram that is created in the last step
+  with the probability density function for a \(N(0.5,\sqrt{0.5/n})\)
+  distribution. To do so, use the following:
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{xvalues =}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{2}\NormalTok{,.}\DecValTok{01}\NormalTok{)}
+\NormalTok{yvalues =}\StringTok{ }\KeywordTok{dnorm}\NormalTok{(xvalues,.}\DecValTok{5}\NormalTok{, }\KeywordTok{sqrt}\NormalTok{(}\FloatTok{0.5}\OperatorTok{/}\NormalTok{n))}
+\KeywordTok{lines}\NormalTok{(xvalues,yvalues)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  Repeat part (e) three times. The first time, set \texttt{n=10}. The
+  second time, set \texttt{n=30}. The third time, set \texttt{n=50}. Be
+  sure you include the probability histogram overlaid with the pdf for
+  \(N(0.5,\sqrt{0.5/n})\) for every choice of \texttt{n}.
+\end{enumerate}
+
+
+\end{document}
