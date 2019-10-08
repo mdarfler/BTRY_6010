@@ -1,0 +1,35 @@
+---
+title: "Class Notes 9/12/2019"
+date: "09/12/2019"
+output: html_notebook
+---
+
+## General Note: Make sure to check the weekly reading list
+
+## Yahtzee Game from Lab
+
+For this problem, if you get all the same values you get a "yahtzee"
+
+```{r}
+sample(1:6, 5, replace = T)
+```
+
+```{r}
+num_trials = 10000
+yahtzee <- 0
+
+#for (i in 1:num_trials) {
+#for(i in 1:num_trials) {
+
+for(i in 1:num_trials) {
+  dice_rolls <- sample(1:6, 5, replace = T)
+  if (sd(dice_rolls) == 0) {
+    print(dice_rolls)
+    yahtzee <- yahtzee + 1
+  }
+}
+#}
+paste0("The frequency of getting a yahtzee is: ", yahtzee/num_trials)
+paste0("the margin of error is ", 1/sqrt(num_trials) * 100,"%")
+```
+
