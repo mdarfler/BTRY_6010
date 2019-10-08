@@ -1,0 +1,206 @@
+---
+title: "Cow Guessing"
+output: html_notebook
+date: "10/08/2019"
+---
+
+# STATS In class notes for 2nd Prelim
+
+#### Main goal: Quantifying uncertainty
+
+Chapter’s 4,5,6
+
+## **Date: 10/8/2019**
+
+Reading this week: Textbook 4.1, 4.2.4. Supplements Chapter 3,4
+
+To Date: fundamentals of probability and distributions. Looking forward we will cover some engineering problems and applications of previous work. Focus will be on classic statistical techniques, but we will also use Monte Carlo simulations.
+
+**Plinko Explanation** - if you sum a group of iid variables it approximates a normal distribution, e.g. *central limit theorem* (classic statistics)
+
+**Bootstrap** - modern method for quantifying uncertainty
+
+**GOAL** Draw scientific inference aces about the specific aspect of a target population from a representative sample. How far are we away from the true population statistic 
+
+Suppose you want to know the average age runners in a race. There are 16,924 runners in the population
+
+$\mu = \dfrac{age_1 + age_2 + \dots + age_16924}{16924}$
+
+If we do SRS we would get
+
+$\bar{X}_i = \dfrac{x_1 + x_2 + \dots + x_i}{n}$
+
+$\mu ≠ \bar{x}$. $\bar{x}$ Is the realization of a random variable. 34.0 and 29.3 might be realizations of the random variables.
+
+> What is the distribution of $\bar{x}$? (Sampling Distribution of $\bar{x}$ for some fixed sample size)
+
+Start with the whole population
+
+![page14image47963456.png](/Users/mdarfler/Library/Application Support/typora-user-images/page14image47963456.png) 
+
+If we SRS with n = 1, it would look exactly like the histogram above. However we we increase n things start to change. For starters, the sample mean $\bar{x}$ does not change. If we draw a histogram of the sample means with n=10 we get:
+
+![page23image47962832.png](/Users/mdarfler/Library/Application Support/typora-user-images/page23image47962832.png)  
+
+Note that the y-axis is density so the area of the blue and the red are both 1.
+
+> Let $\bar{X}_n$ be the sample mean and a SRS of size $n$ from a population with mean $\mu$ and standard deviation $\sigma$. Then, $\bar{X}_n$ is a random variable with
+>
+> $E(\bar{X}_n) = \mu$ And $SD(\bar{X}_n) = \dfrac{\sigma}{\sqrt{n}}$ 
+>
+> $\bar{X}_n \sim N(\mu, \frac{\sigma}{\sqrt{n}})$ For large $n$
+
+#### Inference
+
+$\mu \qquad  p \\\mu_1 - \mu_2 \quad p_1 - p_2 \\ \mu_d \text{ paired mean}$
+
+$\hat{p}_n =$ An approximation of a proportion
+
+Suppose $X_1, \dots, X_n$ are independent coin flips $X_i \sim Bernoulli(p)$
+
+The *sample proportion* can be written $\hat{p}_n = \bar{X}_n = \frac{1}{n} \sum_{I = 1}^n X_i$
+
+E(Xi) = p and Var(Xi) = P(1-p) CLT tells us
+
+$\hat{p}_n \sim N(p, \sqrt{\frac{p(1-p)}{n}})$
+
+
+```{r}
+# Read in data from .csv file
+# This is a data frame containing a single variable: "Guess"
+# A quick look at cow.data$Guess will show that the guesses are sorted in ascending order
+cow.data <- read.csv(file = "https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/Lectures/cow_data(2).csv", header = TRUE)
+# Make histogram
+options(scipen = 999) # suppress scientific notation
+bins <- seq(0, 15000, by = 100)
+hist(cow.data$Guess, breaks = bins, freq = FALSE, xlab = "Weight Estimate (lbs)", ylab = "Density", main = "Histogram of Weight Guesses", col = "red")
+```
+
+```{r}
+# Make new histogram with restricted x-axis
+hist(cow.data$Guess, breaks = bins, xlim = c(0,5000), freq = FALSE, xlab = "Weight Estimate (lbs)", ylab = "Density", main = "Histogram of Weight Guesses", col = "red")
+```
+
+```{r}
+# Function to plot the empirical histogram for a sample
+# Input: n = size of sample
+# Output: plot
+make.empirical.hist <- function(n) {
+  
+  set.seed(5) # for reproducibility
+  
+  # Get sample
+  sample <- sample(cow.data$Guess, size = n)
+  
+  # Make plot
+  hist(sample, breaks = bins, xlim = c(0,5000), freq = FALSE, xlab = "Weight Estimate (lbs)", ylab = "Density", main = paste("Histogram for Sample of Size", n), col = "red")
+  
+}
+
+make.empirical.hist(10)
+make.empirical.hist(100)
+make.empirical.hist(1000)
+```
+
+```{r}
+sample <- sample(cow.data$Guess, size = 1000)
+mean(sample)
+```
+
+```{r}
+# We'll run 10,000 simulations
+num.sim <- 10000
+# Create a vector to store the sample means from each iterate
+sample.means <- c()
+# Run simulations
+for(i in 1:num.sim) {
+  
+  # Get sample of 1,000 guesses
+  sample <- sample(cow.data$Guess, size = 1000)
+  # Compute and store sample mean
+  sample.means[i] <- mean(sample)
+  
+}
+# Display histogram of sample means
+hist(sample.means, freq = FALSE, xlab = "Sample Mean", ylab = "Density", main = "Histogram of Sample Means", col = "red")
+# Mark the location of the population mean
+abline(v = mean(cow.data$Guess), lwd = 2)
+```
+
+### 3.3 Bootstrap
+
+> Can I do an approximation of the population?
+
+For instance, suppose we're interested in the average weight of amphibians on a remote island. We collect 1,000 samples randomly and compute $\mu_{sample}$ and wonder how much it could vary if we chosen a different sample. We can answer this question with **bootstrapping** That is creating the population from the population.
+
+- Collect sample of size $n$ from the pop. Then assume that you no longer have access to the pop. Instead, you will think of this sample as your pop
+- Draw $n$ values randomly, *with replacement*, from the original sample. This will give you a new sample of size $n$. Repeat this step $k$ times to get $k$ bootstrap samples.
+
+```{r}
+set.seed(5) # for reproducibility
+orig.sample <- sample(cow.data$Guess, size = 1000)
+
+#Next we’ll get a single bootstrap sample:
+
+boot.sample <- sample(orig.sample, size = 1000, replace = TRUE)
+
+paste("Mean of original sample:", mean(orig.sample))
+paste("Mean of bootstrapped sample:", mean(boot.sample))
+```
+
+```{r}
+# Function to get bootstrap means
+# Input: original.sample = the original sample
+#        k = number of replications
+# Output: vector of sample means
+get.bootstrap.means <- function(original.sample, k) {
+  
+  # Get size of original sample
+  n <- length(original.sample)
+  
+  # Create vector to store sample means
+  sample.means <- c()
+  
+  # Repeat k times
+  for(i in 1:k) {
+    # Get bootstrap sample
+    boot.sample <- sample(original.sample, size = n, replace = TRUE)
+    # Calculate and store sample mean
+    sample.means[i] <- mean(boot.sample)
+  }
+  
+  return(sample.means)
+}
+
+#Let’s use our function to get 5,000 bootstrap means. We’ll print the first 5 values.
+
+# Get 5,000 sample means
+boot.means <- get.bootstrap.means(orig.sample, 5000)
+# Print the first 5 results
+for(i in 1:5) {
+  print( paste("Bootstrap mean", i, "is:", boot.means[i]) )
+}
+```
+
+```{r}
+hist(boot.means, freq = FALSE, xlab = "Bootstrap Sample Mean", ylab = "Density", main = "Histogram of Bootstrap Means", col = "blue")
+abline(v = mean(cow.data$Guess), lwd = 5)
+```
+
+## Conclusion
+
+Two ways of talking about the sample's relation to the population
+
+1. Classical Central Limit Theorem $\bar{X}_n \sim N(\mu, \frac{\sigma}{\sqrt{n}})$
+2. Bootstrapping - draw many samples *with replacement* from the sample to create an approximation of many random samples from a the theoretical population.
+
+----
+
+# Inference
+
+1. A **confidence interval** - a range of plausible values for a population parameter, based on the data obtainded from our observed sample.
+2. A **hypothesis (or significance) test** - an assessment of whether the observed value of a statistic computed using the sample data is consistent with our divergent from some hypothesized value of the population parameter
+
+these two help us get at *what is $\mu$* better than a single point estimate.
+
+
