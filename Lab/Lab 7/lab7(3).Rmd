@@ -55,24 +55,66 @@ Fuel economy information for cars is determined by the EPA (Environmental Protec
 
   a) Can we use quantiles from the standard normal distribution to determine a 95% confidence interval for the mean fuel economy of Toyota Prius cars?  If so, why?
   
+>Yes, because we know that fuel economy is normally distributed and we know the population standard deviation $\sigma$ 
+  
   b) What is the quantile needed for this confidence interval?  Compute it using the `qnorm()` function in R.
+```{r}
+qnt <- -qnorm(0.025)
+qnt
+```
+  
   
   c) What is $SE(\bar X_n)$ for this study?
+```{r}
+sigma <- 5
+n <-  12
+SE <-  5/sqrt(12)
+SE
+```
+  
   
   d) Determine a 95% confidence interval for the mean fuel economy of Toyota Prius cars.  Interpret this confidence interval in the context of the study.
   
+$$ 95\% ci = (\bar x - SE * z_{\alpha/2}, \bar x + SE * z_{\alpha/2}) $$
+```{r}
+48.3 - SE * qnt
+48.3 + SE * qnt
+```
 
 ### Problem 2
 
 Obesity is one of the most serious health risks of the 21st century.  It has become the leading preventable cause of death worldwide.  Obesity is defined as having a BMI (Body Mass Index) over 29.9.  Researchers would like to determine a 99% confidence interval for the mean BMI of adults living in the US.  A random sample of 450,000 adults from this population is taken and the BMI for each adult is recorded.  The sample variance of BMI was 36.  The sample mean of BMI was 27.7. 
   
  a) Can we use quantiles from the standard normal distribution to determine a 99% confidence interval for the mean BMI of adults living in the US?  If so, why?
+ 
+ >Yes because n is large
   
   b) What is the quantile needed for this confidence interval?  Compute it using the `qnorm()` function in R.
+```{r}
+qtile <- -qnorm(0.005)
+qtile
+```
+  
   
   c) What is $SE(\bar X_n)$ for this study?
   
+```{r}
+xbar <- 
+svar  <- 27.7
+n <-  450000
+
+SE <- sqrt(svar)/sqrt(n)
+SE
+```
+  
+  
   d) Determine a 99% confidence interval for the mean BMI of adults from the US.  Interpret this confidence interval in the context of the study.
+  
+```{r}
+xbar - SE * qtile
+xbar + SE * qtile
+```
+  
   
 ## Special Consideration for the Bernoulli Distribution
 
@@ -113,10 +155,41 @@ where
 Quebec is a large province in Eastern Canada, and is the only province in Canada with a primarily French-speaking population.  Historically there has been a debate over whether Quebec should secede from Canada.  In a recent study of 800 Quebecois (residents of Quebec), 28% thought Quebec should secede from Canada.
 
   a) Can we use quantiles from the standard normal distribution to determine a 95% confidence interval for the true proportion of Quebecois that want to secede from Canada?  If so, why? 
+  
+> yes, because $n\hat p_n \geq 10 \text{ and } n(1-\hat p_n) \geq 10$ 
+
+```{r}
+n <- 800
+p_hat <- 0.28
+
+n*p_hat
+n*(1-p_hat)
+```
+
  
   b) What is $SE(\hat p_n)$ for this study?
+  
+  $$SE(\hat p_n)$ = $\sqrt{\frac{\hat p_n(1-\hat p_n)}{n}}$$
+  
+```{r}
+p_hat <- 0.28
+n <- 800
+
+SE <- sqrt(p_hat*(1-p_hat)/n)
+SE
+```
+  
  
   c) Determine a 95% confidence interval for the true proportion of Quebecois that want to secede from Canada.  Interpret this confidence interval in the context of the study.
+  
+```{r}
+qtile <- -qnorm(0.025)
+x_bar = 0.28
+
+x_bar - SE*qtile
+x_bar + SE*qtile
+```
+  
 
 
 ## The t-distribution
@@ -159,8 +232,46 @@ where
 Assume for the study described in Problem 1 that the sample standard deviation of the 12 sampled Toyota Prius cars is 5 mpg and the population standard deviation is unknown.
 
   a) What distribution should be used to compute a confidence interval for the mean fuel econonmy of Toyota Prius cars under the new assumptions?  Why?
+  t(n-1)
 
   b) Recalculate the 95% confidence interval for the mean fuel economy of Toyota Prius cars under the new assumptions.
+```{r}
+x_bar = 48.3
+n <-  12
+s <- 5
+SE = s/sqrt(n)
+
+alpha = 0.05
+qntil = -qt(alpha/2,n-1)
+
+x_bar - SE * qntil
+x_bar + SE * qntil
+```
+  
   
   c) How does this confidence interval compare to the one computed in 1(d)?
+  
+  > This confidence interval is larger than the ci calculated from above where the population standard deviation is known
+
+```{r}
+# Display the Student's t distributions with various
+# degrees of freedom and compare to the normal distribution
+
+x <- seq(-4, 4, length=100)
+hx <- dnorm(x)
+
+degf <- c(1, 3, 8, 30)
+colors <- c("red", "blue", "darkgreen", "gold", "black")
+labels <- c("df=1", "df=3", "df=8", "df=30", "normal")
+
+plot(x, hx, type="l", lty=2, xlab="x value",
+  ylab="Density", main="Comparison of t Distributions")
+
+for (i in 1:4){
+  lines(x, dt(x,degf[i]), lwd=2, col=colors[i])
+}
+
+legend("topright", inset=.05, title="Distributions",
+  labels, lwd=2, lty=c(1, 1, 1, 1, 2), col=colors)
+```
 
