@@ -7,8 +7,8 @@ output:
   
 ----
 
-# NAME: Your Name 
-# NETID: Your NetID 
+# NAME: Michael Darfler
+# NETID:mbd25
 **DUE DATE: October 12, 2019 by 11:59pm**  
 
 ----
@@ -81,21 +81,32 @@ Let $X$ denote the checkout time (in minutes) of a customer in a Grocery store. 
 
    a) Write down the probability density function (pdf) of $X$, by replacing the question marks (?) with appropriate values in the next two lines.
 $$
-f(x) = ? \mbox{ for }  10 \le x \le 20
+f(x) = 1 \mbox{ for }  10 \le x \le 20
 $$
 and 
 
 $$
-f(x) = ? \mbox{ for } x < 10 \mbox{ or } x > 20.
+f(x) = 0 \mbox{ for } x < 10 \mbox{ or } x > 20.
 $$
 
    b) What is the expected checkout time?
    
+  >15mins
+   
    c) What is the first quartile ($Q_1$) of checkout times? Show your calculations.
+   
+> The first quartile is (20-10)/4 + 10 = 12.5 
    
    d) What is the chance that a randomly selected customer at that store will have to wait more than $15$ minutes? Show your calculations.
    
+   p(X > 15) X~Unif(10,20) = 0.5
+   
+   
+   
    e) Now answer the question in d) using R function `punif` (Type `help(punif)` on the R console to know more about this function). Insert a code chunk below that uses `punif` to calculate this probability. Make sure to set `echo=TRUE` and `eval=TRUE` at the start of your code chunk.
+```{r}
+punif(15, 10,20)
+```
 
 
 ### Problem 2
@@ -160,6 +171,13 @@ The `rnorm`(n,$\mu$,$\sigma$) function in R will simulate n draws from a normal 
 
   i) Include a code chunk here that simulates 10,000 draws from the N(70, 13) distribution to estimate the probability computed in 2c).  As in previous code for estimating probabilities through simulation, you will need to count the number of simulated draws that meet the criterion associated with the event defined in 2c) to be able to estimate this probability.
   
+```{r}
+n <- 1000
+sample <- rnorm(n,mu,sig)
+sum(sample > mu - sig * 1.5 & sample < mu + sig * 1.5)/n
+```
+  
+  
 ### Another Way to Simulate Random Draws from $N(70,13)$
 
 
@@ -173,14 +191,30 @@ So, instead of using `rnorm(n,70,13)` to draw from
  $X \sim N(70,13)$, you can also use 13 $\times$ `rnorm(n)` + 70 to draw from $N(70, 13)$.
 
   ii) Include a code chunk here that estimates the probability of 2c) through simulating 10,000 draws from the standard normal distribution and using the criterion for counting events associated with 2c) determined in (i).
+  
+```{r}
+n = 10000
+sample <- rnorm(n)
+sum(sample > -1.5 & sample < 1.5)/n
+```
+  
 
 ### Problem 4
 
 Here we will take a look at how an entire probability density function can be approximated by simulation. 
 
   i) In a code chunk here simulate 10,000 draws from a $N(2,3)$ distribution.  Call these simulated values, `Sim_N23`.
+```{r}
+n <-  10000
+Sim_N23 = rnorm(n,2,3)
+```
+  
   
   ii) In another code chunk, create a probability histogram of `Sim_N23` using `hist()`. Remember to set `freq=FALSE.`  Set `breaks = 75` and `main= '10,000 Simulated Draws from N(2,3)'`.
+```{r}
+hist(Sim_N23, freq = F, breaks = 75, main='10,000 Simulated Draws from N(2,3)' )
+```
+  
   
   iii) The R function `lines(x,y)` will add a line to an existing plot. The arguments, `x` and `y`, are vectors of x and y coordinates that together define all the points the line must run through.    In the code chunk you used to create the histogram above, we will now add code to overlay the histogram with the probability density function for the $N(2,3)$ distribution.  You can do this in three lines of code:
   
@@ -189,6 +223,14 @@ Here we will take a look at how an entire probability density function can be ap
   b) Assign the output of `dnorm(xvalues, 2, 3)` to a vector named `yvalues`.
     
   c) Use the `lines()` function to overlay the histogram created in (ii) with the probability density function for $N(2,3)$.  In particular `lines(xvalues, yvalues)` should do the trick.
+  
+```{r}
+xvalues <- seq(-10, 15, length=150)
+yvalues <- dnorm(xvalues, 2, 3)
+hist(Sim_N23, freq = F, breaks = 75, main='10,000 Simulated Draws from N(2,3)')
+lines(xvalues, yvalues)
+```
+  
 
 ### Problem 5
 
@@ -200,26 +242,90 @@ Here we will illustrate the Central Limit Theorem by simulating independent draw
 
   a) We start by looking at the PMF of a Poisson(0.5).  Change the code from `eval=FALSE` to `eval=TRUE` once you make sure you understand every line of the code chunk.
   
-```{r, eval=FALSE}
+```{r, eval=T}
 probs = dpois(c(0:6), 0.5)
 barplot(probs,names.arg = c(0,1,2,3,4,5,6),main='PMF for Poisson(0.5)')
 ```
 
   b) Using one or two lines in a code chunk, generate a realization of the sample mean of 4 independent draws from Poisson(.5).  You can generate the sample using, `rpois(4,.5)`.
+```{r}
+sample_mean <- rpois(4, 0.5)
+```
+  
   
   c) To simulate draws from the sampling distribution of $\bar X_4$, we want to repeat (b) many times, storing the results in a vector.
   
   (i) In a code chunk, define the vector of sample means as `xbar.realizations = rep(NA,num.simulations)` where `num.simulations = 10000`.
+```{r}
+num.simulations = 10000
+xbar.realizations = rep(NA,num.simulations) 
+#NANA NANA NANA NANA Batman!
+```
+  
     
   (ii) In this code chunk, write a `for` loop that repeats part (b) 10,000 times, storing the sample mean generated in iteration i as `xbar.realizations[i]`.  `xbar.realizations` will now contain 10,000 draws from the sampling distribution of $\bar X_4$.
+```{r}
+for(i in 1:num.simulations){
+  xbar.realizations[i] = mean(rpois(4,0.5))
+}
+```
+  
     
   d) Create a probability histogram of `xbar.realizations.`  Set `main=expression(paste('Histogram of 10,000 Draws of ',bar(X)[n]))`. 
   
+```{r}
+hist(xbar.realizations, freq = F, main = expression(paste('Histogram of 10,000 Draws of ',bar(X)[4])))
+```
+  
+  
   e) Include a code chunk here that defines, `n=3`.  In this code chunk, include code that repeats parts (b) - (d) using a random sample of `n` observations instead of 4.  Also, as in Problem 4iii), overlay the probability histogram that is created in the last step with the probability density function for a $N(0.5,\sqrt{0.5/n})$ distribution.  To do so, use the following:
-```{r, eval=FALSE}
+```{r, eval=T}
+n <-  3
+for(i in 1:num.simulations){
+  xbar.realizations[i] = mean(rpois(n,0.5))
+}
+
+hist(xbar.realizations, freq = F, breaks = 10, main = expression(paste('Histogram of 10,000 Draws of ',bar(X)[n = 3])))
+
 xvalues = seq(0,2,.01)
 yvalues = dnorm(xvalues,.5, sqrt(0.5/n))
 lines(xvalues,yvalues)
 ```
   
   f)  Repeat part (e) three times.  The first time, set `n=10`. The second time, set `n=30`.  The third time, set `n=50`.  Be sure you include the probability histogram overlaid with the pdf for $N(0.5,\sqrt{0.5/n})$ for every choice of `n`.
+```{r}
+n <-  10
+for(i in 1:num.simulations){
+  xbar.realizations[i] = mean(rpois(n,0.5))
+}
+
+hist(xbar.realizations, freq = F, main = expression(paste('Histogram of 10,000 Draws of ',bar(X)[n = 10])), ylim = c(0,2))
+
+xvalues = seq(0,2,.01)
+yvalues = dnorm(xvalues,.5, sqrt(0.5/n))
+lines(xvalues,yvalues)
+
+n <-  30
+for(i in 1:num.simulations){
+  xbar.realizations[i] = mean(rpois(n,0.5))
+}
+
+hist(xbar.realizations, freq = F, main = expression(paste('Histogram of 10,000 Draws of ',bar(X)[n = 30])), ylim = c(0,4))
+
+xvalues = seq(0,2,.01)
+yvalues = dnorm(xvalues,.5, sqrt(0.5/n))
+lines(xvalues,yvalues)
+
+n <-  50
+for(i in 1:num.simulations){
+  xbar.realizations[i] = mean(rpois(n,0.5))
+}
+
+hist(xbar.realizations, freq = F, main = expression(paste('Histogram of 10,000 Draws of ',bar(X)[n = 50])), ylim = c(0,5))
+
+xvalues = seq(0,2,.01)
+yvalues = dnorm(xvalues,.5, sqrt(0.5/n))
+lines(xvalues,yvalues)
+
+```
+

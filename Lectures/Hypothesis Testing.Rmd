@@ -1,0 +1,59 @@
+---
+title: "Hypothesis Testing"
+output: html_notebook
+date: "10/17/2019"
+---
+
+## Recap
+
+**sampling distribution:** a probabilisitc description of how the observed values of a numerical summary statistic behave under repeated SRS. This concept underlies all basic statistical inference procedures. However. *in practic* we only collect one sample. **QUESTION** what can we say about on sample?
+
+**CTL** to the rescue! $\bar X_n \approx N(\mu, \frac{\sigma}{\sqrt{n}})$ Since individual $X_i$ don't have to look at all like a normal distributions. 
+
+**Two Primary Goals**
+
+1. A **confidence interval** - ranbge of values
+2. **Hypothesis (or significance) test**
+
+## Hypothesis Testing
+- Goal - make a decision about the pop
+- Statistical Hypothesis - a statement made about the value of a population parameter (e.g. $\mu > 80$)
+
+### Example - can I read minds
+
+ask people to think of a number between 1 and 4. go around and guess. **Null Hyopothesis $H_O$** if guessing randomly would get 1/4 correct. **Alternative hypothesis $H_A$** p > 1/4. We know that $X \sim Binom(n,p)$ where n is the number of trials, and $p = 0.5$. What are the odds that P(X ≥ 25) in 65 trials? `1 - pbinom(x-1, n, p)` 
+
+```{r}
+n <-  65
+x <- 25
+p <- 0.25
+1 - pbinom(24,65,0.25)
+```
+
+This is called **p-value** the prob, calculated under the nulll, of seeing something *as or more* extreme than that defined by the null hypothesis.
+
+##How small is small enough
+The **significance level** $\alpha$ of a hypothesis test is our chosen threshold for the p-value below witch we reject the null. most common choice 0.05. (is this strong enough? is this too strong?)
+
+Two kinds of errors: Type I and Type II. $P(\text{Type I error}) \leq \alpha$. P(Reject $H_0 | H_0$ true)
+) **Power** of the test is P(Reject $H_0 | H_A$ is true). The ability to detect that $H_A$ applies. P(Type II error) = P(Fail to reject $H_0 | H_A$ is true) has power 1 - $\alpha$.
+
+Suppose I want to test with $\alpha = 0.05$ How high would observed x need to be for me to reject $H_0$. We need a **cutoff value $c$** usch that P(Reject $H_0 | H_0$ true) = P(X ≥ c | p)
+```{r}
+alpha <-  0.05
+n = 65
+p <- 0.25
+quantile <-  qbinom(1-alpha, n, p) # this is c-1
+cutoff <-  quantile + 1
+cutoff
+
+1 - pbinom(cutoff -1, n, p) # not exactly 0.05 becuase of the discrete nature of the dist
+```
+
+Suppose we found that $x = 21$ out of $n = 65$ guesses. we "fail to reject $H_0$". Suppose I am very psychic so that p = 0.5 Power - P(Binom(65,0.5) ≥ 23) = `1 - pbinom(cuttoff - 1, n, 0.5) = 0.99` So you can plot Power as f function of p.
+
+## How to calculate sample size
+Suppose i think i'm slightly psychic: p = 1/4 + 0.01  = 0.26. What $n$ do I need in order to get a power of $85$. Is $n = 1000$? no because the difference is small and hard to detect. $n \approx 14000$
+
+
+

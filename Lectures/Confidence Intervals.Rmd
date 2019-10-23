@@ -1,0 +1,70 @@
+---
+title: "Confidence Intervals"
+output: html_notebook
+---
+
+#### Interval estimate
+
+interal is calculated bsed on sample (centered at $\bar(X)_n$) thus it is random. example interval $[\bar{X}_n - 3.2, \bar{X}_n + 3.2]$. If we draw 100 samples 97 will cover the *true mean*
+
+![page53image55555488.png](/Users/mdarfler/Library/Application Support/typora-user-images/page53image55555488.png)
+
+If we reeuce the interval we will reduce our confidence unless we increse samples
+
+![page53image55555488.png](/Users/mdarfler/Library/Application Support/typora-user-images/page53image55555488.png)
+
+## Normal t
+
+### Central Limit Theorem
+
+$$ \bar X_n \approx N(\mu, \dfrac{\sigma}{\sqrt{n}})$$
+where $\sigma$ and $\mu$ are the standard deviation and mean of the population. and $n$ is typically $\geq 30$
+
+**RULE OF THUMB** if $n\hat{p}_n \geq 10 \text{ and } n(1 - \hat p_n) \geq 10$ $\hat p_n \approx N(p, \sqrt{p(1-p)/n))}$
+
+### back to Confidence Intervals
+
+>Can we choose the width to get a desired confidence level?
+
+We want to choose $w$ so that $P(\bar X_n - w \leq \mu \leq \bar X_n + w) = 0.95$
+
+if we only kew the distribution of $\bar X_n$ then $P(\mu - \frac{2 \sigma}{\sqrt{n}} \leq \bar X_n \leq \mu - \frac{2 \sigma}{\sqrt{n}})$. Keep in mind that the true population variance is unknown.
+
+we can also look at the compliment of the confidence level which we will call $\alpha$ such that confidence level = $(1 - \alpha)$ This is called *significance* 
+
+
+In reality $2\sigma$ is a 97% confidence level this can be seen by 
+
+```{r}
+qnorm(0.025) # z score at which 2.5% of the population is below, i.e. a/2 quartile
+```
+
+P(1.24 ≤ μ ≤ 5.52)≈ 99% THIS IS NOT TRUE. Without the random variable this is either true or not. What you should say is:
+
+$$P(\bar X_n - \dfrac{2.58 \sigma}{\sqrt n} \leq \mu \leq \bar X_n + \dfrac{2.58 \sigma}{\sqrt n})$$
+
+### When can we treat sample mean as normal
+
+1. When CLT applies (n > 30) ![page30image55532656.png](/Users/mdarfler/Library/Application Support/typora-user-images/page30image55532656.png)
+1. When data distribution is itself nearly noraml ![page33image55320912.png](/Users/mdarfler/Library/Application Support/typora-user-images/page33image55320912.png)
+
+**What happens if $\sigma$ is not known.** Could we replace $\sigma$ by $S_n$ which works if $n$ is large. keep in mind that 
+
+$$\dfrac{\bar X_n - \mu}{\frac{S_n}{\sqrt n} } \not\approx N(0,1) \qquad \text{let's call this } T_n$$
+
+using Sample SD has more variance
+
+![page39image38020624.png](/Users/mdarfler/Library/Application Support/typora-user-images/page39image38020624.png) ![page41image55425872.png](/Users/mdarfler/Library/Application Support/typora-user-images/page41image55425872.png)
+
+## T distribution
+
+where is the $1 - \alpha/2$ quantile of the $t_{df, \alpha/2}$
+![page44image55436432.png](/Users/mdarfler/Library/Application Support/typora-user-images/page44image55436432.png)
+
+## Recap: t-distribution for a CI
+
+1. Use the t-dist when
+  - observations are independent
+  - data's distribution is nearly nomral
+  - $\sigma$ is unknown
+2. when $n$ is large
