@@ -1,0 +1,92 @@
+---
+title: 'Homework 6: Confidence Intervals'
+output: html_document
+---
+  
+----
+
+# NAME: Your Name 
+# NETID: Your NetID 
+**DUE DATE: October 28, 2019 by 11:59pm**  
+
+----
+
+ **For this homework, it will be helpful to have a copy of the knitted version of this document to answer the questions as much of it is written using mathematical notation that may be difficult to read when the document is not knitted.**  
+
+## Instructions
+
+For this homework:
+
+1. All calculations must be done within your document in code chunks.  Provide all intermediate steps.
+
+2. Incude any mathematical formulas you are using for a calculation.  Surrounding mathematical expresses by dollar signs makes the math look nicer and lets you use a special syntax (called latex) that allows for Greek letters, fractions, etc.  Note that this is not R code and therefore should not be put in a code chunk.  You can put these immediately before the code chunk where you actually do the calculation.
+
+### Some Notation
+
+Your solutions to the problems below must include the formula used for each calculation.  To get you started, here is some mathematical expressions written in latex that you may find helpful when writing out the math in your answers.  You can copy, paste, and edit these expressions as needed.
+
+1. ($\bar x_n$ - $SE(\bar X_n)$ $\times$ $z_{\alpha/2}$, $\bar x_n$ + $SE(\bar X_n)$ $\times$ $z_{\alpha/2}$)
+
+2. $n\hat p_n \geq 10$ and
+  $n(1-\hat p_n) \geq 10$
+
+3. ($\hat p_n$ - $SE(\hat p_n)$ $\times$ $z_{\alpha/2}$, $\hat p_n$ + $SE(\hat p_n)$ $\times$ $z_{\alpha/2}$)
+
+4. ($\bar x_n$ - $SE(\bar X_n)$ $\times$ $t_{n-1,\alpha/2}$, $\bar x_n$ + $SE(\bar X_n)$ $\times$ $t_{n-1,\alpha/2}$)
+
+5. $SE(\bar X_n) = \sigma/\sqrt{n}$
+
+6. $s/\sqrt{n}$
+
+7. $SE(\hat p_n)$ estimated by $\sqrt{\frac{\hat p_n(1-\hat p_n)}{n}}$
+
+
+
+----
+
+**In this homework we will practice creating confidence intervals for a population mean, $\mu$.**
+
+### Problem 1
+
+A random sample of 110 lightning flashes in a certain region resulted in a sample average radar echo duration of .81 sec and a sample standard deviation of .34 sec.
+
+  a) What distribution should be used to determine the quantiles needed to calculate a 95% confidence interval for mean radar echo duration? Why?
+  
+  b) Calculate a 95% confidence interval for mean radar echo duration.  Interpret this confidence interval in terms of the study.
+  
+### Problem 2
+
+Ten recently sold houses were randomly selected from Canton, NY.  For each house, the sale price was recorded.  The data are in the *HomesForSaleCanton.csv* file in the folder for homework 6 on blackboard.  Assume the cost of homes in Canton, NY is normally distributed.
+
+  
+  a) What distribution should be used to determine the quantiles needed to calculate a 99% confidence interval for mean cost of a home in Canton, NY? Why?
+  
+  b) Compute a 99% confidence interval for the average cost of a home in Canton, NY.  Interpret this confidence interval in terms of the study.  Use code chunks to compute all of the values needed for the confidence interval and to compute the lower and upper bounds of the confidence interval.
+  
+  c) How would this confidence interval change if the sample mean and variance are unchanged, but the sample size is 35?
+  
+### Problem 3
+
+The data set *ICUAdmissions.csv* includes information on 200 randomly selected patients admitted to the Intensive Care Unit (ICU).  One of the variables, *Status* indicates whether the patient lived (`Status=0`) or died (`Status = 1`).  
+
+  a) Based on these data create a 99% confidence interval for the survival rate of ICU patients.  Include all calculations in a code chunk and interpret this interval in the context of the study.
+  
+  b) What assumptions are necessary for the confidence interval determined  in (a) to be valid?  Provide evidence that each of these assumptions is reasonable.
+  
+
+### Problem 4
+
+A sample of 14 joint specimens of a particular type gave a sample mean proportional limit stress of 8.48 MPa.  Assume proportional limit stress is approximately normally distrubuted.  The variance of proportional limit stress is known to be $\sigma^2 = .6241$.
+
+  a) Calculate and interpret a 95% confidence interval for mean proportional limit stress.
+  
+  b) Without recalculating this interval, explain how the width of this confidence interval would change if the confidence level was set to 90%.
+  
+### Problem 5
+
+United Airlines Flight 179 is non-stop from Boston's logan airport to San Francisco International Airport.  An important factor in scheduling flights is the actual airborne flying time from takeoff to touchdown.  In the data file, *FlightData.csv*, is the airborne time in minutes for 3 dates each month in the year 2010 for this flight and one other flight.  The data of interest can be found in the column named `Flight179`.  Create a 95% confidence interval for the mean airborne time for this flight based on the data and interpret it in terms of the study.  Also, give support for how you chose the quantiles to calculate this interval.
+
+
+
+
+  
