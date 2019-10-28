@@ -1,12 +1,12 @@
 ---
-title: 'Homework 6: Confidence Intervals'
+title: 'DarflerM - HW6'
 output: html_document
 ---
   
 ----
 
-# NAME: Your Name 
-# NETID: Your NetID 
+# NAME: Michael Darfler 
+# NETID: mbd25
 **DUE DATE: October 28, 2019 by 11:59pm**  
 
 ----
@@ -19,7 +19,7 @@ For this homework:
 
 1. All calculations must be done within your document in code chunks.  Provide all intermediate steps.
 
-2. Incude any mathematical formulas you are using for a calculation.  Surrounding mathematical expresses by dollar signs makes the math look nicer and lets you use a special syntax (called latex) that allows for Greek letters, fractions, etc.  Note that this is not R code and therefore should not be put in a code chunk.  You can put these immediately before the code chunk where you actually do the calculation.
+2. Include any mathematical formulas you are using for a calculation.  Surrounding mathematical expresses by dollar signs makes the math look nicer and lets you use a special syntax (called latex) that allows for Greek letters, fractions, etc.  Note that this is not R code and therefore should not be put in a code chunk.  You can put these immediately before the code chunk where you actually do the calculation.
 
 ### Some Notation
 
@@ -40,6 +40,11 @@ Your solutions to the problems below must include the formula used for each calc
 
 7. $SE(\hat p_n)$ estimated by $\sqrt{\frac{\hat p_n(1-\hat p_n)}{n}}$
 
+```{r}
+icu <- read.csv("https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/Homework/HW%206/ICUAdmissions(3).csv", header = T)
+flightdata <- read.csv("https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/Homework/HW%206/FlightData(3).csv", header = T)
+homes <-  read.csv("https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/Homework/HW%206/HomesForSaleCanton(3).csv", header = T)
+```
 
 
 ----
@@ -52,8 +57,33 @@ A random sample of 110 lightning flashes in a certain region resulted in a sampl
 
   a) What distribution should be used to determine the quantiles needed to calculate a 95% confidence interval for mean radar echo duration? Why?
   
+> The distribution that should be used to determine the questionable needed to calculate the 95% confidence interval for mean radar echo duration is the Normal Distribution $N(0,1)$. This is because $n = 110$ which is sufficiently large to assume a Normal distribution under the Central Limit Theorem
+  
+  
   b) Calculate a 95% confidence interval for mean radar echo duration.  Interpret this confidence interval in terms of the study.
   
+$\bar x_n \pm SE(\bar X_n) \times z_{\alpha/2}$
+
+$SE(\bar X_n) = \sigma/\sqrt{n} \approx s/\sqrt n$
+
+
+```{r}
+ci <- 0.95
+alpha <- 1 - ci
+qntile <- -qnorm(alpha/2)
+x_bar <-  0.81
+sd <-  0.34
+n <-  110
+SE <-  sd/sqrt(n)
+
+lower <- x_bar - qntile * SE
+upper <- x_bar + qntile * SE
+
+paste0("ci_95 = ", lower, " ≤ mu ≤", upper)
+```
+
+> We are 95% confident that the true mean of the random Variable X, radar echo duration, is between `r round(lower, 3)`  seconds and `r round(upper, 3)` seconds.
+
 ### Problem 2
 
 Ten recently sold houses were randomly selected from Canton, NY.  For each house, the sale price was recorded.  The data are in the *HomesForSaleCanton.csv* file in the folder for homework 6 on blackboard.  Assume the cost of homes in Canton, NY is normally distributed.
@@ -61,32 +91,137 @@ Ten recently sold houses were randomly selected from Canton, NY.  For each house
   
   a) What distribution should be used to determine the quantiles needed to calculate a 99% confidence interval for mean cost of a home in Canton, NY? Why?
   
+> The Normal Distribution N(0,1) should be used to determine the quantiles needed to calculate the 99% confidence interval for mean cost of a home in Canton, NY because we know that the population distribution from which the sample is generated is also Normal. 
+  
   b) Compute a 99% confidence interval for the average cost of a home in Canton, NY.  Interpret this confidence interval in terms of the study.  Use code chunks to compute all of the values needed for the confidence interval and to compute the lower and upper bounds of the confidence interval.
   
+$\bar x_n \pm SE(\bar X_n) \times z_{\alpha/2}$
+
+$SE(\bar X_n) = \sigma/\sqrt{n} \approx s/\sqrt n$
+  
+```{r}
+ci <- 0.99
+alpha <- 1 - ci
+qntile <- -qnorm(alpha/2)
+x_bar <-  mean(homes$Price)
+sd <-  sqrt(var(homes$Price))
+n <-  length(homes$Price)
+SE10 <-  sd/sqrt(n)
+
+lower10 <- x_bar - qntile * SE10
+upper10 <- x_bar + qntile * SE10
+
+paste0("ci",(1-alpha)*100,"% = ", lower10, " ≤ mu ≤ ", upper10)
+
+```
+
+> We are 99% confident that the true mean of the random Variable X, the sale price of a house in Canton, NY, is between $69,419 and $$224,181.
+
   c) How would this confidence interval change if the sample mean and variance are unchanged, but the sample size is 35?
   
+```{r}
+ci <-  0.99
+alpha <- 1 - ci
+qntile <- -qnorm(alpha/2)
+x_bar <-  mean(homes$Price)
+sd <-  sqrt(var(homes$Price))
+n <-  35
+SE35 <-  sd/sqrt(n)
+
+lower35 <- x_bar - qntile * SE35
+upper35 <- x_bar + qntile * SE35
+
+paste0("ci",(1-alpha)*100,"% = ", lower35, " ≤ mu ≤", upper35)
+```
+>When increasing the sample size from 10 to 35 the range of 99% confidence interval decreased from `r round(upper10 - lower10,2)` to `r round(upper35 - lower35,2)` because the SE decreased from `r round(SE10,2)` to `r round(SE35,2)`.
+
 ### Problem 3
 
 The data set *ICUAdmissions.csv* includes information on 200 randomly selected patients admitted to the Intensive Care Unit (ICU).  One of the variables, *Status* indicates whether the patient lived (`Status=0`) or died (`Status = 1`).  
 
   a) Based on these data create a 99% confidence interval for the survival rate of ICU patients.  Include all calculations in a code chunk and interpret this interval in the context of the study.
   
-  b) What assumptions are necessary for the confidence interval determined  in (a) to be valid?  Provide evidence that each of these assumptions is reasonable.
+>For this study we need to use a Bernoulli Distribution to calculate $\hat p_n$, the sample proportion, and the Standard Deviation.
+
+$sd = \sqrt{\frac{\hat p_n(1-\hat p_n)}{n}}$
+
+```{r}
+(p_hat <- 1-mean(icu$Status))
+(n <-  length(icu$Status))
+(SE <- sqrt((p_hat * (1-p_hat))/n))
   
+ci <- 0.99
+alpha <- 1 - ci
+qntile <- -qnorm(alpha/2)
+
+lower <- p_hat - qntile * SE
+upper <- p_hat + qntile * SE
+
+paste0("ci",(1-alpha)*100,"% = ", lower, " ≤ p_hat ≤", upper)
+```
+
+> We are 99% confident that the true proportion of the random Variable $X = 0$ the patient survived, is between `r round(lower,2)` and `r round(upper, 2)`
+
+  b) What assumptions are necessary for the confidence interval determined  in (a) to be valid?  Provide evidence that each of these assumptions is reasonable.
+
+$n\hat p_n \geq 10 \text{ and }n(1-\hat p_n) \geq 10$
+```{r}
+n*p_hat >= 10
+n*(1-p_hat) >= 10
+```
+
 
 ### Problem 4
 
-A sample of 14 joint specimens of a particular type gave a sample mean proportional limit stress of 8.48 MPa.  Assume proportional limit stress is approximately normally distrubuted.  The variance of proportional limit stress is known to be $\sigma^2 = .6241$.
+A sample of 14 joint specimens of a particular type gave a sample mean proportional limit stress of 8.48 MPa.  Assume proportional limit stress is approximately normally distributed.  The variance of proportional limit stress is known to be $\sigma^2 = .6241$.
 
   a) Calculate and interpret a 95% confidence interval for mean proportional limit stress.
   
+$X \sim N(8.48, 0.6241)$
+$\bar x_n \pm SE(\bar X_n) \times z_{\alpha/2}$
+
+```{r}
+ci <-  0.95
+alpha <- 1 - ci
+qntile <- -qnorm(alpha/2)
+x_bar <-  8.48
+sigma_squared <- 0.6241
+n <-  14
+SE <-  sqrt(sigma_squared/n)
+
+lower <- x_bar - qntile * SE
+upper <- x_bar + qntile * SE
+
+paste0("ci_95 = ", lower, " ≤ mu ≤", upper)
+```
+> We are 95% confident that the true mean of the random Variable X, the proportional limit stress, is between `r round(lower,3)` MPa and `r round(upper, 3)` MPa.
+
   b) Without recalculating this interval, explain how the width of this confidence interval would change if the confidence level was set to 90%.
+  
+>If the confidence interval was set to 90% its width would decrease because the $Z_{\alpha/2}$ value would decrease.
   
 ### Problem 5
 
-United Airlines Flight 179 is non-stop from Boston's logan airport to San Francisco International Airport.  An important factor in scheduling flights is the actual airborne flying time from takeoff to touchdown.  In the data file, *FlightData.csv*, is the airborne time in minutes for 3 dates each month in the year 2010 for this flight and one other flight.  The data of interest can be found in the column named `Flight179`.  Create a 95% confidence interval for the mean airborne time for this flight based on the data and interpret it in terms of the study.  Also, give support for how you chose the quantiles to calculate this interval.
+United Airlines Flight 179 is non-stop from Boston's Logan airport to San Francisco International Airport.  An important factor in scheduling flights is the actual airborne flying time from takeoff to touchdown.  In the data file, *FlightData.csv*, is the airborne time in minutes for 3 dates each month in the year 2010 for this flight and one other flight.  The data of interest can be found in the column named `Flight179`.  Create a 95% confidence interval for the mean airborne time for this flight based on the data and interpret it in terms of the study.  Also, give support for how you chose the quantiles to calculate this interval.
 
 
+```{r}
+data <- flightdata$Flight179
+ci <- 0.95
+alpha <- 1 - ci
+qntile <- -qnorm(alpha/2)
+(x_bar <-  mean(data))
+(var <-  var(data))
+(n <-  length(data))
+(SE <-  sqrt(var/n))
+
+lower <- x_bar - qntile * SE
+upper <- x_bar + qntile * SE
+
+paste0("ci_95 = ", lower, " ≤ mu ≤", upper)
+```
+
+> We are 95% confident that the true mean of the random Variable X, the proportional limit stress, is between `r round(lower, 2)` minutes and `r round(upper, 2)` minutes. The Normal Distribution was used to calculate the quantiles because the sample size was `r n` which is sufficiently large according to the Central Limit Theorem. 
 
 
   
