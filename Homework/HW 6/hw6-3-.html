@@ -438,30 +438,52 @@ paste0(&quot;ci_95 = &quot;, lower, &quot; ≤ mu ≤&quot;, upper)</code></pre>
 <li>What distribution should be used to determine the quantiles needed to calculate a 99% confidence interval for mean cost of a home in Canton, NY? Why?</li>
 </ol>
 <blockquote>
+<<<<<<< HEAD
 <p>The t Distribution with 9 <span class="math inline">\((n-1)\)</span> degrees of freedom should be used to determine the quantiles needed to calculate the 99% confidence interval for mean cost of a home in Canton, NY because we know that the population distribution from which the sample is generated is Normal, but sample size is small and the true population variance is not known.</p>
+=======
+<p>The Normal Distribution N(0,1) should be used to determine the quantiles needed to calculate the 99% confidence interval for mean cost of a home in Canton, NY because we know that the population distribution from which the sample is generated is also Normal.</p>
+>>>>>>> fb01967cb1e1e64c91a30147b1dad671b802c4c7
 </blockquote>
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Compute a 99% confidence interval for the average cost of a home in Canton, NY. Interpret this confidence interval in terms of the study. Use code chunks to compute all of the values needed for the confidence interval and to compute the lower and upper bounds of the confidence interval.</li>
 </ol>
+<<<<<<< HEAD
 <p><span class="math inline">\(\bar x_n \pm SE(\bar X_n) \times t_{\alpha/2,n-1}\)</span></p>
 <p><span class="math inline">\(SE(\bar X_n) = \sigma/\sqrt{n} \approx s/\sqrt n\)</span></p>
 <pre class="r"><code>x_bar &lt;-  mean(homes$Price)
+=======
+<p><span class="math inline">\(\bar x_n \pm SE(\bar X_n) \times z_{\alpha/2}\)</span></p>
+<p><span class="math inline">\(SE(\bar X_n) = \sigma/\sqrt{n} \approx s/\sqrt n\)</span></p>
+<pre class="r"><code>ci &lt;- 0.99
+alpha &lt;- 1 - ci
+qntile &lt;- -qnorm(alpha/2)
+x_bar &lt;-  mean(homes$Price)
+>>>>>>> fb01967cb1e1e64c91a30147b1dad671b802c4c7
 sd &lt;-  sqrt(var(homes$Price))
 n &lt;-  length(homes$Price)
 SE10 &lt;-  sd/sqrt(n)
 
+<<<<<<< HEAD
 ci &lt;- 0.99
 alpha &lt;- 1 - ci
 qntile &lt;- -qt(alpha/2,n-1)
 
 
+=======
+>>>>>>> fb01967cb1e1e64c91a30147b1dad671b802c4c7
 lower10 &lt;- x_bar - qntile * SE10
 upper10 &lt;- x_bar + qntile * SE10
 
 paste0(&quot;ci&quot;,(1-alpha)*100,&quot;% = &quot;, lower10, &quot; ≤ mu ≤ &quot;, upper10)</code></pre>
+<<<<<<< HEAD
 <pre><code>## [1] &quot;ci99% = 49.1716612203239 ≤ mu ≤ 244.428338779676&quot;</code></pre>
 <blockquote>
 <p>We are 99% confident that the true mean of the random Variable X, the sale price of a house in Canton, NY, is between $49,172 and $244,428.</p>
+=======
+<pre><code>## [1] &quot;ci99% = 69.4194886888677 ≤ mu ≤ 224.180511311132&quot;</code></pre>
+<blockquote>
+<p>We are 99% confident that the true mean of the random Variable X, the sale price of a house in Canton, NY, is between $69,419 and $$224,181.</p>
+>>>>>>> fb01967cb1e1e64c91a30147b1dad671b802c4c7
 </blockquote>
 <ol start="3" style="list-style-type: lower-alpha">
 <li>How would this confidence interval change if the sample mean and variance are unchanged, but the sample size is 35?</li>
@@ -480,7 +502,11 @@ upper35 &lt;- x_bar + qntile * SE35
 paste0(&quot;ci&quot;,(1-alpha)*100,&quot;% = &quot;, lower35, &quot; ≤ mu ≤&quot;, upper35)</code></pre>
 <pre><code>## [1] &quot;ci99% = 105.438376894337 ≤ mu ≤188.161623105663&quot;</code></pre>
 <blockquote>
+<<<<<<< HEAD
 <p>When increasing the sample size from 10 to 35 we can use the Normal Distribution when calculating the quantiles for our confidence intraval because n is sufficiently large. In this case the 99% confidence interval decreased from 195.26 to 82.72 because the SE decreased from 30.04 to 16.06 and the distribution changed.</p>
+=======
+<p>When increasing the sample size from 10 to 35 the range of 99% confidence interval decreased from 154.76 to 82.72 because the SE decreased from 30.04 to 16.06.</p>
+>>>>>>> fb01967cb1e1e64c91a30147b1dad671b802c4c7
 </blockquote>
 </div>
 <div id="problem-3" class="section level3">
@@ -490,6 +516,7 @@ paste0(&quot;ci&quot;,(1-alpha)*100,&quot;% = &quot;, lower35, &quot; ≤ mu ≤
 <li>Based on these data create a 99% confidence interval for the survival rate of ICU patients. Include all calculations in a code chunk and interpret this interval in the context of the study.</li>
 </ol>
 <blockquote>
+<<<<<<< HEAD
 <p>For this study we need to use a Bernoulli Distribution to calculate <span class="math inline">\(\hat p_n\)</span>, the sample proportion, and use <span class="math inline">\(\sqrt{\frac{\hat p_n(1-\hat p_n)}{n}}\)</span> to calculate the sample standard deviation.</p>
 </blockquote>
 <p><span class="math inline">\(sd = \sqrt{\frac{\hat p_n(1-\hat p_n)}{n}}\)</span></p>
@@ -498,6 +525,18 @@ n &lt;-  length(icu$Status)
 SE &lt;- sqrt((p_hat * (1-p_hat))/n)
   
 ci &lt;- 0.99
+=======
+<p>For this study we need to use a Bernoulli Distribution to calculate <span class="math inline">\(\hat p_n\)</span>, the sample proportion, and the Standard Deviation.</p>
+</blockquote>
+<p><span class="math inline">\(sd = \sqrt{\frac{\hat p_n(1-\hat p_n)}{n}}\)</span></p>
+<pre class="r"><code>(p_hat &lt;- 1-mean(icu$Status))</code></pre>
+<pre><code>## [1] 0.8</code></pre>
+<pre class="r"><code>(n &lt;-  length(icu$Status))</code></pre>
+<pre><code>## [1] 200</code></pre>
+<pre class="r"><code>(SE &lt;- sqrt((p_hat * (1-p_hat))/n))</code></pre>
+<pre><code>## [1] 0.02828427</code></pre>
+<pre class="r"><code>ci &lt;- 0.99
+>>>>>>> fb01967cb1e1e64c91a30147b1dad671b802c4c7
 alpha &lt;- 1 - ci
 qntile &lt;- -qnorm(alpha/2)
 
@@ -507,14 +546,22 @@ upper &lt;- p_hat + qntile * SE
 paste0(&quot;ci&quot;,(1-alpha)*100,&quot;% = &quot;, lower, &quot; ≤ p_hat ≤&quot;, upper)</code></pre>
 <pre><code>## [1] &quot;ci99% = 0.727144545291262 ≤ p_hat ≤0.872855454708738&quot;</code></pre>
 <blockquote>
+<<<<<<< HEAD
 <p>We are 99% confident that the true proportion of the random Variable <span class="math inline">\(X = 0\)</span>, the patient survived, is between 0.73 and 0.87</p>
+=======
+<p>We are 99% confident that the true proportion of the random Variable <span class="math inline">\(X = 0\)</span> the patient survived, is between 0.73 and 0.87</p>
+>>>>>>> fb01967cb1e1e64c91a30147b1dad671b802c4c7
 </blockquote>
 <ol start="2" style="list-style-type: lower-alpha">
 <li>What assumptions are necessary for the confidence interval determined in (a) to be valid? Provide evidence that each of these assumptions is reasonable.</li>
 </ol>
+<<<<<<< HEAD
 <blockquote>
 <p>In order to calculate the confidence interval we have to assume that the data is iid (independent and identically distributed). The probability that patient a survives, given patient b survives, is the same as probability of patient a surviving. In other words <span class="math inline">\(P(A | B) = P(A)\)</span>. We also have to know that <span class="math inline">\(n\hat p_n \geq 10\)</span> and <span class="math inline">\(n(1-\hat p_n) \geq 10\)</span></p>
 </blockquote>
+=======
+<p><span class="math inline">\(n\hat p_n \geq 10 \text{ and }n(1-\hat p_n) \geq 10\)</span></p>
+>>>>>>> fb01967cb1e1e64c91a30147b1dad671b802c4c7
 <pre class="r"><code>n*p_hat &gt;= 10</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <pre class="r"><code>n*(1-p_hat) &gt;= 10</code></pre>
@@ -531,9 +578,15 @@ paste0(&quot;ci&quot;,(1-alpha)*100,&quot;% = &quot;, lower, &quot; ≤ p_hat �
 alpha &lt;- 1 - ci
 qntile &lt;- -qnorm(alpha/2)
 x_bar &lt;-  8.48
+<<<<<<< HEAD
 var &lt;- 0.6241
 n &lt;-  14
 SE &lt;-  sqrt(var/n)
+=======
+sigma_squared &lt;- 0.6241
+n &lt;-  14
+SE &lt;-  sqrt(sigma_squared/n)
+>>>>>>> fb01967cb1e1e64c91a30147b1dad671b802c4c7
 
 lower &lt;- x_bar - qntile * SE
 upper &lt;- x_bar + qntile * SE
@@ -557,12 +610,24 @@ paste0(&quot;ci_95 = &quot;, lower, &quot; ≤ mu ≤&quot;, upper)</code></pre>
 ci &lt;- 0.95
 alpha &lt;- 1 - ci
 qntile &lt;- -qnorm(alpha/2)
+<<<<<<< HEAD
 x_bar &lt;-  mean(data)
 var &lt;-  var(data)
 n &lt;-  length(data)
 SE &lt;-  sqrt(var/n)
 
 lower &lt;- x_bar - qntile * SE
+=======
+(x_bar &lt;-  mean(data))</code></pre>
+<pre><code>## [1] 357.8611</code></pre>
+<pre class="r"><code>(var &lt;-  var(data))</code></pre>
+<pre><code>## [1] 407.1516</code></pre>
+<pre class="r"><code>(n &lt;-  length(data))</code></pre>
+<pre><code>## [1] 36</code></pre>
+<pre class="r"><code>(SE &lt;-  sqrt(var/n))</code></pre>
+<pre><code>## [1] 3.363</code></pre>
+<pre class="r"><code>lower &lt;- x_bar - qntile * SE
+>>>>>>> fb01967cb1e1e64c91a30147b1dad671b802c4c7
 upper &lt;- x_bar + qntile * SE
 
 paste0(&quot;ci_95 = &quot;, lower, &quot; ≤ mu ≤&quot;, upper)</code></pre>
