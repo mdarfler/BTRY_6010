@@ -46,7 +46,6 @@ flightdata <- read.csv("https://raw.githubusercontent.com/mdarfler/BTRY_6010/mas
 homes <-  read.csv("https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/Homework/HW%206/HomesForSaleCanton(3).csv", header = T)
 ```
 
-
 ----
 
 **In this homework we will practice creating confidence intervals for a population mean, $\mu$.**
@@ -91,22 +90,24 @@ Ten recently sold houses were randomly selected from Canton, NY.  For each house
   
   a) What distribution should be used to determine the quantiles needed to calculate a 99% confidence interval for mean cost of a home in Canton, NY? Why?
   
-> The Normal Distribution N(0,1) should be used to determine the quantiles needed to calculate the 99% confidence interval for mean cost of a home in Canton, NY because we know that the population distribution from which the sample is generated is also Normal. 
+> The t Distribution with 9 $(n-1)$ degrees of freedom should be used to determine the quantiles needed to calculate the 99% confidence interval for mean cost of a home in Canton, NY because we know that the population distribution from which the sample is generated is Normal, but sample size is small and the true population variance is not known. 
   
   b) Compute a 99% confidence interval for the average cost of a home in Canton, NY.  Interpret this confidence interval in terms of the study.  Use code chunks to compute all of the values needed for the confidence interval and to compute the lower and upper bounds of the confidence interval.
   
-$\bar x_n \pm SE(\bar X_n) \times z_{\alpha/2}$
+$\bar x_n \pm SE(\bar X_n) \times t_{\alpha/2,n-1}$
 
 $SE(\bar X_n) = \sigma/\sqrt{n} \approx s/\sqrt n$
   
 ```{r}
-ci <- 0.99
-alpha <- 1 - ci
-qntile <- -qnorm(alpha/2)
 x_bar <-  mean(homes$Price)
 sd <-  sqrt(var(homes$Price))
 n <-  length(homes$Price)
 SE10 <-  sd/sqrt(n)
+
+ci <- 0.99
+alpha <- 1 - ci
+qntile <- -qt(alpha/2,n-1)
+
 
 lower10 <- x_bar - qntile * SE10
 upper10 <- x_bar + qntile * SE10
@@ -115,7 +116,7 @@ paste0("ci",(1-alpha)*100,"% = ", lower10, " ≤ mu ≤ ", upper10)
 
 ```
 
-> We are 99% confident that the true mean of the random Variable X, the sale price of a house in Canton, NY, is between $69,419 and $$224,181.
+> We are 99% confident that the true mean of the random Variable X, the sale price of a house in Canton, NY, is between $49,172 and $244,428.
 
   c) How would this confidence interval change if the sample mean and variance are unchanged, but the sample size is 35?
   
@@ -133,7 +134,7 @@ upper35 <- x_bar + qntile * SE35
 
 paste0("ci",(1-alpha)*100,"% = ", lower35, " ≤ mu ≤", upper35)
 ```
->When increasing the sample size from 10 to 35 the range of 99% confidence interval decreased from `r round(upper10 - lower10,2)` to `r round(upper35 - lower35,2)` because the SE decreased from `r round(SE10,2)` to `r round(SE35,2)`.
+>When increasing the sample size from 10 to 35 we can use the Normal Distribution when calculating the quantiles for our confidence intraval because n is sufficiently large. In this case the 99% confidence interval decreased from `r round(upper10 - lower10,2)` to `r round(upper35 - lower35,2)` because the SE decreased from `r round(SE10,2)` to `r round(SE35,2)` and the distribution changed.
 
 ### Problem 3
 
@@ -141,14 +142,14 @@ The data set *ICUAdmissions.csv* includes information on 200 randomly selected p
 
   a) Based on these data create a 99% confidence interval for the survival rate of ICU patients.  Include all calculations in a code chunk and interpret this interval in the context of the study.
   
->For this study we need to use a Bernoulli Distribution to calculate $\hat p_n$, the sample proportion, and the Standard Deviation.
+>For this study we need to use a Bernoulli Distribution to calculate $\hat p_n$, the sample proportion, and use $\sqrt{\frac{\hat p_n(1-\hat p_n)}{n}}$ to calculate the sample standard deviation.
 
 $sd = \sqrt{\frac{\hat p_n(1-\hat p_n)}{n}}$
 
 ```{r}
-(p_hat <- 1-mean(icu$Status))
-(n <-  length(icu$Status))
-(SE <- sqrt((p_hat * (1-p_hat))/n))
+p_hat <- 1-mean(icu$Status)
+n <-  length(icu$Status)
+SE <- sqrt((p_hat * (1-p_hat))/n)
   
 ci <- 0.99
 alpha <- 1 - ci
@@ -160,11 +161,12 @@ upper <- p_hat + qntile * SE
 paste0("ci",(1-alpha)*100,"% = ", lower, " ≤ p_hat ≤", upper)
 ```
 
-> We are 99% confident that the true proportion of the random Variable $X = 0$ the patient survived, is between `r round(lower,2)` and `r round(upper, 2)`
+> We are 99% confident that the true proportion of the random Variable $X = 0$, the patient survived, is between `r round(lower,2)` and `r round(upper, 2)`
 
-  b) What assumptions are necessary for the confidence interval determined  in (a) to be valid?  Provide evidence that each of these assumptions is reasonable.
+  b) What assumptions are necessary for the confidence interval determined in (a) to be valid?  Provide evidence that each of these assumptions is reasonable.
 
-$n\hat p_n \geq 10 \text{ and }n(1-\hat p_n) \geq 10$
+> In order to calculate the confidence interval we have to assume that the data is iid (independent and identically distributed). The probability that patient a survives, given patient b survives, is the same as probability of patient a surviving. In other words $P(A | B) = P(A)$. We also have to know that $n\hat p_n \geq 10$ and $n(1-\hat p_n) \geq 10$
+
 ```{r}
 n*p_hat >= 10
 n*(1-p_hat) >= 10
@@ -185,9 +187,9 @@ ci <-  0.95
 alpha <- 1 - ci
 qntile <- -qnorm(alpha/2)
 x_bar <-  8.48
-sigma_squared <- 0.6241
+var <- 0.6241
 n <-  14
-SE <-  sqrt(sigma_squared/n)
+SE <-  sqrt(var/n)
 
 lower <- x_bar - qntile * SE
 upper <- x_bar + qntile * SE
@@ -210,10 +212,10 @@ data <- flightdata$Flight179
 ci <- 0.95
 alpha <- 1 - ci
 qntile <- -qnorm(alpha/2)
-(x_bar <-  mean(data))
-(var <-  var(data))
-(n <-  length(data))
-(SE <-  sqrt(var/n))
+x_bar <-  mean(data)
+var <-  var(data)
+n <-  length(data)
+SE <-  sqrt(var/n)
 
 lower <- x_bar - qntile * SE
 upper <- x_bar + qntile * SE
