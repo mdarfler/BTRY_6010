@@ -1,0 +1,619 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Lab 8: Hypothesis Testing},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Lab 8: Hypothesis Testing}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+
+\begin{document}
+\maketitle
+
+\textbf{For this lab, it will be helpful to have a copy of the knitted
+version of this document to answer the questions as much of it is
+written using mathematical notation that may be difficult to read when
+the document is not knitted. For your convenience, a pdf of this
+document is in the lab folder on blackboard. Please ignore the code used
+to generate the figures in this lab.}
+
+\hypertarget{lab-goal}{%
+\subsection{Lab Goal}\label{lab-goal}}
+
+The purpose of this lab is to explore hypothesis testing for an unknown
+population mean, \(\mu\), when \(\bar X_n \sim N(\mu,\sigma/\sqrt{n})\).
+There are three main topics in the lab:
+
+\begin{enumerate}
+\def\labelenumi{(\Roman{enumi})}
+\tightlist
+\item
+  how to form a rejection region at a given significance level
+\item
+  how to calculate a p-value
+\item
+  how to calculate the power of a test (or choose \(n\) to get a desired
+  power)
+\end{enumerate}
+
+\hypertarget{recap-of-psychic-example-in-lecture}{%
+\subsection{Recap of ``psychic'' example in
+lecture}\label{recap-of-psychic-example-in-lecture}}
+
+In class, Dr.~Basu used the binomial distribution to test whether or not
+he was psychic. Each student was supposed to choose one of the four
+colors red, blue, yellow and green. Dr.~Basu's task was to correctly
+guess the colors chosen by students. What were the basic ideas behind
+this test?
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\item
+  The \textbf{null hypothesis} is that Dr.~Basu is not psychic, meaning
+  he is just random guessing. If he were random guessing, then he would
+  only have a 1 in 4 chance of guessing the correct color for each
+  person in the class, so \(H_0:p=1/4\) (where \(p\) is the probability
+  of his being right on any single guess).
+\item
+  We would like to test whether Dr.~Basu is psychic. This implies that
+  the actual probability of Dr.~Basu guessing the correct number for a
+  given student is greater than what we would expect by random guessing.
+  This establishes the \textbf{alternative hypothesis} of our test,
+  \(H_a: p > 0.25\).
+\item
+  He repeated the experiment \(n=89\) times. Under the null hypothesis,
+  we would expect him to get, on average, \(0.25 \times 89\approx22\)
+  correct. We will decide to reject \(H_0\) if we have enough evidence
+  in favor of \(H_a\) over \(H_0\). What does ``evidence in favor of
+  \(H_a\) over \(H_0\)'' look like? That depends on the form of \(H_a\).
+  In this case, \(H_a:p>0.25\), so if the number of correct predictions
+  Dr.~Basu made is a lot bigger than \(22\), that would lead us to
+  reject \(H_0\) in favor of \(H_a\). How do we determine a specific
+  cutoff for what ``a lot bigger'' means? We determine the distribution
+  of the test statistic under \(H_0\) and then choose the cutoff so that
+  the probability of rejecting \(H_0\) when \(H_0\) is true is no more
+  than \(\alpha\), the desired \textbf{significance level} of the test.
+  The set of values (of the test statistic) that would lead to our test
+  rejecting \(H_0\) in favor of \(H_a\) is called the \textbf{rejection
+  region}.
+\end{enumerate}
+
+\hypertarget{overview-of-hypothesis-testing-using-a-rejection-region}{%
+\subsection{Overview of hypothesis testing using a rejection
+region}\label{overview-of-hypothesis-testing-using-a-rejection-region}}
+
+\emph{Step 1.} Identify null and alternative hypotheses.
+
+\emph{Step 2.} Determine distribution of the test statistic under the
+null hypothesis.
+
+\emph{Step 3.} Determine rejection region based on (1) and (2) and the
+desired significance level \(\alpha\) chosen for this test.
+
+\emph{Step 4.} Compute test statistic on the particular sample of data
+you collected. Does this fall in rejection region? If so, reject \(H_0\)
+in favor of \(H_a\). If not, fail to reject \(H_0\) in favor of \(H_a\).
+
+\emph{Step 5.} Check assumptions.
+
+\hypertarget{part-i-of-lab}{%
+\subsection{Part I of lab}\label{part-i-of-lab}}
+
+We go through Step 1 to Step 4, with a different kind of alternative
+hypothesis and when test statistic is normal. We will skip Step 5 for
+now since we'll see how to check normality in a future lab.
+
+\hypertarget{step-1-choosing-alternative-hypothesis}{%
+\subsubsection{Step 1: Choosing alternative
+hypothesis}\label{step-1-choosing-alternative-hypothesis}}
+
+Depending on the particular problem you are studying, there are three
+types of alternative hypothesis to consider about the population mean
+\(\mu\) (in ``psychic'' example, \(p\) is the population mean of the
+Bernoulli distribution).
+
+A1) \(H_{a}\): \(\mu \neq \mu_0\) (``two-sided alternative'')
+
+A2) \(H_{a}\): \(\mu > \mu_0\) (used in ``psychic'' example with
+\(\mu_0\) = 0.25)
+
+A3) \(H_{a}\): \(\mu < \mu_0\)
+
+If in the ``psychic'' example, we were interested in whether Dr.~Basu
+was random guessing or not, we should have chosen \(H_a:p\neq0.25\). But
+since being psychic would mean specifically that \(p>0.25\), we chose
+this alternative instead.
+
+\hypertarget{step-2-distribution-of-test-statistic-under-null-hypothesis}{%
+\subsubsection{Step 2: Distribution of test statistic under null
+hypothesis}\label{step-2-distribution-of-test-statistic-under-null-hypothesis}}
+
+In the ``psychic'' example, we based the test of whether to reject
+\(H_0\) in favor of \(H_a\) on the distribution of a test statistic
+under the assumption that \(H_0\) is true. This is the standard
+framework for hypothesis testing.
+
+For the example given in class, \(H_0\) states that \(p = 0.25\). The
+null hypothesis indicates that for any single student there is a 0.25
+chance that Dr.~Basu will succeed in guessing his/her chosen color
+correctly. This indicates that the number of correct guesses in 89
+trials (89 students) has a Binomial(89,0.25) distribution under the
+assumption that Dr.~Basu is not psychic (\(H_0\)). Thus, in the example
+given in class, this was the appropriate null distribution for the
+number of correct guesses.
+
+In many situations, we wish to perform a hypothesis test about the
+population mean \(\mu\), and the most common choice of test statistic in
+this context is the sample mean, \(\bar X_n\). For this lab, we will
+assume that \(\bar X_n \sim N(\mu, \sigma/\sqrt{n})\). This is
+approximately true when (i) the Central Limit Theorem holds or when (ii)
+the individual \(X_i\) are themselves approximately normal and
+independent of each other. Under the null hypothesis that
+\(H_0:\mu=\mu_0\), we have that
+\(\bar X_n \sim N(\mu_0, \sigma/\sqrt{n})\).
+
+\hypertarget{example-hard-alcohol-content-of-mixed-drinks-in-nyc}{%
+\paragraph{Example: Hard Alcohol Content of Mixed Drinks in
+NYC}\label{example-hard-alcohol-content-of-mixed-drinks-in-nyc}}
+
+The industry standard for the amount of alcohol poured into many types
+of drinks is 1.5 oz. Regulators are interested in whether on average the
+amount of alcohol poured into drinks purchased in New York City is the
+industry standard. Forty bartenders are chosen at random from bars and
+restaurants in NYC. Each were asked to pour the amount of hard alcohol
+into a glass needed to make a mixed drink. The amount of hard alcohol
+poured by each bartender was recorded. The standard deviation of the
+amount of hard alcohol poured to make a drink in NYC is known to be
+about 0.39 oz. The sample mean of the amount of hard alcohol poured for
+the mixed drink by the 40 bartenders was 1.7 oz.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\item
+  Define \(\mu\) and determine the null and alternative hypotheses of
+  this study.
+\item
+  What is the approximate distribution of the sample mean under the null
+  hypothesis for this study?
+\end{enumerate}
+
+\hypertarget{step-3-determine-rejection-region}{%
+\subsubsection{Step 3: Determine rejection
+region}\label{step-3-determine-rejection-region}}
+
+In the ``psychic'' example, we decided that if the test statistic
+(number of correct guesses) was higher than a certain cutoff, we should
+reject \(H_0\) in favor of \(H_a\). The set of values above this cutoff
+are called the rejection region for the test.
+
+For any test, the \textbf{rejection region} is the range of values of
+the test statistic for which \(H_0\) will be rejected in favor of
+\(H_a\). The rejection region is based on three things:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\item
+  The desired significance level, \(\alpha\), of the test. This is the
+  largest that we will allow the probability of making a Type I error
+  (rejecting \(H_0\) when \(H_0\) is true) to be.
+\item
+  The alternative hypothesis. Looking at the alternative tells us
+  whether high values or low values (or both) of the test statistic
+  would be considered evidence against the null and \emph{in favor of
+  the alternative}.
+\item
+  The distribution of the test statistic under the null (from Step 2)
+  tells us what the cutoff values should be for the rejection region to
+  make the test have significance level \(\alpha\).
+\end{enumerate}
+
+In class, the rejection region for \(H_a: p > 0.25\) was \(X \geq 30\).
+This rejection region guarantees that if \(H_0\) is true, there is at
+most a 5\% chance that \(H_0\) will be rejected.
+
+What are the rejection regions based on the sample mean for the three
+alternatives above?
+
+A1) If \(H_{a}\): \(\mu \neq \mu_0\), \(H_0\) will be rejected if the
+observed sample mean from our data, \(\bar x_n\), is either a lot bigger
+or a lot smaller than what we would expect under \(H_0\). How large is
+``a lot bigger'' and how small is ``a lot smaller''? These cutoffs come
+from considering the null distribution of \(\bar X_n\) and the
+significance level \(\alpha\). It's easiest looking at a picture:
+
+\includegraphics{lab8-3-_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+Reject \(H_0\) if \(\bar x_n\) is less than the \(\alpha/2\) quantile
+(a.k.a., the \(100(\alpha/2)\) percentile) of the distribution of
+\(\bar X_n\) under \(H_0\) \emph{or} if \(\bar x_n\) is greater than the
+\((1 - \alpha/2)\) quantile (a.k.a., the \(100(1 - \alpha/2)\)
+percentile) of the distribution of \(\bar X_n\) under \(H_0\). We see
+from the picture that we reject if \(\bar x_n\) is farther than
+\(z_{\alpha/2}\sigma/\sqrt{n}\) from \(\mu_0\): \[
+  |\bar x_n - \mu_0 | > z_{\alpha/2}\sigma/\sqrt{n}.
+  \] That is we reject if
+\(\bar x_n > \mu_0+z_{\alpha/2}\sigma/\sqrt{n}\) \emph{or} if
+\(\bar x_n < \mu_0-z_{\alpha/2}\sigma/\sqrt{n}\).
+
+A2) If \(H_{a}\): \(\mu > \mu_0\), \(H_0\) will be rejected if the
+observed sample mean from our data, \(\bar x_n\), is a lot bigger than
+what we would expect under \(H_0\). How large is ``a lot bigger''? The
+cutoff comes from considering the null distribution of \(\bar X_n\) and
+the significance level \(\alpha\). Again, it's always best to draw a
+picture:
+
+\includegraphics{lab8-3-_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+Reject \(H_0\) if \(\bar x_n\ge\) the \(100(1 - \alpha)\) percentile of
+the distribution of \(\bar X_n\) under \(H_0\). We see from the picture
+that we reject if \[
+  \bar x_n > \mu_0 + z_{\alpha}\sigma/\sqrt{n}.
+  \]
+
+A3) If \(H_{a}\): \(\mu < \mu_0\), \(H_0\) will be rejected if the
+observed sample mean from our data, \(\bar x_n\), is a lot smaller than
+what we would expect under \(H_0\). How small is ``a lot smaller''? The
+cutoff comes from considering the null distribution of \(\bar X_n\) and
+the significance level \(\alpha\). Again, we draw a picture:
+
+\includegraphics{lab8-3-_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+Reject \(H_0\) if \(\bar x_n\) \(\leq\) \(100\alpha\) percentile of the
+distribution of \(\bar X_n\) under \(H_0\). We see from the picture that
+we reject if \[
+  \bar x_n < \mu_0 - z_{\alpha}\sigma/\sqrt{n}.
+  \]
+
+\hypertarget{example-hard-alcohol-content-of-mixed-drinks-in-nyc-1}{%
+\paragraph{Example: Hard Alcohol Content of Mixed Drinks in
+NYC}\label{example-hard-alcohol-content-of-mixed-drinks-in-nyc-1}}
+
+We continue with the next part of our example problem. Suppose the
+regulators want to perform the hypothesis test determined above at a
+significance level of 0.01.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{2}
+\item
+  What is the rejection region of this test?
+\item
+  Based on the rejection region, should we reject \(H_0\)?
+\end{enumerate}
+
+\hypertarget{overview-of-hypothesis-testing-using-p-values}{%
+\subsection{Overview of hypothesis testing using
+P-values}\label{overview-of-hypothesis-testing-using-p-values}}
+
+Instead of the rejection region approach, we now consider the (highly
+related) p-value approach to hypothesis testing.
+
+\emph{Step 1.} Identify null and alternative hypotheses.
+
+\emph{Step 2.} Determine distribution of the test statistic under the
+null hypothesis.
+
+\emph{Step 3.} Compute the p-value based on the particular sample of
+data you collected.
+
+\emph{Step 4.} Reject \(H_0\) in favor of \(H_a\) if p-value is smaller
+than desired significance level \(\alpha\).
+
+\emph{Step 5.} Check assumptions.
+
+The \textbf{p-value} of a test is the probability under the null
+hypothesis of seeing something as extreme or more extreme than what was
+actually observed.
+
+\hypertarget{part-ii-of-lab}{%
+\subsection{Part II of lab}\label{part-ii-of-lab}}
+
+We go through these steps (again, skipping step 5 for this lab) with
+alternative hypotheses A1 to A3 when the test statistic is normal.
+
+\hypertarget{step-1-and-step-2}{%
+\subsubsection{Step 1 and Step 2}\label{step-1-and-step-2}}
+
+Identical to Steps 1 and 2 in rejection region approach.
+
+\hypertarget{step-3-compute-the-p-value}{%
+\subsubsection{Step 3: Compute the
+p-value}\label{step-3-compute-the-p-value}}
+
+We observed \(\bar x_n\) and want to know how likely it is for
+\(\bar X_n \sim N(\mu_0, \sigma/\sqrt{n})\) (this is the null
+distribution) for \(\bar X_n\) to be as extreme or more extreme as
+\(\bar x_n\). What does ``extreme'' mean? This is defined by the
+alternative hypothesis. Because A1 is the most complicated, we'll do
+this last.
+
+A2) \(H_{a}\): \(\mu > \mu_0\). In this case, ``extreme'' means being
+much larger than \(\mu_0\). So we want to know the probability
+(calculated under \(H_0\)) that \(\bar X_n\) would be as big as
+\(\bar x_n\) (our observed value) or larger. That is, we want to know
+
+\[
+P(\bar X_n > \bar x_n~|~H_0\text{ true})
+\]
+
+Recalling that \(H_0\) says that
+\(\bar X_n\sim N(\mu_0,\sigma/\sqrt{n})\) we can draw a picture to show
+the probability we want:
+
+\includegraphics{lab8-3-_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+The p-value in this case is \[
+P(\bar X_n > \bar x_n~|~H_0\text{ true}).
+\] In R this is given by
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(xbar, mu0, sigma }\OperatorTok{/}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(n))}
+\end{Highlighting}
+\end{Shaded}
+
+or we could standardize to z-values (to get same answer):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zvalue =}\StringTok{ }\NormalTok{(xbar }\OperatorTok{-}\StringTok{ }\NormalTok{mu0) }\OperatorTok{/}\StringTok{ }\NormalTok{(sigma }\OperatorTok{/}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(n)) }\CommentTok{# standardize according to null}
+\DecValTok{1}\OperatorTok{-}\KeywordTok{pnorm}\NormalTok{(zvalue) }\CommentTok{# under null, 'zvalue' is a realization from a N(0,1)}
+\end{Highlighting}
+\end{Shaded}
+
+A3) \(H_{a}\): \(\mu < \mu_0\). In this case, ``extreme'' means being
+much smaller than \(\mu_0\). So we want to know the probability
+(calculated under \(H_0\)) that \(\bar X_n\) would be as small as
+\(\bar x_n\) (our observed value) or smaller. That is, we want to know
+
+\[
+P(\bar X_n < \bar x_n~|~H_0\text{ true})
+\]
+
+It's always a good idea to draw a picture:
+
+\includegraphics{lab8-3-_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+The p-value in this case is \[
+P(\bar X_n < \bar x_n~|~H_0\text{ true}).
+\] In R this is given by
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pnorm}\NormalTok{(xbar, mu0, sigma }\OperatorTok{/}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(n))}
+\end{Highlighting}
+\end{Shaded}
+
+or we could standardize to z-values (to get same answer):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zvalue =}\StringTok{ }\NormalTok{(xbar }\OperatorTok{-}\StringTok{ }\NormalTok{mu0) }\OperatorTok{/}\StringTok{ }\NormalTok{(sigma }\OperatorTok{/}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(n)) }\CommentTok{# standardize according to null}
+\KeywordTok{pnorm}\NormalTok{(zvalue) }\CommentTok{# under null, 'zvalue' is a realization from a N(0,1)}
+\end{Highlighting}
+\end{Shaded}
+
+A1) \(H_{a}\): \(\mu \neq \mu_0\). In this case, ``extreme'' means
+either much larger or much smaller than \(\mu_0\). So we want to know
+the probability (calculated under \(H_0\)) that \(\bar X_n\) would be as
+far or farther from \(\mu_0\) as we observed \(\bar x_n\) to be. That
+is, we want to know if \(|\bar x_n-\mu_0|\) is unusually high based on
+what we'd expect for \(|\bar X_n-\mu_0|\) under \(H_0\). Note that
+\(H_0\) tells us that \(\bar X_n-\mu_0\sim N(0,\sigma/\sqrt{n})\). Let's
+draw a picture to show what we mean:
+
+\includegraphics{lab8-3-_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+The p-value in this case is \[
+P(\bar X_n-\mu_0 > |\bar x_n-\mu_0|\text{ or }\bar X_n-\mu_0 < -|\bar x_n-\mu_0|~|~H_0\text{ true}) = 2P(\bar X_n-\mu_0 > |\bar x_n-\mu_0|~|~H_0\text{ true}).
+\]
+
+For calculating this probability, it's easier to deal with the standard
+normal. Under the null, \[
+\frac{\bar X_n-\mu_0}{\sigma/\sqrt{n}}\sim N(0,1),
+\] so we want to know if we calculate \[
+z_n=\frac{\bar x_n-\mu_0}{\sigma/\sqrt{n}},
+\] we want to calculate \[
+P( N(0,1) > |z_n| \text{ or } N(0,1) < -|z_n|) = 2 P(N(0,1) > |z_n|).
+\] In R, this is given by
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{2} \OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{pnorm}\NormalTok{(}\KeywordTok{abs}\NormalTok{(z)))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{p-value-hard-alcohol-content-of-mixed-drinks-in-nyc}{%
+\subsubsection{P-value: Hard Alcohol Content of Mixed Drinks in
+NYC}\label{p-value-hard-alcohol-content-of-mixed-drinks-in-nyc}}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\item
+  What is the p-value of this test?
+\item
+  Based on the p-value, should we reject \(H_0\)?
+\end{enumerate}
+
+\hypertarget{power-part-iii-of-lab}{%
+\subsection{Power (Part III of lab)}\label{power-part-iii-of-lab}}
+
+The power of a test is the probability we will reject \(H_0\) when it is
+false. If \(H_0: \mu = \mu_0\) is false, a value of \(\mu\) contained in
+the range of the alternative hypothesis must be the correct mean of
+\(\bar X_n\). The power of a test cannot be calculated without
+specifying an alternative value of \(\mu\) contained in the range of
+\(H_a\). We call this value \(\mu_a\). The power of a test is calculated
+under the assumption that \(\bar X_n \sim N(\mu_a,\sigma/\sqrt{n})\) is
+the correct distribution of the sample mean.
+
+Generally \(\mu_a\) is chosen so that \(|\mu_0 - \mu_{a}|\) represents
+the smallest difference between \(\mu_0\) and \(\mu\) for which you
+would like to reject \(H_0\) at the calculated power level.
+
+\hypertarget{problem-2}{%
+\subsubsection{Problem 2}\label{problem-2}}
+
+In reference to problem 1, suppose that NYC officials don't mind if the
+population mean amount of hard alcohol in a mixed drink in NYC is a bit
+higher than 1.5 oz, but they do want to make sure that they can detect
+when it is in truth 1.65 oz (or higher). That is, they want to make sure
+that when the population mean is in fact 1.65oz, their testing will have
+a high probability of revealing this fact. Thus, to calculate the power
+of the test, we'll set \(\mu_a\) = 1.65 oz. and
+\(\bar X_{40} \sim N(1.65, 0.39/\sqrt{40})\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  Approximate the power of the test performed in Problem 1 using the
+  following steps:
+\end{enumerate}
+
+\begin{verbatim}
+i) Simulate 100,000 independent samples from the distribution of $\bar X_{40}$ under the alternative hypothesis that $\mu_a = 1.65$, i.e. $\bar X_{40} \sim N(1.65, 0.39/\sqrt{40})$.
+    
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\roman{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Based on these 100,000 samples, estimate the probability that the
+  sample mean of the study will fall into the rejection region
+  determined in Problem 1(b). This is the power of the test when the
+  sample size, n, is equal to 40.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\item
+  Calculate the actual power of this test,
+  \(P(\bar X_n \leq 1.34 \text{ or } \bar X_n \geq 1.66~|~\mu=1.65)\)
+  using the \texttt{pnorm()} function in R.
+\item
+  Re-run the code from part (b) using different values of n.~By trial
+  and error, find the smallest value of \(n\) such that the power of the
+  test is greater than or equal to 0.9.
+\end{enumerate}
+
+
+\end{document}

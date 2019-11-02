@@ -2,13 +2,12 @@
 title: 'Homework 7: The one-sample t-test'
 output:
   html_document: default
-  pdf_document: default
 ---
   
 ----
 
-# NAME: Your Name 
-# NETID: Your NetID 
+# NAME: Michael Darfler
+# NETID: mbd25
 **DUE DATE: November 2, 2019 by 11:59pm**  
 
 ----
@@ -30,7 +29,7 @@ For this homework:
 ## Hypothesis Testing for $\mu$ Using a t-distribution
 
 ### Review: When can we treat $\bar X_n$ as normal? 
-As in Lab 8, hypothesis testing for $\mu$ can be based on the distribution of $\bar X_n$.  In the lab it was assumed that $\bar X_n \sim N(\mu, \sigma/\sqrt{n})$.  Generally, this assumption can be made at least approximately when the $X_i$'s are indepedent and one of the following conditions holds:
+As in Lab 8, hypothesis testing for $\mu$ can be based on the distribution of $\bar X_n$.  In the lab it was assumed that $\bar X_n \sim N(\mu, \sigma/\sqrt{n})$.  Generally, this assumption can be made at least approximately when the $X_i$'s are independent and one of the following conditions holds:
 
   1) The sample size, $n$, is greater than 30 and the distribution isn't strongly skewed. In that case, the Central Limit Theorem applies.  (For the case of sampling from a Bernoulli distribution, we have a more specific rule, namely that $n\hat p$ and $n(1 - \hat p)$ should both be greater than or equal to 10.)
   
@@ -67,9 +66,18 @@ We will still consider the three alternative hypotheses presented in Lab 8 and a
 
 A study was conducted of a simple random sample of 15 adult male patients following a new treatment for congestive heart failure.  One of the variables measured on the patients was the increase in exercise capacity (in minutes) over a 4-week treatment period.  Assume this variable is normally distributed.  The previous treatment regime had produced an average of $\mu =2$ minutes.  The researchers wanted to evaluate whether the new treatment had a different impact on the increase in exercise capacity than the old treatment. The data can be found in the *Heart.csv* file.
 
+
   a) What are the null and alternative hypotheses of this study?
+ 
+> $H_0: \mu = \mu_0$   
+> $H_A: \mu \neq \mu_0$   
+> $\mu$ = the increase in exercise capacity after the new treatment   
+> $\mu_0 = 2.0$   
+  
   
   b) What is the distribution of the standardized sample mean, $\frac{\bar X_n - \mu_0}{S_n/\sqrt{n}}$, under the null hypothesis for this study?
+  
+> The distribution of the standardized sample mean under the null hypothesis for this study is $\frac{\bar X_n - \mu}{S_n/\sqrt{n}} \sim t_{14}$.
   
 ## Rejection Regions and p-Values Using the t-distribution
  
@@ -90,17 +98,73 @@ Likewise at the bottom of page 5, Steps 1 -- 4 still apply, just Step 2 has a di
 
   a) Using a code chunk, import the data set *Heart.csv* into the workspace of this document (look back at Lab 6 if you need help).  Make sure it is read in correctly.
   
+```{r}
+heart <- read.csv("https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/Homework/HW7/Heart(4).csv")
+```
+  
   b) Assuming the significance level of the test is 0.05, what is the rejection region of the test described in Problem 1?
+  
+rejection region is $\frac{|\bar x_n - \mu_0 |}{s/\sqrt(n)} > t_{\alpha/2, n-1}$
+
+```{r, eval= T}
+alpha <- 0.05
+dat <- heart$Increase
+mu_0 <- 2.0
+n <- length(dat)
+s <- sd(dat)
+SE <- s/sqrt(n)
+quantile <- -qt(alpha/2,n-1)
+
+
+cutoff = quantile
+```
+ > The rejection region for the test is $\frac{|\bar x_n - \mu_0 |}{s/\sqrt(n)} >$ `r round(cutoff, 3)`
  
   c) Compute the statistic, $\frac{\bar x_n - \mu_0}{s/\sqrt{n}}$, needed to perform this test using the variable `Increase` from the `Heart` data.  
+```{r}
+mu_0 <- 2.0
+dat <- heart$Increase
+x_bar <-mean(dat)
+n <- length(dat)
+s <- sd(dat)
+SE <- s/sqrt(n)
+
+test_statistic <- {x_bar-mu_0}/SE
+```
   
+> The test statistic $\frac{\bar x_n - \mu_0}{s/\sqrt{n}}$ from the data is `r round(test_statistic,2)`. 
+
+
    d) Based on the rejection region, should we reject $H_0$?
+   
+> Since $|\bar x_n - \mu_0| > t_{\alpha/2,n-1} \frac{S}{\sqrt{n}}$ we reject $H_0$
    
 ### Problem 3
 
   a) What is the p-value of the test described in Problem 1?
   
+$$
+P(\bar X_n-\mu_0 > |\bar x_n-\mu_0| \cup \bar X_n-\mu_0 < -|\bar x_n-\mu_0|~|~H_0\text{ true}) = 2P(\bar X_n-\mu_0 > |\bar x_n-\mu_0|~|~H_0\text{ true}).
+$$
+
+$$
+\frac{\bar X_n-\mu_0}{\sigma/\sqrt{n}}\sim t_{n-1},
+$$
+$$
+z_n=\frac{\bar x_n-\mu_0}{s/\sqrt{n}},
+$$
+$$
+P( t_{n-1} > |z_n| \text{ or } t_{n-1} < -|z_n|) = 2 P(t_{n-1} > |z_n|).
+$$
+```{r}
+p_value <- (1 - pt(test_statistic, n-1))*2
+```
+
+> The p-value of the test is `r round(p_value, 3)`
+  
   b) Should we reject $H_0$ at the $0.05$ level based on this p-value?
+  
+> We should reject $H_0$ based on this p-value.
   
 ## Power calculation for a t-test
 
@@ -113,9 +177,91 @@ They did a Monte Carlo study to decide what sample size would be required.  In p
 a) Write a code chunk that does the following two things:
   - draws a realization of a sample of size $n$ from the distribution described above (for now, your first line of code can set `n = 10`).
   - does exactly what was done in Problem 2 for parts (b)-(d) but on the sample of simulated data instead of on the actual data (don't forget that the quantile of the t-distribution will change since $n$ is different). For part (d), the necessary comparison should be done using logic operations in R -- the output of the code should be `TRUE` if the test rejects $H_0$ in favor of $H_a$ and `FALSE` if the test fails to reject $H_0$.
+  
+```{r}
+n = 10
+mu0 = 2
+muA = 3
+sigma = 1
+alpha <- 0.05
+SE = sigma/sqrt(n)
 
-b) To perform a Monte Carlo simulation, we want to repeat (a) a very large number of times (perhaps `nsim = 100000`) and calculate the proportion of times the test rejects.  Write a code chunk with a `for` loop that does this.  Hint: It may help to look back at past examples of Monte Carlo studies. (Note: It is possible, but more advanced, to write this without a `for` loop.  If you're up for the challenge, you should go for it. But this is not required.)
+cutoff <- mu0 + -qt(alpha/2, n-1) * SE
+
+realization <- rnorm(n,muA,sigma)
+x_bar <- mean(realization)
+
+x_bar > cutoff
+```
+  b) To perform a Monte Carlo simulation, we want to repeat (a) a very large number of times (perhaps `nsim = 100000`) and calculate the proportion of times the test rejects.  Write a code chunk with a `for` loop that does this.  Hint: It may help to look back at past examples of Monte Carlo studies. (Note: It is possible, but more advanced, to write this without a `for` loop.  If you're up for the challenge, you should go for it. But this is not required.)
+  
+```{r}
+n = 10
+mu0 = 2
+muA = 3
+sigma = 1
+alpha <- 0.05
+SE = sigma/sqrt(n)
+
+cutoff <- mu0 + -qt(alpha/2, n-1) * SE
+
+count = 0;
+simulations = 100000
+
+for(i in 1:simulations){
+  realization <- rnorm(n,muA,sigma)
+  x_bar <- mean(realization)
+  if(x_bar > cutoff){
+    count = count + 1
+  }
+}
+
+count/simulations
+```
 
 c) Use the code from part (b) to estimate the power for four values of $n$.  Try a wide enough range of $n$ values to see a wide range of powers.  Also, include $n=15$ to see what they would have estimated the power of their own study to have been.
+```{r, eval=F}
+n_sim <-  100000
+mu0 <-  2
+muA <-  3
+sigma <-  1
+alpha <- 0.05
+
+sample_size <- c(10:15)
+power <- rep(0,length(x))
+
+for(i in 1:length(sample_size)){
+  n <- sample_size[i]
+  SE <- sigma/sqrt(n)
+  cutoff <- mu0 + -qt(alpha/2, n-1) * SE
+  
+  count <- 0
+
+  for(j in 1:n_sim){
+    realization <- rnorm(n,muA,sigma)
+    x_bar <- mean(realization)
+    if(x_bar > cutoff){
+      count = count + 1
+    }
+  }
+  power[i] <- count/n_sim
+}
+```
+>The code above runs on my computer but it won't knit. `Error in eval(expr, envir, enclos): obejct 'x' not found Calls: <Anonymous> ...`   
+`handle -> withCallingHandlers -> withVisible -> eval -> eval Execution halted`  
+Below is the plot of the results
+
+```{r}
+sample_size <- c(10:15)
+power <- c(0.81596, 0.86193, 0.89590, 0.92319, 0.94364, 0.95888)
+plot(sample_size,power, 
+     type ="o", col = "red", lwd = "3", 
+     main = "Sample Size v. Power", xlab = "Sample Size")
+abline(h = 0.9, lty = 2)
+```
+
+
 
 d) Find a value of $n$ (using trial-and-error) for which the power is close to the desired $90\%$.
+
+> You would need a sample size of 13 in order to get a power of over 90%

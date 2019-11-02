@@ -1,7 +1,6 @@
 ---
 title: 'Lab 8: Hypothesis Testing'
-output: 
-  html_document: default
+output: pdf_document
 ---
 
  **For this lab, it will be helpful to have a copy of the knitted version of this document to answer the questions as much of it is written using mathematical notation that may be difficult to read when the document is not knitted.  For your convenience, a pdf of this document is in the lab folder on blackboard. Please ignore the code used to generate the figures in this lab.**
@@ -18,22 +17,11 @@ The purpose of this lab is to explore hypothesis testing for an unknown populati
 
 In class, Dr. Basu used the binomial distribution to test whether or not he was psychic. Each student was supposed to choose one of the four colors red, blue, yellow and green. Dr. Basu's task was to correctly guess the colors chosen by students. What were the basic ideas behind this test?
 
-$$X \sim Binomilla(n,p) \quad \text{with known n and unknown p}$$
-
   1) The **null hypothesis** is that Dr. Basu is not psychic, meaning he is just random guessing.  If he were random guessing, then he would only have a 1 in 4 chance of guessing the correct color for each person in the class, so $H_0:p=1/4$ (where $p$ is the probability of his being right on any single guess).
   
-  $$X \sim Binomial(n, 0.25)$$
-  
-  2) We would like to test whether Dr. Basu is psychic.  This implies that the actual probability of Dr. Basu guessing the correct number for a given student is greater than what we would expect by random guessing.  This establishes the **alternative hypothesis** of our test, $H_a: p > 0.25$ Dr. Basu *is* psychic.
+  2) We would like to test whether Dr. Basu is psychic.  This implies that the actual probability of Dr. Basu guessing the correct number for a given student is greater than what we would expect by random guessing.  This establishes the **alternative hypothesis** of our test, $H_a: p > 0.25$.
   
   3) He repeated the experiment $n=89$ times.  Under the null hypothesis, we would expect him to get, on average, $0.25 \times 89\approx22$ correct.  We will decide to reject $H_0$ if we have enough evidence in favor of $H_a$ over $H_0$.  What does "evidence in favor of $H_a$ over $H_0$" look like?  That depends on the form of $H_a$.  In this case, $H_a:p>0.25$, so if the number of correct predictions Dr. Basu made is a lot bigger than $22$, that would lead us to reject $H_0$ in favor of $H_a$.  How do we determine a specific cutoff for what "a lot bigger" means?  We determine the distribution of the test statistic under $H_0$ and then choose the cutoff so that the probability of rejecting $H_0$ when $H_0$ is true is no more than $\alpha$, the desired **significance level** of the test.  The set of values (of the test statistic) that would lead to our test rejecting $H_0$ in favor of $H_a$ is called the **rejection region**.
-  
-  $$P(X > x_{rejection}) = \alpha = 0.05$$
-```{r}
-for(i in 8:12){
-print(paste0(i, ": ",pbinom(i, 30, 0.25, lower.tail = F)))
-}
-```
   
 ## Overview of hypothesis testing using a rejection region
 
@@ -77,14 +65,15 @@ The industry standard for the amount of alcohol poured into many types of drinks
 
 
   a) Define $\mu$ and determine the null and alternative hypotheses of this study.
+  
+*$\mu$ = Mean amount of hard alcohol in mixed drinks made in NYC*
 
-> $\mu = 1.5$ 
-   
+  *$H_0: \mu = 1.5$ and $H_a: \mu \neq 1.5$*
+  
   b) What is the approximate distribution of the sample mean under the null hypothesis for this study?
   
->$X \sim N(1.5, \frac{0.39}{\sqrt{40}})$
+  *$\bar X_{40} \sim N(1.5, 0.39/\sqrt{40})$*
 
-  
 ### Step 3: Determine rejection region
 
 In the "psychic" example, we decided that if the test statistic (number of correct guesses) was higher than a certain cutoff, we should reject $H_0$ in favor of $H_a$.  The set of values above this cutoff are called the rejection region for the test.
@@ -92,8 +81,6 @@ In the "psychic" example, we decided that if the test statistic (number of corre
 For any test, the **rejection region** is the range of values of the test statistic for which $H_0$ will be rejected in favor of $H_a$.  The rejection region is based on three things:
 
 1) The desired significance level, $\alpha$, of the test.  This is the largest that we will allow the probability of making a Type I error (rejecting $H_0$ when $H_0$ is true) to be.
-
->$\alpha = 0.05$
 
 2) The alternative hypothesis.  Looking at the alternative tells us whether high values or low values (or both) of the test statistic would be considered evidence against the null and *in favor of the alternative*.
 
@@ -193,24 +180,35 @@ text(-3,.1,expression(paste(100*alpha, "%", sep = "")))
 We continue with the next part of our example problem.  Suppose the regulators want to perform the hypothesis test determined above at a significance level of 0.01.  
   
   c) What is the rejection region of this test?
-
+  
+  *As always, we determine the rejection region based on (i) the type of alternative hypothesis, (ii) the distribution of the test statistic under $H_0$, and (iii) the significance level $\alpha$.  Then we check whether $\bar x_{40} = 1.7$ falls in this region (basic idea: Is 1.7 an unusual realization of $\bar X_{40}$ under $H_0$?).  Above, it was determined under $H_0$ that $\bar X_{40} \sim N(1.5, 0.39/\sqrt{40})$.  There are two ways we can calculate this in R.*
+  
+  - *Method 1: Our alternative hypothesis is $\mu\neq \mu_0$, so (referring to A1's picture), we should reject if $\bar x_n > \mu_0+z_{\alpha/2}\sigma/\sqrt{n}$ or if $\bar x_n < \mu_0-z_{\alpha/2}\sigma/\sqrt{n}$.*
+  
 ```{r}
-alpha <- 0.01
-mu <- 1.5
-sigma <- 0.39
-n <- 40
-SE <- sigma/sqrt(n)
-
-(reject_lower <- qnorm(alpha/2, mu, SE))
-(reject_upper <- qnorm(1-alpha/2, mu, SE))
-
-(1-pnorm(1.7,mu,SE))*2
+mu0 = 1.5
+sigma = 0.39
+n = 40
+alpha = 0.01
+z = -qnorm(alpha / 2)
+mu0 + z * sigma / sqrt(n) # reject above this
+mu0 - z * sigma / sqrt(n) # or below this
 ```
->$x_{reject} = 1.5 \pm 2.58 \times \frac{\sigma}{\sqrt n} = (1.34, 1.66)$ Reject $H_0 \quad if \quad 1.34 < \bar X < 1.66$.
 
+ - *Method 2: Looking at the A1 picture, we really are just trying to find the $\alpha/2$ and $1-\alpha/2$ quantiles of the $N(1.5, 0.39/\sqrt{40})$ distribution.  So in R we could do this more directly:*
+  
+```{r}
+qnorm(0.995, mean = mu0, sd = sigma/sqrt(n)) # 99.5th Percentile
+qnorm(0.005, mu0, sigma/sqrt(n)) # 0.5th Percentile
+```
+
+*Both methods are doing the same thing: We reject $H_0$ when $\bar x_{40}$ is either larger than or equal to the 99.5th percentile of $N(1.5, 0.39/\sqrt{40})$ or smaller than or equal to the 0.5th percentile of $N(1.5, 0.39/\sqrt{40})$.  This ensures that the probability that $\bar X_n$ is in the rejection region when $H_0$ is true is at most 0.01. Using either method we get the same answer: We reject $H_0$ in favor of $H_a$ if $\bar x_{40} \geq 1.66 \text{ or } \bar x_{40} \leq 1.34$*
+
+      
   d) Based on the rejection region, should we reject $H_0$?
   
-> We **reject** the null hypothesis
+  *Since $1.7 > 1.66$, we reject $H_0$ in favor of $H_a$ at the $\alpha=0.01$ significance level.  There is evidence that the mean amount of hard alcohol in mixed drinks purchased in NYC is not the industry standard of 1.5 oz.*
+  
   
 ## Overview of hypothesis testing using P-values
 
@@ -369,7 +367,17 @@ In R, this is given by
 
   a) What is the p-value of this test?
   
+  *Since this is a two-sided test (A1), the p-value is $2 P(N(0,1) > |z_n|)$ where $z_n=(1.7 - 1.5) /(0.39/\sqrt{40})$ since under the null hypothesis  $(\bar X_{40}-1.5)/(0.39/\sqrt{40}) \sim N(0,1)$. The p-value is therefore*
+  
+```{r}
+z = (1.7 - 1.5) / (0.39/sqrt(40))
+2 * (1 - pnorm(abs(z)))
+```
+
+      
   b) Based on the p-value, should we reject $H_0$?
+  
+  *Since the p-value of $0.0012 < 0.01$, we reject $H_0$ in favor of $H_a$ at the 0.01 significance level.*
   
 ## Power (Part III of lab)
 
@@ -384,11 +392,51 @@ In reference to problem 1, suppose that NYC officials don't mind if the populati
       
     i) Simulate 100,000 independent samples from the distribution of $\bar X_{40}$ under the alternative hypothesis that $\mu_a = 1.65$, i.e. $\bar X_{40} \sim N(1.65, 0.39/\sqrt{40})$.
         
+```{r}
+set.seed(1)
+n=40
+nsim = 100000
+sampmean.alt = rnorm(nsim, 1.65, 0.39/sqrt(n))
+```
+
   ii) Based on these 100,000 samples, estimate the probability that the sample mean of the study will fall into the rejection region determined in Problem 1(b).  This is the power of the test when the sample size, n, is equal to 40.  
         
+*Recall that the rejection region is RR: $\bar x_{40} \geq 1.66 \text{ or } \bar x_{40} \leq 1.34$.  So, we will count how many times our simulated values fall into the rejection region and divide by the total number of simulated values.*
+
+```{r}
+n=40
+lowercutoff = qnorm(.005, 1.5, 0.39 / sqrt(n))
+uppercutoff = qnorm(.995, 1.5, 0.39 / sqrt(n))
+# recall that | means 'or'...
+num_reject = sum((sampmean.alt <= lowercutoff) | (sampmean.alt >= uppercutoff))
+power = num_reject / nsim
+power
+```
+
+        
+        
   b) Calculate the actual power of this test, $P(\bar X_n \leq 1.34 \text{ or } \bar X_n \geq 1.66~|~\mu=1.65)$ using the `pnorm()` function in R.
+  
+  
+  
+```{r,tidy=TRUE}
+n=40
+lowercutoff = qnorm(.005, 1.5, 0.39 / sqrt(n))
+uppercutoff = qnorm(.995, 1.5, 0.39 / sqrt(n))
+pnorm(lowercutoff, 1.65, 0.39/sqrt(n)) + (1 - pnorm(uppercutoff, 1.65, 0.39/sqrt(n)))
+```
 
  c)   Re-run the code from part (b) using different values of n.  By trial and error, find the smallest value of $n$ such that the power of the test is greater than or equal to 0.9.
-       
+ 
+```{r,tidy=TRUE}
+n=101
+lowercutoff = qnorm(.005, 1.5, 0.39 / sqrt(n))
+uppercutoff = qnorm(.995, 1.5, 0.39 / sqrt(n))
+pnorm(lowercutoff, 1.65, 0.39/sqrt(n)) + (1 - pnorm(uppercutoff, 1.65, 0.39/sqrt(n)))
+```
+
+*n=101 for the power of this test to be at least 0.90.*
+ 
+        
 
  
