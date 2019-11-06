@@ -1,12 +1,13 @@
 ---
 title: 'Lab 8: Hypothesis Testing'
 output: 
-  html_document: default
+  html_notebook: 
+    theme: yeti
 ---
 
  **For this lab, it will be helpful to have a copy of the knitted version of this document to answer the questions as much of it is written using mathematical notation that may be difficult to read when the document is not knitted.  For your convenience, a pdf of this document is in the lab folder on blackboard. Please ignore the code used to generate the figures in this lab.**
 
-## Lab Goal
+## Lab Goals
 
 The purpose of this lab is to explore hypothesis testing for an unknown population mean, $\mu$, when $\bar X_n \sim N(\mu,\sigma/\sqrt{n})$.  There are three main topics in the lab:
 
