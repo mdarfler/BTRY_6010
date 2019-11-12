@@ -1,0 +1,42 @@
+---
+title: "Lab 8 Prelim 2 Sample"
+author: "Michael Darfler"
+date: "11/6/2019"
+output: html_document
+---
+
+# 2018 Q2
+
+We administerd a drug believed to affect weight to n = 25 rats. The rats were weighed immediately before administration of the drug, and after one month the rats were weighed again. Before the mean rat was 252.5 oz One month later, the mean rat weight was 256.5 ounces. the sample standard deviation was 5 ounces.
+
+```{r}
+x_bar_pre = 252.5
+x_bar_post = 256.5
+n = 25
+```
+
+  a) Define the parameter of interest $\mu_d$ in the context of the problem
+  
+  > $\mu_d$ is the population increase in weight of the rat after the drug
+  
+  b) Specify the distribution of your sample statistic, and calculate its realized value in this data. Clearly state any assumptions
+  
+  > $\bar X_d \sim N(\mu_d,\frac{\sigma_d}{\sqrt{n}})$  
+  > $\bar x_d = \bar x_a - \bar x_b = 4$
+  > The distribution of $\bar X_d$ is normal as shown by the`qqplot` of the the differences.  
+  > $x_d$'s are independent and identically distributed.  
+  > N is not sufficiently large.
+  
+  c) construct 90% confidence interval
+  
+```{r}
+x_bar = 4
+alpha = 0.1
+t = -qt(alpha/2, n-1)
+SE = s/sqrt(25)
+
+(lower = 4 - t * SE)
+(upper = 4 + t * SE)
+```
+  
+  
