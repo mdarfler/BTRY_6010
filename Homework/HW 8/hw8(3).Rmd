@@ -262,6 +262,28 @@ power = mean(rej)
 ```
  > The approximate power for this test is `r power*100`%
  
+```{r}
+power_sim <- function(nx, ny, mux, muy){
+  sigx <- 4
+  sigy <- 8
+  signif <- 0.05
+  
+  nsim <- 5000
+  results <- rep(0,nsim)
+  
+  for(i in 1: nsim){
+    x <- rnorm(nx,mux,sigx)
+    y <- rnorm(ny, muy, sigy)
+    results <- t.test(x,y)
+    pval <- results$p.value
+    rej[i] <- pval < signif
+  }
+
+  return(mean(rej))
+  
+}
+```
+ 
 e) Using the code from part (d), include a code chunk for parts (i), (ii), and (iii), below, that changes the power calculation as specified.  Then, for all three parts, make a general statement of how changing the parameter as indicated seems to impact the power calculation.
   
     i) Repeat the power calculation twice.  First, increase `nx` to 25, keeping everything else fixed.  For the next power calculation change `nx` to 50, keeping everything else fixed.
