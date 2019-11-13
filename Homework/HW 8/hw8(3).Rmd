@@ -340,6 +340,8 @@ result
 ```{r}
 nx <-  50
 ny <-  50
+mux <- 6
+muy <- 11
 
 rej <- rep(0,nsim)
 result <- rep(0,length(nx))
@@ -347,17 +349,17 @@ result <- rep(0,length(nx))
 for(i in 1:nsim){
   x <- rnorm(sample.nx,mux,sigx)
   y <- rnorm(sample.ny, muy, sigy)
-  results <- t.test(x,y,mu = 5)
+  results <- t.test(x,y)
   pval <- results$p.value
   rej[i] <- pval < signif
 }
 mean(rej)
 
-
+muy <- 16
 for(i in 1:nsim){
   x <- rnorm(sample.nx,mux,sigx)
   y <- rnorm(sample.ny, muy, sigy)
-  results <- t.test(x,y,mu = 10)
+  results <- t.test(x,y)
   pval <- results$p.value
   rej[i] <- pval < signif
 }
