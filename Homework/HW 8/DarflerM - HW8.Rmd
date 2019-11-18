@@ -21,12 +21,12 @@ For this homework:
 
 1. All calculations must be done within your document in code chunks.  Provide all intermediate steps.
 
-2. Incude any mathematical formulas you are using for a calculation.  Surrounding mathematical expresses by dollar signs makes the math look nicer and lets you use a special syntax (called latex) that allows for Greek letters, fractions, etc.  Note that this is not R code and therefore should not be put in a code chunk.  You can put these immediately before the code chunk where you actually do the calculation.
+2. Include any mathematical formulas you are using for a calculation.  Surrounding mathematical expresses by dollar signs makes the math look nicer and lets you use a special syntax (called latex) that allows for Greek letters, fractions, etc.  Note that this is not R code and therefore should not be put in a code chunk.  You can put these immediately before the code chunk where you actually do the calculation.
 
 
 ### Problem 1
 
-Are mean pulse rates different when students are taking a quiz versus when they are sitting in lecture?  The *QuizPulse20* data contains the pulse rates for 20 randomly selected students from a large psychology class under two different scenerios: 1) when they were sitting in class taking a quiz and 2) when they were sitting in class during lecture.  
+Are mean pulse rates different when students are taking a quiz versus when they are sitting in lecture?  The *QuizPulse20* data contains the pulse rates for 20 randomly selected students from a large psychology class under two different scenarios: 1) when they were sitting in class taking a quiz and 2) when they were sitting in class during lecture.  
 
 
 $\mu_x$ = mean pulse rate for students taking a quiz
@@ -58,7 +58,7 @@ library(car)
 qqPlot(QuizPulse20$Differences)
 ```
 
-> Yes. it is reasonalbe to assume that the differences are normally distributied
+> Yes. it is reasonable to assume that the differences are normally distributed
 
   d) Create a 95% confidence interval for the difference between student mean pulse rate during a quiz and student mean pulse rate during lecture using the `t.test()` function in R.  Do this by passing in the differences.
   
@@ -82,7 +82,7 @@ results
     
     ii) The output from (d) can also be used to perform a paired t-test.  What is the decision based on the p-value of this test if the significance level is set at 0.05?  State your answer in the context of this study.
     
->Given a significance level of 0.05, i.e. 5% chance of a type-I error, and a p-value of `r results$p.value` we would reject the null hypothesis in favor of the alternative hypothesis that $\mu_d \neq 0$.
+>Given a significance level of 0.05, i.e. 5% chance of a type-I error, and a p-value of `r round(results$p.value, 3)` we would reject the null hypothesis in favor of the alternative hypothesis $\mu_d \neq 0$.
 
 ### Problem 2
     
@@ -124,12 +124,12 @@ results
   
   e) At the 0.05 significance level, is there evidence that the mean score for students whose pulses increase is different from the mean score for students whose pulses do not increase?  Base your answer on the confidence interval created in (c).
   
-> At the 5% confidence level there is evidence that the mean score for students with elevated pulses is different from the mean score for students without elevated pulses. This is because the lower bound of the 95% confidence interval is > 0. 
+> At the 5% signifcance level there is evidence that the mean score for students with elevated pulses is different from the mean score for students without elevated pulses. This is because the lower bound of the 95% confidence interval is > 0. 
   
   
   f) Increased pulse rate has been shown to be associated with higher stress levels.  Based on the result of this study, would it make sense for the professor of this psychology class to take measures to reduce the stress level of students on days they are taking a quiz in order to increase their scores?
   
-> Based on this data, it would not make sense to resduce stress becuase our data show that increased heart rate is associated with increased performance.
+> Based on this data, it would not make sense to reduce stress because our data show that increased heart rate is associated with increased performance.
 
 
 ## Power
@@ -227,7 +227,7 @@ mean(rej)
     
     vi) Does the estimate for the significance level of the test indicate that it is 0.05?  Why or why not. 
     
-> Yes, the estimate for the significance level of the test does indicated that it was 0.05. Specifically, the results of our simulation showed that `r (1 - mean(rej)) * 100`% of the time the means were the same. 
+> Yes, the estimate for the significance level of the test does indicated that it was 0.05. Specifically, the results of our simulation showed that `r (1 - mean(rej)) * 100`% of the time the means were the statistically the same. 
 
 d) Now let's estimate the power of the test performed in (b).  Remember that the power of a test is the probability that we will reject $H_0$ when it is false.  Repeat the simulation from part (c) where now `mux` and `muy` are set to their original values from part (a).  What is the approximate power of this test?
 
@@ -262,7 +262,7 @@ power = mean(rej)
 ```
  > The approximate power for this test is `r power*100`%
  
-```{r}
+```{r, echo=F,eval=F}
 power_sim <- function(nx, ny, mux, muy){
   sigx <- 4
   sigy <- 8
@@ -307,7 +307,7 @@ for(j in 1:length(nx)){
 }
 result
 ```
-    > the increse in the sample size of n modeslty increased the power
+    > the increase in the sample size of $x$ modestly increased the power
     
     ii) Repeat the power calculation twice.  First, increase `nx` and `ny` to 25, keeping everything else fixed.  For the next power calculation, change `nx` and `ny` to 50, keeping everything else fixed. 
     
@@ -333,7 +333,7 @@ for(j in 1:length(nx)){
 }
 result
 ```
- > increasing the sample size of x and y significantly improved the power. with nx, ny = 50, the power is more than double what it was start
+ > increasing the sample size of $x$ and $y$ significantly improved the power. with nx, ny = 50, the power is more than double what it was start
  
     iii) Repeat the power calculation twice.  First, increase the effect size, |`mux` - `muy`| to 5, keeping everything else fixed.  For the next power calculation, increase the effect size to 10, keeping everything else fixed.
     
@@ -366,3 +366,4 @@ for(i in 1:nsim){
 mean(rej)
 
 ```
+> Increasing the effect size has a very significant affect on the power. At a difference of 5 between means, the power is already over 97%. When the effect size is 10, the power is essentially 100%  
