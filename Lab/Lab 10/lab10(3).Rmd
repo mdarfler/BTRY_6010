@@ -62,9 +62,9 @@ Here we will calculate the ANOVA statistic and perform the test "by hand."  Incl
 
   a) Calculate the mean yield for each fertilizer, $\bar y_{i\mathbf{.}}$ for i = 1,2,3. 
     
-    i. $\bar y_{1\mathbf{.}}=4$
-    ii. $\bar y_{2\mathbf{.}}=3$
-    iii. $\bar y_{3\mathbf{.}}=5$
+  i. $\bar y_{1\mathbf{.}}=4$
+  ii. $\bar y_{2\mathbf{.}}=3$
+  iii. $\bar y_{3\mathbf{.}}=5$
 
   b) Calculate the grand mean, $\bar y_{\mathbf{..}}$.
 
