@@ -1,14 +1,13 @@
 ---
 title: 'Homework 9: ANOVA'
 output:
-  pdf_document: default
   html_document: default
 ---
   
 ----
 
-# NAME: Your Name 
-# NETID: Your NetID 
+# NAME: Michael Darfler
+# NETID: mbd25
 **DUE DATE: November 27, 2019 by 11:59pm**  
 ----
 
@@ -82,24 +81,47 @@ This dataset includes observations of the following variables from a random samp
 ### Problem 1
 
 Does mean GPA for college students change by class year?  At a significance level of 0.05, test this hypothesis.  The first step is reading in the `SleepStudy` data from the folder for Homework 9.  Then, do the following:
+```{r}
+student_data <- read.csv("https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/Homework/HW%209/SleepStudy(5).csv")
+student_data$ClassYear <- as.factor(student_data$ClassYear)
+```
 
 
   a) State the null and alternative hypotheses.
   
- 
-  
+  >H0: All means are the same  
+  >HA: At least one mean is different
   
   b) Compute the total degrees of freedom, the degrees of freedom associated with the numerator of the F statistic, and the error degrees of freedom.
+  
+  >DoF associated with the numerator is the number of factors - 1  
+  >DoF associated with the error is the number of observations - 1  
+  >The total DoF is the sum of the two
+  
+```{r}
+dof_n <- length(unique(student_data$ClassYear)) - 1
+dof_e <- nrow(student_data) - 1
+
+
+paste0("The number of degrees of freedom associated with the numberator of the F statistic is; ", dof_n)
+paste0("The number of error degrees of freedom is: ", dof_e)
+paste0("The total number of degrees of freedom is: ", dof_n + dof_e)
+```
   
  
   
   c) Perform the test in R and include the ANOVA table here.
   
+```{r}
+student_data.lm <- lm(GPA ~ ClassYear, data = student_data)
+aov <- anova(student_data.lm)
+print(aov)
+```
 
-  
   d) What is the sse and mse?  Include how you would calculate the mse from the sse.
-  
 
+$SSE = \sum_{i = 1}^k n_i (Y_{ij} - \bar Y_{i.})^2$
+$MSE = \frac{SSE}{df2}
   
   
   e) What is the ssb and msb? Include how you would calculate the msb from the ssb.
