@@ -95,17 +95,17 @@ student_data$ClassYear <- as.factor(student_data$ClassYear)
   b) Compute the total degrees of freedom, the degrees of freedom associated with the numerator of the F statistic, and the error degrees of freedom.
   
   >DoF associated with the numerator is the number of factors - 1  
-  >DoF associated with the error is the number of observations - 1  
-  >The total DoF is the sum of the two
+  >DoF associated with the error is the number of observations - number of categories   
+  >The total DoF is the total number of observations - 1
   
 ```{r}
 dof_n <- length(unique(student_data$ClassYear)) - 1
-dof_e <- nrow(student_data) - 1
+dof_e <- nrow(student_data) - 3
 
 
 paste0("The number of degrees of freedom associated with the numberator of the F statistic is; ", dof_n)
 paste0("The number of error degrees of freedom is: ", dof_e)
-paste0("The total number of degrees of freedom is: ", dof_n + dof_e)
+paste0("The total number of degrees of freedom is: ", nrow(student_data) - 1)
 ```
   
  
@@ -120,42 +120,96 @@ print(aov)
 
   d) What is the sse and mse?  Include how you would calculate the mse from the sse.
 
-$SSE = \sum_{i = 1}^k n_i (Y_{ij} - \bar Y_{i.})^2$
-$MSE = \frac{SSE}{df2}
-  
-  
+>SSE is the sum of squares of error and is calculated as $SSE = \sum_{j=i}^k \sum_{i = 1}^k (Y_{ij} - \bar Y_{i.})^2$  
+>MSE is the mean square of errors and is calculated  as $MSE = \frac{SSE}{df2}$
+
+```{r}
+fr = subset(student_data, ClassYear == 1, select = `GPA`)
+so = subset(student_data, ClassYear == 2, select = `GPA`)
+jr =  subset(student_data, ClassYear == 3, select = `GPA`)
+sr = subset(student_data, ClassYear == 4, select = `GPA`)
+
+SSE = sum(c(sum((fr$GPA - mean(fr$GPA))^2),sum((so$GPA - mean(so$GPA))^2),sum((jr$GPA - mean(jr$GPA))^2),sum((sr$GPA - mean(sr$GPA))^2)))
+print(SSE)
+
+df2 = nrow(student_data) - 4
+
+SSE/df2
+```
+
   e) What is the ssb and msb? Include how you would calculate the msb from the ssb.
   
+ > SSB is the sum of squares between and is calculated as $\sum_{i = 1}^k n_i (\bar Y_{i.} - \bar Y_{..})^2$  
+ > MSB is the mean square between and is calculated as $\frac{SSB}{df1}$
  
+```{r}
+df1 = aov$Df[1]
+paste0("SSB = ", aov$`Sum Sq`[1])
+paste0("MSB = ", aov$`Mean Sq`[1])
+```
   
   
   f) What is the realization of the F statistic?  Include a formula.
   
+> F = MSB/MSE
+
+```{r}
+f <- aov$`F value`[1]
+paste0("The realization of the F statistic is ", f)
+```
+
   
   g) What is the p-value of this test?  Calculate the p-value using the `pf()` function in a code chunk here. Verify that this p-value matches the p-value in the ANOVA table.  Should the null hypothesis be rejected based on this p-value? Interpret your conclusion in the context of this problem.
 
+```{r}
+1 - pf(f,df1,df2)
+aov$`Pr(>F)`[1]
+```
 
 
   h) Follow these steps to check the assumptions required to perform an ANOVA test.  
   
     i) Does the assumption of independence hold? (Suppose you could talk to the researchers who collected these data.  What would be relevant to ask them?)
 
+> I wouls ask if the student GPA was based primarily on individual work an that group projects were a minimal factor in calculating the GPA.
 
     ii) Check using a graphical method if the assumption of normality holds. Does it hold?
 
+```{r}
+library(car)
+qqPlot(student_data$GPA)
+```
 
+> The qqplot shows that the data appear to be normally distributed
 
     iii) Check using a graphical method and a formal test if the assumption of equal variance holds.  Does it hold?
 
+```{r}
+leveneTest(student_data.lm)
+boxplot(GPA~ClassYear, data = student_data)
+```
 
+> Leven's test for homogeneity of Variance returned a p value of .97 so that we can accept that the variance is the same for all populations.
 
     iv) Are the assumptions required to perform an ANOVA hypothesis test met?
 
-
+> Yes. All assumptions are met.
 
 ### Problem 2
 
 Which of the class years have significantly different mean GPAs?  Conduct all pairwise tests using the Tukey HSD method.  Assume the significance level of these tests is 0.01.  State your conclusion.
+
+```{r}
+library(multcomp)
+
+student_data.tukey = glht(student_data.lm, linfct = mcp(ClassYear = "Tukey"))
+summary(student_data.tukey)
+```
+
+> The following class years have statistically significant difference at the level 0.01
+> Freshman and Sophomore  
+> Freshman and Juniors  
+> Freshman and Seniors
 
 
 ### Problem 3  
@@ -163,19 +217,29 @@ Which of the class years have significantly different mean GPAs?  Conduct all pa
 Does mean GPA for college students change by `AlcoholUse`?  At a significance level of 0.05, test this hypothesis.  For this research question, do the following:
 
   a) Perform an ANOVA test in R and include the ANOVA table here.
-
-  
+```{r}
+alcohol.lm = lm(GPA~AlcoholUse, data = student_data)
+aov_alcohol = anova(alcohol.lm)
+print(aov_alcohol)
+```
   
   b) What is the realization of the test statistic?
   
+```{r}
+paste0("The realization of the test statistic is: ", aov_alcohol$`F value`[1])
+```
 
   
   c) What is the p-value of this test?  Include a formula for the p-value with your answer.  Should the null hypothesis be rejected based on the p-value?  Use a significance level of 0.05.
   
+```{r}
+1 - pf(aov_alcohol$`F value`[1],aov_alcohol$Df[1],aov_alcohol$Df[2])
+aov_alcohol$`Pr(>F)`[1]
+```
 
   d) Assuming the assumptions for ANOVA are met, state the conclusion of this test in the context of the research question.
   
-
+> At the significance level of 0.05 we would reject the accept the null hypothesis that all means are the same.
 
 ### Problem 4
 
@@ -196,15 +260,28 @@ knitr::kable(tbl)
 
   a) Determine G, A, and H. 
   
+  > G = 4, A = 35, H = 39
+  
   b) Determine B. 
+  
+  > ssb = tss - sse = 3037 - 1837 = 1200
   
   c) Determine C. 
   
+  > MSB = SSB/df1 = 1200/4 = 300
+  
   d) Determine D. 
+  
+  > MSE = SSE/df2 = 1837/35 = 52.4871
   
   e) Determine E. 
   
+  > F* = MSB/MSE = 300/52.4871 5.506
+  
   f) Determine F. 
   
+```{r}
+1 - pf(5.506, 4, 35)
+```
 
  
