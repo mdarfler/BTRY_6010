@@ -58,6 +58,11 @@ Between 2002 and 2004 a series of speed dating experiments were conducted at Col
 
 Read the data into this lab document and use the `names()` function to determine the variable names of this dataset.
   
+```{r}
+SpeedDating2 <- read.csv("https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/Lab/Lab%2011/SpeedDating2(3).csv")
+
+names(SpeedDating2)
+```
 
 ### Problem 1
 
@@ -65,7 +70,9 @@ Initially we will consider a model that includes all of the predictors in the ta
 
 Write out the model.  Include definitions of each predictor and regression coefficient.  Assume `F` is the first level of `gender`.  In R, the covariate for a binary predictor is 0 if the observation belongs to the first level of the predictor and 1 if the observation belongs to the second level of the predictor.
   
+$$Y_i = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + \beta_3 X_{i3} = \beta_4 X_{i4} + \beta_5 X_{i5} + \epsilon_i$$
 
+$Y_i$ : "Like" for participant i
 
 ### Problem 2
 
@@ -87,31 +94,32 @@ summary(like.lm)
 
   c) Using this model, what is the equation that estimates the expected value of `like` given the 5 predictors?
   
- 
+  $$Y_i = 0.29 - 0.06 X_{i1} + 0.41 X_{i2} + 0.15 X_{i3} + 0.14 X_{i4} + .27 X_{i5}$$
+
 
   d) What is the estimated expected value of `like` when `gender=F` and all other predictors are zero?
   
-  
+  0.29
   
   e) What is the value of $X_{i1}$ when `gender=F`?  What is the value of $X_{i1}$ when `gender=M`? 
       
-     
+   0, 1
       
   f) What is the estimated expected value of `like` when `gender=M` and all other predictors are zero?
   
- 
+   0.29 - 0.06
   
   g) What is the estimated expected value of `like` for a female respondant that rated the male a 7 for attractiveness, a 5 for sincerity, an 8 for fun, and a 0 for shared interests?
-  
+  0.29 - 0 + 0.41 * 7 + 0.15 * 5 + 0.14 * 0.27 * 0
   
   
   h) What is the $R^2$ value for this model?  Interpret it in the context of this study. Would we expect the estimate in (g) to be very accurate based on this $R^2$ value?
   
- 
+ 0.6565 amount of variability that our model explains. 
   
   i) A more specific way to characterize the variability in $E(Y)$ from part (g) is to use the `predict()` function.  In the following code chunk, the `predict()` function is first used to create a confidence interval for $E(Y)$ given the predictors from part (g).  Then, the `predict()` function is used to create a prediction interval for a new observation of `like` when the predictors are as specified in part (g).
   
-```{r,eval=FALSE,tidy=TRUE}
+```{r}
 predict(like.lm,list(gender="F",attractive=7, sincere=5, fun=8, sharedinterests=0),interval = "conf")
 predict(like.lm,list(gender="F",attractive=7, sincere=5, fun=8, sharedinterests=0),interval = "pred")
 ```
