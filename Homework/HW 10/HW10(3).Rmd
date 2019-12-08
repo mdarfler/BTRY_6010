@@ -1,14 +1,13 @@
 ---
 title: 'Homework 10: Multiple Linear Regression'
 output:
-  pdf_document: default
   html_document: default
 ---
   
 ----
 
-# NAME: Your Name 
-# NETID: Your NetID 
+# NAME: Michael Darfler
+# NETID: mbd25 
 **DUE DATE: December 11, 2019 by 11:59pm **  
 ----
 
@@ -48,23 +47,44 @@ Here we will explore a MLR with response equal to `WorldGross` and the following
 
   a) Read the data into this homework document and list the variable names.
   
+```{r}
+hollywood = read.csv("https://raw.githubusercontent.com/mdarfler/BTRY_6010/master/Homework/HW%2010/Hollywood(3).csv")
+
+names(hollywood)
+```
+  
 
   b) Fit a linear model with `WorldGross` as the response and `AudienceScore`, `BOAveOpenWeek`, `Fantasy`, and `Budget` as predictors.  Also, include a summary of this model.
   
-  
+```{r}
+hollywood.lm <- lm(WorldGross ~ AudienceScore + BOAveOpenWeek + Fantasy + Budget, data = hollywood)
+
+summary(hollywood.lm)
+```
+
   c) State the expression for the estimated expected value of `WorldGross` using the model fit in (b).
   
+> $\hat E (Y | \text{ predictors}) =$ `r round(hollywood.lm$coefficients[1],3)` + `r round(hollywood.lm$coefficients[2], 3)` AudienceScore + `r round(hollywood.lm$coefficients[3], 3)` BOAveOpenWeek + `r round(hollywood.lm$coefficients[4], 3)` FantasyTRUE + `r round(hollywood.lm$coefficients[5], 3)` Budget
  
   d) What values can the covariate `FantasyTRUE` take on, and what is the meaning of each possible value?
   
+> `FantasyTRUE` can take on the values of `0` and `1.` If the value is `0` then the movie is **not** a fantsay film. If the value is `1` then it is a fantsay film.
 
   e) Estimate the expected gross income for a non-fantasy movie that has an audience score equal to 90, a budget of 50 million dollars, and that has an opening week box office average of $10,000.
   
+```{r}
+prediction <- predict(hollywood.lm, list(Fantasy = FALSE, AudienceScore =90, Budget = 50, BOAveOpenWeek = 10000))
+```
  
-  
+ > Given the predictors from above, the espected gross income for the film would be $`r format(prediction * 1000000, scientific = FALSE, format = "d", big.mark = ",")` 
+ 
   f) Use the `confint()` function to create a 95% confidence interval for the partial slope of `Budget`. Interpret it in the context of this study.
-  
-  
+```{r}
+ci <- confint(hollywood.lm, level = 0.95)
+```
+> We are 95% confident that the partial slope for budget between `r round(ci[5,1], 3)` and `r round(ci[5,2], 3)`.
+
+
 
 ### Problem 2
 
@@ -72,15 +92,37 @@ Here we will check the assumptions of the MLR fit in Problem 1.
 
   a) Does it seem reasonable to assume these observations are independent?
   
+> It does not seem reasonable that these observations are independent, since many of these movies are playing concurrently and the gross of one film may give us information about the gross of another film.
  
   b) Create a scatterplot of the residuals (on the y-axis) vesus the fitted values (on the x-axis).  Does the equal variance assumption seem reasonable?
   
-  
+```{r}
+plot(hollywood.lm$fitted.values, hollywood.lm$residuals)
+```
+> The assumption of equal variance does not seem to apply. 
+
   c) Create a Q-Q plot of the residuals. Does the normality assumption seem reasonable?
+```{r}
+library(car) 
+qqPlot(hollywood.lm$residuals)
+```
   
+ > No, the normalacy assumption does not apply. Beyond ± 1 standard deviation the data is not normally distributed.
  
   d) Try replacing `WorldGross` by `sqrt(WorldGross)` in the `lm` formula.  Repeat part (c) and comment.
   
+```{r}
+hollywood.lm_adjusted <- lm(sqrt(WorldGross) ~ AudienceScore + BOAveOpenWeek + Fantasy + Budget, data = hollywood)
+
+qqPlot(hollywood.lm_adjusted$residuals)
+```
+> By adjusting the model to use the square root of the gross the values are more normally distributed.
 
   e) Try plotting the residuals of the model in 2d versus the row number of the movie (that is, use `plot` with first argument `1:nrow(Hollywood)` and second argument the residuals).  What do you observe?  Explain what this indicates (and you might want to change your answer to 2a accordingly).
   
+```{r}
+plot(1:nrow(hollywood), hollywood.lm_adjusted$residuals)
+```
+  
+  
+> The assumption of equal variance seems to be much better supported in this graph. This seems to indicated that the adjusted model is a much better fit for MLR.
