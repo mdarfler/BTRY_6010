@@ -1,0 +1,86 @@
+---
+title: 'Homework 10: Multiple Linear Regression'
+output:
+  pdf_document: default
+  html_document: default
+---
+  
+----
+
+# NAME: Your Name 
+# NETID: Your NetID 
+**DUE DATE: December 11, 2019 by 11:59pm **  
+----
+
+## Instructions
+
+For this homework:
+
+1. All calculations must be done within your document in code chunks.  Provide all intermediate steps.
+
+2. DO NOT JUST INCLUDE A CALCULATION:  Incude any formulas you are using for a calculation.  You can put these immediately before the code chunk where you actually do the calculation.
+    
+## Hollywood Movies 2011 Dataset
+
+This dataset includes information for 118 movies released in 2011.  Here is a brief description of each of the variables included in this dataset.
+
++------------------+----------------------------------------------+
+|   Variable       |            Description                       |
++==================+==============================================+
+|   `WorldGross`   | Gross income for all viewers (in millions)   |
++------------------+----------------------------------------------+
+|  `AudienceScore` |  Audience Rating                             |
++------------------+----------------------------------------------+
+|`BOAveOpenWeek`   | Average box office income per theater        |
+|                  | in the opening week                          |                                   
++------------------+----------------------------------------------+
+|`Budget`          |  Production Budget (in millions)             |
+|                  |                                              |                   
++------------------+----------------------------------------------+
+|`Fantasy`         |  TRUE if the movie genre is Fantasy;         |
+|                  |  FALSE if the movie genre is not Fantasy     |                   
++------------------+----------------------------------------------+
+
+### Problem 1
+
+Here we will explore a MLR with response equal to `WorldGross` and the following predictors: `AudienceScore`, `BOAveOpenWeek`, `Fantasy`, and `Budget`.
+
+
+  a) Read the data into this homework document and list the variable names.
+  
+
+  b) Fit a linear model with `WorldGross` as the response and `AudienceScore`, `BOAveOpenWeek`, `Fantasy`, and `Budget` as predictors.  Also, include a summary of this model.
+  
+  
+  c) State the expression for the estimated expected value of `WorldGross` using the model fit in (b).
+  
+ 
+  d) What values can the covariate `FantasyTRUE` take on, and what is the meaning of each possible value?
+  
+
+  e) Estimate the expected gross income for a non-fantasy movie that has an audience score equal to 90, a budget of 50 million dollars, and that has an opening week box office average of $10,000.
+  
+ 
+  
+  f) Use the `confint()` function to create a 95% confidence interval for the partial slope of `Budget`. Interpret it in the context of this study.
+  
+  
+
+### Problem 2
+
+Here we will check the assumptions of the MLR fit in Problem 1.
+
+  a) Does it seem reasonable to assume these observations are independent?
+  
+ 
+  b) Create a scatterplot of the residuals (on the y-axis) vesus the fitted values (on the x-axis).  Does the equal variance assumption seem reasonable?
+  
+  
+  c) Create a Q-Q plot of the residuals. Does the normality assumption seem reasonable?
+  
+ 
+  d) Try replacing `WorldGross` by `sqrt(WorldGross)` in the `lm` formula.  Repeat part (c) and comment.
+  
+
+  e) Try plotting the residuals of the model in 2d versus the row number of the movie (that is, use `plot` with first argument `1:nrow(Hollywood)` and second argument the residuals).  What do you observe?  Explain what this indicates (and you might want to change your answer to 2a accordingly).
+  
